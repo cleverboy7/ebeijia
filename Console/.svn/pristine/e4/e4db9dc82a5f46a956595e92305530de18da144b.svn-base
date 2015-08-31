@@ -1,0 +1,72 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "TBL_WECHAT_MOD")
+public class TblWechatMod implements java.io.Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
+	private String modId;
+	private String modName;
+    private String mchtId;
+    private String actType;
+    private String url;
+    
+	public TblWechatMod() {
+	}
+	
+	@Id
+	@Column(name = "MOD_ID", nullable = false, length = 20)
+	public String getModId() {
+		return modId;
+	}
+
+	public void setModId(String modId) {
+		this.modId = modId;
+	}
+	
+	@Column(name = "URL", length = 256)
+	public String getUrl() {
+		return url;
+	}
+
+	@Column(name = "MCHT_ID", length = 15)
+	public String getMchtId() {
+		return mchtId;
+	}
+
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+
+
+	@Column(name = "ACT_TYPE", length = 1)
+	public String getActType() {
+		return actType;
+	}
+
+	public void setActType(String actType) {
+		this.actType = actType;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	@Column(name = "MOD_NAME", length = 64)
+	public String getModName() {
+		return modName;
+	}
+
+	public void setModName(String modName) {
+		this.modName = modName;
+	}
+	
+	
+}

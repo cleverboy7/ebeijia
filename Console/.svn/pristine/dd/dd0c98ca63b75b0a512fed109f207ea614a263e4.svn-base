@@ -1,0 +1,41 @@
+package com.ebeijia.entity.vo.interf;
+
+import java.io.Serializable;
+
+public class TblSmsInfo extends CommonReq implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
+	private String phone;
+	private String content;
+	private String sendId;
+	private String returnCode;
+	
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getSendId() {
+		return sendId;
+	}
+	public void setSendId(String sendId) {
+		this.sendId = sendId;
+	}
+	public String getReturnCode() {
+		return returnCode;
+	}
+	public void setReturnCode(String returnCode) {
+		this.returnCode = returnCode;
+	}
+	
+	
+
+}

@@ -1,0 +1,9 @@
+package com.ebeijia.nosql.redis.until;
+
+
+public class RedisConstant {
+
+	public static final String KEY = "Console:";
+	//奖惩缓存
+	public static final String  USR_BEHAV = KEY + "usrBehav"; 
+}

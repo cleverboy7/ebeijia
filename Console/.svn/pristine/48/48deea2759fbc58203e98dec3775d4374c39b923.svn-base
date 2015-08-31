@@ -1,0 +1,124 @@
+package com.ebeijia.service.wechat.core;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.mcht.MchtInfDao;
+import com.ebeijia.dao.wechat.WechatMchtInfDao;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+
+@Service
+public final class WechatMchtInfServiceImpl implements WechatMchtInfService {
+
+	@Autowired
+	private WechatMchtInfDao wechatMchtInfDao;
+	@Autowired
+	private MchtInfDao mchtInfDao;
+
+	@Transactional
+	@CacheEvict(value="wechatMchtCache",allEntries=true)
+	public void updateWechatMchtInf(TblWechatMchtInf wechatMchtInf) {
+		wechatMchtInfDao.saveOrUpdate(wechatMchtInf);
+	}
+
+	@Transactional
+	@CacheEvict(value="wechatMchtCache",allEntries=true)
+	public void deleteWechatMchtInf(TblWechatMchtInf wechatMchtInf) {
+		wechatMchtInfDao.delete(wechatMchtInf);
+	}
+
+	@Transactional
+	@CacheEvict(value="wechatMchtCache",allEntries=true)
+	public String addWechatMchtInf(TblWechatMchtInf wechatMchtInf) {
+		//检查是否已经绑定
+		StringBuilder hql = new StringBuilder();
+		hql.append("from TblWechatMchtInf where mchtId ='").append(wechatMchtInf.getMchtId()).append("'");
+		hql.append(" or  nickName ='").append(wechatMchtInf.getNickname()).append("'");
+		hql.append(" or  appId ='").append(wechatMchtInf.getAppid()).append("'");
+		hql.append(" or  appsecret ='").append(wechatMchtInf.getAppsecret()).append("'");
+		List<TblWechatMchtInf> list =wechatMchtInfDao.find(hql.toString());
+		String respMsg ="";
+		if(list.isEmpty()){
+			wechatMchtInfDao.saveOrUpdate(wechatMchtInf);
+		}else{
+			respMsg="0";
+		}
+		return respMsg;
+	}
+
+	@Transactional
+	@Cacheable(value="wechatMchtCache",key = "#root.method.name")
+	public List<TblWechatMchtInf> queryWechatMchtInfList() {
+		return wechatMchtInfDao.getWechatMchtInfList();
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMchtCache",key = "#root.method.name+#id")
+	public TblWechatMchtInf getById(String id){
+		return wechatMchtInfDao.getById(id);
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMchtCache",key = "#root.method.name")
+	public Map<String, Object> findMchtList(){
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		List<Object[]> mchtList = mchtInfDao.findMchtList();
+		List<Object> list = new LinkedList<Object>();
+		for (Object[] obj : mchtList) {
+			Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+			hashMap.put("key", obj[0] + "-" + obj[1]);
+			hashMap.put("value", obj[0]);
+			list.add(hashMap);
+		}
+		map.put("info", list);
+		return map;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMchtCache")
+	public Map<String,Object> findBySql(String mchtId,String pagaData) {
+		StringBuffer query = new StringBuffer();
+		query.append("from TblWechatMchtInf");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND id.mchtId like '%").append(mchtId).append("%'");
+		}
+		query.append( " ORDER BY id.mchtId");
+		Map<String,Object> m =wechatMchtInfDao.findByPage(query.toString(), pagaData);
+		return m;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMchtCache",key = "#root.method.name+#nickName")
+	public TblWechatMchtInf findByNikeName(String nickName){
+		StringBuilder sb = new StringBuilder();
+		sb.append("from TblWechatMchtInf where nickName = '").append(nickName).append("'");
+		List<TblWechatMchtInf> list = wechatMchtInfDao.find(sb.toString());
+		if(list.isEmpty()){
+			return null;
+		}else{
+			return list.get(0);
+		}
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMchtCache",key = "#root.method.name+#appid")
+	public TblWechatMchtInf getByAppid(String appid){
+		StringBuilder sb = new StringBuilder();
+		sb.append("from TblWechatMchtInf where app_id = '").append(appid).append("'");
+		List<TblWechatMchtInf> list = wechatMchtInfDao.find(sb.toString());
+		if(list.isEmpty()){
+			return null;
+		}else{
+			return list.get(0);
+		}
+	}
+}

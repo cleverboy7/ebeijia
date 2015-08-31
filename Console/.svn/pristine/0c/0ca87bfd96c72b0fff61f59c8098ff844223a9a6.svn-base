@@ -1,0 +1,487 @@
+package com.ebeijia.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "TBL_USR_INF")
+public class TblUsrInf implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	
+	private String usrId;
+	private String usrType;
+	private String usrLev;
+	private String mobileNo;
+	private String loginPwd;
+	private String usrName;
+	private String usrRname;
+	private String usrStat;
+	private String usrLastLogTime;
+	private String usrSex;
+	private String usrMarriageStat;
+	private String usrEducation;
+	private String usrRegTime;
+	private String usrLockTime;
+	private Integer usrNum;
+	private String usrBirthday;
+	private String usrCerNo;
+	private String usrEmail;
+	private String usrPostNo;
+	private String usrAddr;
+	private String usrWchatNo;
+	private String usrWboNo;
+	private String usrNo1;
+	private String usrNo2;
+	private String usrPic;
+	private String usrSign;
+	private String usrNote;
+	private String usrJob;
+	private Integer usrWage;
+	private String usrSpecialty;
+	private Integer usrAge;
+	private Integer usrHigh;
+	private Integer usrWeight;
+	private String usrColor;
+	private String usrNumber;
+	private String usrConste;
+	private String usrZodiac;
+	private String usrNo;
+	private String inviteNo;
+	private String usrBlood;
+	private String usrHobby;
+	
+	/** default constructor */
+	public TblUsrInf() {
+	}
+
+	/** minimal constructor */
+	public TblUsrInf(String usrId, String mobileNo, String loginPwd,
+			String usrRegTime) {
+		this.usrId = usrId;
+		this.mobileNo = mobileNo;
+		this.loginPwd = loginPwd;
+		this.usrRegTime = usrRegTime;
+	}
+
+	/** full constructor */
+	public TblUsrInf(String usrId, String usrType, String usrLvl,
+			String mobileNo, String loginPwd, String opnPwd, String usrName,
+			String usrRname, String usrStat, String usrLogStat,
+			String usrLastLogTime, String usrFlag, String usrSex,
+			String usrMarriageStat, String usrEducation, String usrRegTime,
+			String usrBirthday, String usrCerType, String usrCerNo,
+			String usrEmail, String usrPostNo, String usrAddr,
+			String usrWchatNo, String usrWboNo, String usrNo1, String usrNo2,
+			String usrPic, String usrNote,String usrLockTime,Integer usrNum,String usrSign,
+			Integer usrWage,String usrSpecialty,Integer usrAge,Integer usrHigh,Integer usrWeight,
+			String usrColor,String usrNumber,String usrConste,String usrZodiac,String usrNo,String inviteNo,String usrBlood,
+			String usrHobby) {
+		this.usrId = usrId;
+		this.usrType = usrType;
+		this.mobileNo = mobileNo;
+		this.loginPwd = loginPwd;
+		this.usrName = usrName;
+		this.usrRname = usrRname;
+		this.usrStat = usrStat;
+		this.usrLastLogTime = usrLastLogTime;
+		this.usrSex = usrSex;
+		this.usrMarriageStat = usrMarriageStat;
+		this.usrEducation = usrEducation;
+		this.usrRegTime = usrRegTime;
+		this.usrBirthday = usrBirthday;
+		this.usrCerNo = usrCerNo;
+		this.usrEmail = usrEmail;
+		this.usrPostNo = usrPostNo;
+		this.usrAddr = usrAddr;
+		this.usrWchatNo = usrWchatNo;
+		this.usrWboNo = usrWboNo;
+		this.usrNo1 = usrNo1;
+		this.usrNo2 = usrNo2;
+		this.usrPic = usrPic;
+		this.usrNote = usrNote;
+		this.usrLockTime = usrLockTime;
+		this.usrNum = usrNum;
+		this.usrSign = usrSign;
+		this.usrWage = usrWage;
+		this.usrSpecialty = usrSpecialty;
+		this.usrAge = usrAge;
+		this.usrHigh = usrHigh;
+		this.usrWeight = usrWeight;
+		this.usrColor = usrColor;
+		this.usrNumber = usrNumber;
+		this.usrConste = usrConste;
+		this.usrZodiac = usrZodiac;
+		this.usrNo = usrNo;
+		this.inviteNo = inviteNo;
+		this.usrBlood = usrBlood;
+		this.usrHobby = usrHobby;
+		
+	}
+	
+	
+	// Property accessors
+		@Id
+		@Column(name = "USR_ID", unique = true, nullable = false, length = 10)
+		public String getUsrId() {
+			return this.usrId;
+		}
+
+		public void setUsrId(String usrId) {
+			this.usrId = usrId;
+		}
+		
+		@Column(name = "USR_LEV", length = 2)
+		public String getUsrLev() {
+			return usrLev;
+		}
+
+		public void setUsrLev(String usrLev) {
+			this.usrLev = usrLev;
+		}
+
+		@Column(name = "USR_TYPE", length = 2)
+		public String getUsrType() {
+			return this.usrType;
+		}
+
+		public void setUsrType(String usrType) {
+			this.usrType = usrType;
+		}
+
+		@Column(name = "MOBILE_NO", unique = true, nullable = false, length = 20)
+		public String getMobileNo() {
+			return this.mobileNo;
+		}
+
+		public void setMobileNo(String mobileNo) {
+			this.mobileNo = mobileNo;
+		}
+
+		@Column(name = "LOGIN_PWD", nullable = false, length = 32)
+		public String getLoginPwd() {
+			return this.loginPwd;
+		}
+
+		public void setLoginPwd(String loginPwd) {
+			this.loginPwd = loginPwd;
+		}
+
+		@Column(name = "USR_NAME", length = 32)
+		public String getUsrName() {
+			return this.usrName;
+		}
+
+		public void setUsrName(String usrName) {
+			this.usrName = usrName;
+		}
+
+		@Column(name = "USR_RNAME", length = 32)
+		public String getUsrRname() {
+			return this.usrRname;
+		}
+
+		public void setUsrRname(String usrRname) {
+			this.usrRname = usrRname;
+		}
+
+		@Column(name = "USR_STAT", length = 1)
+		public String getUsrStat() {
+			return this.usrStat;
+		}
+
+		public void setUsrStat(String usrStat) {
+			this.usrStat = usrStat;
+		}
+
+		@Column(name = "USR_LAST_LOG_TIME", length = 14)
+		public String getUsrLastLogTime() {
+			return this.usrLastLogTime;
+		}
+
+		public void setUsrLastLogTime(String usrLastLogTime) {
+			this.usrLastLogTime = usrLastLogTime;
+		}
+
+		@Column(name = "USR_SEX", length = 1)
+		public String getUsrSex() {
+			return this.usrSex;
+		}
+
+		public void setUsrSex(String usrSex) {
+			this.usrSex = usrSex;
+		}
+
+		@Column(name = "USR_MARRIAGE_STAT", length = 1)
+		public String getUsrMarriageStat() {
+			return this.usrMarriageStat;
+		}
+
+		public void setUsrMarriageStat(String usrMarriageStat) {
+			this.usrMarriageStat = usrMarriageStat;
+		}
+
+		@Column(name = "USR_EDUCATION", length = 1)
+		public String getUsrEducation() {
+			return this.usrEducation;
+		}
+
+		public void setUsrEducation(String usrEducation) {
+			this.usrEducation = usrEducation;
+		}
+
+		@Column(name = "USR_REG_TIME", length = 14)
+		public String getUsrRegTime() {
+			return this.usrRegTime;
+		}
+
+		public void setUsrRegTime(String usrRegTime) {
+			this.usrRegTime = usrRegTime;
+		}
+
+		@Column(name = "USR_BIRTHDAY", length = 8)
+		public String getUsrBirthday() {
+			return this.usrBirthday;
+		}
+
+		public void setUsrBirthday(String usrBirthday) {
+			this.usrBirthday = usrBirthday;
+		}
+
+
+		@Column(name = "USR_CER_NO", length = 32)
+		public String getUsrCerNo() {
+			return this.usrCerNo;
+		}
+
+		public void setUsrCerNo(String usrCerNo) {
+			this.usrCerNo = usrCerNo;
+		}
+
+		@Column(name = "USR_EMAIL", length = 64)
+		public String getUsrEmail() {
+			return this.usrEmail;
+		}
+
+		public void setUsrEmail(String usrEmail) {
+			this.usrEmail = usrEmail;
+		}
+
+		@Column(name = "USR_POST_NO", length = 6)
+		public String getUsrPostNo() {
+			return this.usrPostNo;
+		}
+
+		public void setUsrPostNo(String usrPostNo) {
+			this.usrPostNo = usrPostNo;
+		}
+
+		@Column(name = "USR_ADDR", length = 256)
+		public String getUsrAddr() {
+			return this.usrAddr;
+		}
+
+		public void setUsrAddr(String usrAddr) {
+			this.usrAddr = usrAddr;
+		}
+
+		@Column(name = "USR_WCHAT_NO", length = 32)
+		public String getUsrWchatNo() {
+			return this.usrWchatNo;
+		}
+
+		public void setUsrWchatNo(String usrWchatNo) {
+			this.usrWchatNo = usrWchatNo;
+		}
+
+		@Column(name = "USR_WBO_NO", length = 32)
+		public String getUsrWboNo() {
+			return this.usrWboNo;
+		}
+
+		public void setUsrWboNo(String usrWboNo) {
+			this.usrWboNo = usrWboNo;
+		}
+
+		@Column(name = "USR_NO1", length = 32)
+		public String getUsrNo1() {
+			return this.usrNo1;
+		}
+
+		public void setUsrNo1(String usrNo1) {
+			this.usrNo1 = usrNo1;
+		}
+
+		@Column(name = "USR_NO2", length = 32)
+		public String getUsrNo2() {
+			return this.usrNo2;
+		}
+
+		public void setUsrNo2(String usrNo2) {
+			this.usrNo2 = usrNo2;
+		}
+
+		@Column(name = "USR_PIC", length = 10)
+		public String getUsrPic() {
+			return this.usrPic;
+		}
+
+		public void setUsrPic(String usrPic) {
+			this.usrPic = usrPic;
+		}
+
+		@Column(name = "USR_NOTE", length = 256)
+		public String getUsrNote() {
+			return this.usrNote;
+		}
+
+		public void setUsrNote(String usrNote) {
+			this.usrNote = usrNote;
+		}
+		@Column(name = "USR_LOCK_TIME", length = 14)
+		public String getUsrLockTime() {
+			return usrLockTime;
+		}
+
+		public void setUsrLockTime(String usrLockTime) {
+			this.usrLockTime = usrLockTime;
+		}
+		@Column(name = "USR_NUM", length = 1)
+		public Integer getUsrNum() {
+			return usrNum;
+		}
+
+		public void setUsrNum(Integer usrNum) {
+			this.usrNum = usrNum;
+		}
+		@Column(name = "USR_SIGN", length = 64)
+		public String getUsrSign() {
+			return usrSign;
+		}
+
+		public void setUsrSign(String usrSign) {
+			this.usrSign = usrSign;
+		}
+		@Column(name = "USR_JOB", length = 32)
+		public String getUsrJob() {
+			return usrJob;
+		}
+
+		public void setUsrJob(String usrJob) {
+			this.usrJob = usrJob;
+		}
+		@Column(name = "USR_WAGE", length = 10)
+		public Integer getUsrWage() {
+			return usrWage;
+		}
+		
+		public void setUsrWage(Integer usrWage) {
+			this.usrWage = usrWage;
+		}
+		@Column(name = "USR_SPECIALTY", length = 128)
+		public String getUsrSpecialty() {
+			return usrSpecialty;
+		}
+
+		public void setUsrSpecialty(String usrSpecialty) {
+			this.usrSpecialty = usrSpecialty;
+		}
+		
+		@Column(name = "USR_AGE", length = 3)
+		public Integer getUsrAge() {
+			return usrAge;
+		}
+
+		public void setUsrAge(Integer usrAge) {
+			this.usrAge = usrAge;
+		}
+		@Column(name = "USR_HIGH", length = 3)
+		public Integer getUsrHigh() {
+			return usrHigh;
+		}
+
+		public void setUsrHigh(Integer usrHigh) {
+			this.usrHigh = usrHigh;
+		}
+		@Column(name = "USR_WEIGHT", length = 3)
+		public Integer getUsrWeight() {
+			return usrWeight;
+		}
+
+		public void setUsrWeight(Integer usrWeight) {
+			this.usrWeight = usrWeight;
+		}
+		@Column(name = "USR_COLOR", length = 15)
+		public String getUsrColor() {
+			return usrColor;
+		}
+		
+		public void setUsrColor(String usrColor) {
+			this.usrColor = usrColor;
+		}
+		@Column(name = "USR_NUMBER", length = 5)
+		public String getUsrNumber() {
+			return usrNumber;
+		}
+		public void setUsrNumber(String usrNumber) {
+			this.usrNumber = usrNumber;
+		}
+		
+		@Column(name = "USR_CONSTE", length = 16)
+		public String getUsrConste() {
+			return usrConste;
+		}
+
+		public void setUsrConste(String usrConste) {
+			this.usrConste = usrConste;
+		}
+		@Column(name = "USR_ZODIAC", length = 3)
+		public String getUsrZodiac() {
+			return usrZodiac;
+		}
+
+		public void setUsrZodiac(String usrZodiac) {
+			this.usrZodiac = usrZodiac;
+		}
+
+		@Column(name = "USR_NO", length = 6)
+		public String getUsrNo() {
+			return usrNo;
+		}
+
+		public void setUsrNo(String usrNo) {
+			this.usrNo = usrNo;
+		}
+
+		@Column(name = "INVITE_NO", length = 6)
+		public String getInviteNo() {
+			return inviteNo;
+		}
+
+		public void setInviteNo(String inviteNo) {
+			this.inviteNo = inviteNo;
+		}
+		
+		@Column(name = "USR_BLOOD", length = 2)
+		public String getUsrBlood() {
+			return usrBlood;
+		}
+
+		public void setUsrBlood(String usrBlood) {
+			this.usrBlood = usrBlood;
+		}
+		@Column(name = "USR_HOBBY", length = 30)
+		public String getUsrHobby() {
+			return usrHobby;
+		}
+
+		public void setUsrHobby(String usrHobby) {
+			this.usrHobby = usrHobby;
+		}
+		
+		
+
+}

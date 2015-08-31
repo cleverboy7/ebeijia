@@ -1,0 +1,28 @@
+package com.ebeijia.controller.list.wechat;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.service.wechat.group.WechatSubGroupService;
+
+@Controller
+@RequestMapping(value="/list")
+public class ListSubGroupId {
+	
+	@Autowired
+	private WechatSubGroupService wechatSubGroupService;
+	
+	//获取关注者组别
+	@RequestMapping(value="subGroup.html")
+	public @ResponseBody Map<String, Object> subGroup(HttpServletRequest request){
+		String mchtId =request.getParameter("mchtId");
+		Map<String, Object> map = wechatSubGroupService.listGroupByMchtId(mchtId);
+		return map;
+	}
+}

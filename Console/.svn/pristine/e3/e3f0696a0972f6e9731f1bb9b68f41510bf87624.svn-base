@@ -1,0 +1,46 @@
+package com.ebeijia.dao.wechat;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.ebeijia.dao.base.BaseDao;
+import com.ebeijia.dao.base.BaseDaoImplHibernate;
+import com.ebeijia.entity.page.Page;
+import com.ebeijia.entity.page.PageEntity;
+import com.ebeijia.entity.wechat.TblWechatReqMsg;
+
+@Repository("WechatReqMsgDao")
+public class WechatReqMsgDao extends BaseDaoImplHibernate<TblWechatReqMsg> implements BaseDao<TblWechatReqMsg> {
+
+	public List<TblWechatReqMsg> getWechatReqMsgList(){
+		List<TblWechatReqMsg> wechatReqMsgList = new ArrayList<TblWechatReqMsg>();
+		String hql = "FROM TblWechatReqMsg ";
+		wechatReqMsgList = getHibernateTemplate().find(hql);
+		return wechatReqMsgList;
+	}
+	
+	/**
+	 * 获取实体信息的总数
+	 * @return Integer 当前实体类在数据库的信息总数
+	 */
+	public Integer countTotalNum(TblWechatReqMsg wechatReqMsg){
+		String hql ="SELECT COUNT(*) FROM TblWechatReqMsg";
+		return ((Long) this.getHibernateTemplate().find(hql).get(0)).intValue();
+	}
+	
+	/**
+	 * 分页方法
+	 * @param query:sql语句
+	 * @param aoData:分页对象
+	 * @return Map<String,Object>
+	 */
+	public Map<String,Object> findByPage(String query , String aoData){
+		PageEntity page =new PageEntity();
+		page=Page.init(aoData);
+		Map<String,Object> m = this.findByPageAndTotal(query.toString(),page.getiDisplayStart(),page.getiDisplayLength());
+		return m;
+	}
+}

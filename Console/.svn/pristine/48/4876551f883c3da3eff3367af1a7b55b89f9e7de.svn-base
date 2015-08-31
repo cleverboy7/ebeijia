@@ -1,0 +1,31 @@
+package com.ebeijia.entity.vo.wechat.mass;
+
+/** 
+ * 群发所有，用户组 
+ *  
+ * @author zhicheng.xu 
+ * @date 2015-04-19
+ */  
+public class SendMpnewsMass extends BaseMass {  
+	
+    private Filter filter;
+
+    private Mpnews mpnews;
+
+	public Filter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+
+	public Mpnews getMpnews() {
+		return mpnews;
+	}
+
+	public void setMpnews(Mpnews mpnews) {
+		this.mpnews = mpnews;
+	}
+
+}  

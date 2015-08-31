@@ -1,0 +1,14 @@
+package com.ebeijia.service.wechat.msg;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ebeijia.dao.wechat.WechatConfigDao;
+
+@Service
+public final class WechatConfigServiceImpl implements WechatConfigService {
+
+	@Autowired
+	private WechatConfigDao wechatConfigDao;
+
+}

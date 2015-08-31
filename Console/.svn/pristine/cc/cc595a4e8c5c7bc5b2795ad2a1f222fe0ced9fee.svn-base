@@ -1,0 +1,30 @@
+package com.ebeijia.entity.vo.wechat.mass;
+
+/** 
+ * 群发所有，用户组 
+ *  
+ * @author zhicheng.xu 
+ * @date 2015-04-19
+ */  
+public class SendVoiceMass extends BaseMass {  
+	
+    private Filter filter;
+
+    private Voice voice;
+
+	public Filter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+
+	public Voice getVoice() {
+		return voice;
+	}
+
+	public void setVoice(Voice voice) {
+		this.voice = voice;
+	}
+}  

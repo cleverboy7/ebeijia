@@ -1,0 +1,112 @@
+package com.ebeijia.service.wechat.act;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.ebeijia.dao.wechat.WechatModDao;
+import com.ebeijia.entity.wechat.TblWechatMod;
+import com.ebeijia.entity.wechat.TblWechatRule;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+@Service
+public final class WechatModServiceImpl implements WechatModService {
+
+	@Autowired
+	private WechatModDao wechatModDao;
+	@Autowired
+	private WechatRuleService wechatRuleService;
+
+	@Override
+	@Transactional
+	public String save(String mchtId,String modName,String prizeJson,String type) {
+		TblWechatMod data = new TblWechatMod();
+		data.setModId(getModId());
+		data.setActType(type);
+		data.setMchtId(mchtId);
+		data.setModName(modName);
+		wechatModDao.save(data);
+		JsonParser jsonparer = new JsonParser();
+		JsonObject json = jsonparer.parse(prizeJson).getAsJsonObject();
+		JsonArray array =json.get("prizes").getAsJsonArray();
+		for(int i =0;i<array.size();i++){
+			TblWechatRule ruleData = new TblWechatRule();
+			JsonObject jsonElement =array.get(i).getAsJsonObject();
+			String probability = jsonElement.get("probability").getAsString();
+			String prName = jsonElement.get("prName").getAsString();
+			String prize = jsonElement.get("prize").getAsString();
+			String winNum = jsonElement.get("winNum").getAsString();
+			ruleData.setPrize(prize);
+			ruleData.setPrName(prName);
+			ruleData.setProbability(Integer.parseInt(probability));
+			ruleData.setWinNum(winNum);
+			wechatRuleService.save(ruleData,data.getModId());
+		}
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public String upd(TblWechatMod data) {
+		wechatModDao.update(data);
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public Map<String, Object> findBySql(String mchtId, String pageData) {
+		StringBuilder query =new StringBuilder();
+		query.append(" from TblWechatMod ");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND mchtId like '%").append(mchtId).append("%'");
+		}
+		query.append(" order by createTime");
+		Map<String,Object> m =wechatModDao.findByPage(query.toString(), pageData);
+		return m;
+	}
+
+	@Override
+	public String del(String id) {
+		wechatModDao.deleteById(id);
+		return null;
+	}
+
+	@Override
+	public TblWechatMod getById(String id) {
+		return wechatModDao.getById(id);
+	}
+	//根据类型查询模板
+	public Map<String, Object> modList(String mchtId,String type){
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		StringBuilder hql =new StringBuilder();
+		hql.append("FROM TblWechatMod WHERE mchtId='").append(mchtId).append("'");
+		hql.append(" and actType ='").append(type).append("' ");
+		List<TblWechatMod> dataList = wechatModDao.find(hql.toString());
+		Iterator<TblWechatMod> it = dataList.iterator();
+		List<Object> list = new LinkedList<Object>();
+		while(it.hasNext()){
+			Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+			TblWechatMod data = it.next();
+			hashMap.put("key", data.getModId()+"-"+data.getModName());
+			hashMap.put("value", data.getModId());
+			hashMap.put("url", data.getUrl());
+			list.add(hashMap);
+		}
+		map.put("info", list);
+		return map;
+	}
+
+	private String getModId() {
+		String sql = "SELECT SEQ_MOD_ID.NEXTVAL FROM DUAL";
+		String modNo = wechatModDao.getListSQL(sql).get(0).toString();
+		return modNo;
+	}
+}

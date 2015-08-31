@@ -1,0 +1,333 @@
+package com.ebeijia.service.wechat.menu;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatMenuDao;
+import com.ebeijia.entity.vo.wechat.AccessToken;
+import com.ebeijia.entity.vo.wechat.Button;
+import com.ebeijia.entity.vo.wechat.CommonButton;
+import com.ebeijia.entity.vo.wechat.ComplexButton;
+import com.ebeijia.entity.vo.wechat.Menu;
+import com.ebeijia.entity.vo.wechat.ViewButton;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+import com.ebeijia.entity.wechat.TblWechatMenu;
+import com.ebeijia.service.wechat.core.WechatMchtInfService;
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.service.wechat.inter.MenuManager;
+import com.ebeijia.util.StringUtil;
+import com.ebeijia.util.wechat.WechatUtil;
+
+@Service
+public final class WechatMenuServiceImpl implements WechatMenuService {
+
+	@Autowired
+	private WechatMenuDao wechatMenuDao;
+	@Autowired
+	private WechatMchtInfService wechatMchtInfService;
+	@Autowired
+	private WechatTokenService wechatTokenService;
+	@Autowired
+	private MenuManager menuManager;
+	
+	
+	@Transactional
+	@CacheEvict(value="wechatMenuCache",allEntries=true)
+	public void updateWechatMenu(TblWechatMenu wechatMenu) {
+		wechatMenuDao.saveOrUpdate(wechatMenu);
+	}
+
+	@Transactional
+	@CacheEvict(value="wechatMenuCache",allEntries=true)
+	public void save(TblWechatMenu wechatMenu){
+		wechatMenuDao.save(wechatMenu);
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatMenuCache",allEntries=true)
+	public void deleteWechatMenu(TblWechatMenu wechatMenu) {
+		wechatMenuDao.update(wechatMenu);    
+	}
+
+	@Transactional
+	@CacheEvict(value="wechatMenuCache",allEntries=true)
+	public void addWechatMenu(TblWechatMenu wechatMenu) {
+		wechatMenuDao.saveOrUpdate(wechatMenu);
+	}
+
+	@Transactional
+	@Cacheable(value="wechatMenuCache",key = "#root.method.name+#id")
+	public TblWechatMenu getById(String id){
+		return wechatMenuDao.getById(id);
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMenuCache",key = "#root.method.name")
+	public List<TblWechatMenu> queryWechatMenuList() {
+		return wechatMenuDao.getWechatMenuList();
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMenuCache",key = "#root.method.name+#wechatMenu")
+	public int countTotalNum(TblWechatMenu wechatMenu){
+		return wechatMenuDao.countTotalNum(wechatMenu);
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMenuCache",key = "#root.method.name+#id")
+	public TblWechatMenu queryWechatMenuById(int id){
+		return wechatMenuDao.getById(id);
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMenuCache",key = "#root.method.name+#mchtId+#groupId")
+	public Menu SynchToMenu(String mchtId,String groupId) {
+		TblWechatMchtInf tblWechatMchtInf =wechatMchtInfService.getById(mchtId);
+        AccessToken at = wechatTokenService.getAccessToken(tblWechatMchtInf.getAppid(), tblWechatMchtInf.getAppsecret());  
+        Menu menu = new Menu();
+        JSONObject jsonObject = null;
+		// 异常时返回内容
+		String result = null;
+        if (null != at) {
+        	menu =getMenu(mchtId,groupId);
+			jsonObject = menuManager.createMenu(menu, at.getToken());
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					return menu;
+				}
+			} else {
+				result = "8888888";
+			}
+		} else {
+			result = "9999999";
+		}
+		return menu;  
+	}  
+	
+	@Transactional
+	@Cacheable(value="wechatMenuCache",key = "#root.method.name+#menuKey+#mchtId")
+	public List<TblWechatMenu> findByHql(String menuKey,String mchtId){
+		String hql = "FROM TblWechatMenu WHERE menuKey = '" + menuKey + "'";
+		return wechatMenuDao.find(hql);
+	}
+	
+	
+	/**
+	 * 从DB中查出的菜单转换为微信API格式
+	 * @param groupId
+	 * @param mchtId
+	 * @return
+	 */
+	@Transactional
+	@Cacheable(value="wechatMenuCache",key = "#root.method.name+#mchtId+#groupId")
+	private Menu getMenu(String mchtId,String groupId){
+		StringBuilder sb =new StringBuilder();
+    	sb.append("from TblWechatMenu where mchtId = '").append(mchtId).append("' ");
+    	sb.append(" and  groupId ='").append(groupId).append("' order by orderNo");
+    	List<TblWechatMenu> listMenu = wechatMenuDao.find(sb.toString());
+    	//一级菜单
+		Map<String, TblWechatMenu> mapFir = this.tblWechatFirMenuFormate(listMenu);
+		//二级菜单
+		Map<String, TblWechatMenu> mapSec = this.tblWechatSecMenuFormate(listMenu);
+		//记录是否有二级菜单
+		Boolean flag = false;
+		Menu menu = new Menu();
+		// 转换菜单格式
+		Button[] button = new Button[mapFir.size()]; //一级菜单数组
+		Iterator<String> interator = mapFir.keySet().iterator();
+		int i = 0;
+		int count = 0;//记录二级菜单的数量
+		while(interator.hasNext()) {
+			String key = interator.next();
+			TblWechatMenu rootMenu = mapFir.get(key);
+			Iterator<String> interatorSec = mapSec.keySet().iterator();
+			while(interatorSec.hasNext()) {
+				String keySec = interatorSec.next();
+				if(mapSec.get(keySec).getParentId().equals(rootMenu.getMenuId())){
+					flag = true;
+					count++;
+				}
+			}
+			// 没有二级菜单
+			if(!flag){
+				// 事件菜单
+				if("1".equals(rootMenu.getType()) ){
+					CommonButton btn = new CommonButton();
+					btn.setType("click");
+					btn.setName(rootMenu.getMenuName());
+					btn.setKey(rootMenu.getMenuKey());
+					//一级菜单按钮放入一级菜单数组中
+					button[i] = btn;
+				}
+				// 链接菜单
+				else if("2".equals(rootMenu.getType()) ){
+					ViewButton btn = new ViewButton();
+					btn.setType("view");
+					btn.setName(rootMenu.getMenuName());
+					btn.setUrl(rootMenu.getUrl());
+					button[i] = btn;//一级菜单按钮放入一级菜单数组中
+				}
+			}
+			// 解析二级菜单
+			else{
+				// 有二级菜单的一级菜单对象
+				ComplexButton rootBtn = new ComplexButton(); 
+				rootBtn.setName(rootMenu.getMenuName());
+				// 二级菜单数组
+				Button[] subButton = new Button[count];
+				Iterator<String> interatorMapSec = mapSec.keySet().iterator();
+				int j = 0;
+				while (interatorMapSec.hasNext()) {
+					String keyMapSec = interatorMapSec.next();
+					if(mapSec.get(keyMapSec).getParentId().equals(rootMenu.getMenuId())){
+						TblWechatMenu subMenu = mapSec.get(keyMapSec);
+						// 事件菜单
+						if("1".equals(subMenu.getType()) ){
+							CommonButton btn = new CommonButton();
+							btn.setType("click");
+							btn.setName(subMenu.getMenuName());
+							btn.setKey(subMenu.getMenuKey());
+							subButton[j] = btn;//二级菜单按钮放入二级菜单数组中
+						}
+						// 链接菜单
+						else if("2".equals(subMenu.getType()) ){
+							ViewButton btn = new ViewButton();
+							btn.setType("view");
+							btn.setName(subMenu.getMenuName());
+							btn.setUrl(subMenu.getUrl());
+							subButton[j] = btn;//二级菜单按钮放入二级菜单数组中
+						}
+						j++;
+					}
+				}
+				rootBtn.setSub_button(subButton);//二级菜单赋给一级菜单
+				button[i] = rootBtn;
+			}
+			i++;
+			flag = false;
+			count = 0;
+		}
+		menu.setButton(button);
+		return menu;
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatMenuCache",allEntries=true)
+	public void modifyMenuById(TblWechatMenu tblWechatMenu){
+		wechatMenuDao.update(tblWechatMenu);
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatMenuCache",allEntries=true)
+	public String deleteMenuById(String menuId){
+		TblWechatMenu tblWechatMenu = wechatMenuDao.getById(menuId);
+		String mchtId = tblWechatMenu.getMchtId();
+		String result =null;
+		if(tblWechatMenu.getParentId().equals("-")) {
+			//如果是主菜单 删除其子菜单
+			String sql = "from TblWechatMenu where parentId = '"+tblWechatMenu.getMenuId()+"' and mchtId = '" + mchtId + "'";
+			List<TblWechatMenu> list = wechatMenuDao.find(sql);
+			if(list != null && !list.isEmpty()) {
+				result ="没有找到此菜单";
+			}
+			//删除所有的子菜单
+			String sqlDeleteMenu = "delete from TblWechatMenu where mchtId = '" + mchtId +"' and "+ "parentId = '" + menuId + "'";
+			wechatMenuDao.updateAll(sqlDeleteMenu);
+		}
+		wechatMenuDao.delete(tblWechatMenu);
+		return result;
+	}
+	
+	
+	
+	@Transactional
+	@Cacheable(value="wechatMenuCache")
+	public Map<String,Object> findBySql(String mchtId,String groupId,String pagaData) {
+		StringBuilder query =new StringBuilder();
+		query.append("from TblWechatMenu");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND id.mchtId like '%").append(mchtId).append("%'");
+		}
+		if(groupId!=null && !"".equals(groupId)){
+			query.append(" AND groupId like '%").append(groupId).append("%'");
+		}
+		query.append( " ORDER BY groupId,orderNo,parentId");
+		Map<String,Object> m =wechatMenuDao.findByPage(query.toString(), pagaData);
+		return m;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMenuCache",key = "#root.method.name+#mchtId+#groupId")
+	public Map<String, Object> listFind(String mchtId ,String groupId){
+		String hql = "FROM TblWechatMenu where mchtId = ? and groupId = ? and parentId = '-' ORDER BY menuId";
+		List<TblWechatMenu> tblWechatMenu = wechatMenuDao.find(hql,mchtId,groupId);
+		Iterator<TblWechatMenu> it = tblWechatMenu.iterator();
+		List<Object> list = new LinkedList<Object>();
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		while(it.hasNext()){
+			Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+			TblWechatMenu tblMenu = it.next();
+			hashMap.put("key", tblMenu.getMenuId()+ "-" + tblMenu.getMenuName());
+			hashMap.put("value", tblMenu.getMenuId());
+			list.add(hashMap);
+		}
+		map.put("info", list);
+		return map;
+	}
+	
+	@Transactional
+	public String getMenuId() {
+		String sql = "SELECT SEQ_WECHAT_MENU_ID.NEXTVAL FROM DUAL";
+		String menuId = wechatMenuDao.getListSQL(sql).get(0).toString();
+		return StringUtil.beforFillValue(menuId, 10, '0');
+	}
+	
+	/**
+	 * 微信菜单格式化一级菜单
+	 * @param menus
+	 * @return
+	 */
+	private Map<String, TblWechatMenu> tblWechatFirMenuFormate(List<TblWechatMenu> menus){
+		// 使用有序的map集合
+		Map<String, TblWechatMenu> map = new LinkedHashMap<String, TblWechatMenu>();
+		// 组装从DB读取的菜单
+		for(TblWechatMenu menu : menus){
+			if(null == menu.getParentId() || menu.getParentId().equals("-")){
+//				System.out.println("parentId:" + menu.getParentId());
+				map.put(menu.getMenuId(), menu); // 父菜单
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * 微信菜单格式化二级菜单
+	 * @param menus
+	 * @return
+	 */
+	private Map<String, TblWechatMenu> tblWechatSecMenuFormate(List<TblWechatMenu> menus){
+		// 使用有序的map集合
+		Map<String, TblWechatMenu> map = new LinkedHashMap<String, TblWechatMenu>();
+		// 组装从DB读取的菜单
+		for(TblWechatMenu menu : menus){
+			if(!menu.getParentId().equals("-")){
+				map.put(menu.getMenuId(), menu); // 子菜单
+			}
+		}
+		return map;
+	}
+}

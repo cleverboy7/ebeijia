@@ -1,0 +1,55 @@
+package com.ebeijia.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "TBL_PIC_INF")
+public class TblPicInf {
+	private String picId;
+	private String picType;
+	private String picName;
+	private String picUrl;
+	public TblPicInf(){
+		
+	}
+	public TblPicInf(String picId, String picType, String picName, String picUrl) {
+		super();
+		this.picId = picId;
+		this.picType = picType;
+		this.picName = picName;
+		this.picUrl = picUrl;
+	}
+	@Id
+	@Column(name = "PIC_ID", unique = true, nullable = false, length = 10)
+	public String getPicId() {
+		return picId;
+	}
+	public void setPicId(String picId) {
+		this.picId = picId;
+	}
+	@Column(name = "PIC_TYPE", length = 2)
+	public String getPicType() {
+		return picType;
+	}
+	public void setPicType(String picType) {
+		this.picType = picType;
+	}
+	@Column(name = "PIC_NAME", length = 64)
+	public String getPicName() {
+		return picName;
+	}
+	public void setPicName(String picName) {
+		this.picName = picName;
+	}
+	@Column(name = "PIC_URL", length = 128)
+	public String getPicUrl() {
+		return picUrl;
+	}
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+	
+}

@@ -1,0 +1,108 @@
+package com.ebeijia.controller.action.wechat.msg;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.DateTime4J;
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.wechat.TblWechatRespMsg;
+import com.ebeijia.service.wechat.msg.WechatRespMsgService;
+import com.ebeijia.util.Constant;
+@Controller
+@RequestMapping(value="/wechat/respMsg")
+public class WechatRespMsgAddAction {
+	@Autowired
+	private WechatRespMsgService wechatRespMsgService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatRespMsgAddAction.class);
+	
+	@RequestMapping(value="add.html",method = RequestMethod.POST)
+	@MyLog(remark="微信回复消息新增")
+	@ResponseBody
+	public Map<String, Object> add(HttpSession session,HttpServletRequest request) {
+		TblWechatRespMsg tblWechatRespMsg = this.build(request);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(tblWechatRespMsg == null){
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		String articlesJson = request.getParameter("articles");
+		String mchtId=request.getParameter("mchtId");
+		String keywords=request.getParameter("keywords");
+		String msgType=request.getParameter("msgType");
+		if("news".equals(msgType)){
+			if("".equals(articlesJson) || articlesJson == null){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "微信图文格式不正确", "");
+				return map;
+			}
+		}
+		try{
+			//验证关键字限制
+			int total = wechatRespMsgService.check(null,mchtId,keywords);
+			if(total >0){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "关键字已存在！", "");
+				return map;
+			}
+			wechatRespMsgService.save(tblWechatRespMsg,articlesJson);
+			map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			return map;
+		}catch(Exception e){
+			logger.info("微信回复消息新增失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "微信回复消息新增失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	//绑定实体类
+	private TblWechatRespMsg build(HttpServletRequest request){
+		String mchtId=request.getParameter("mchtId");
+		String keywords=request.getParameter("keywords");
+		String keywordType=request.getParameter("keywordType");
+		String respType=request.getParameter("respType");
+		String msgType=request.getParameter("msgType");
+		String content=request.getParameter("content");
+		String picUrl=request.getParameter("picUrl");
+		String title=request.getParameter("title");
+		String dsc=request.getParameter("dsc");
+		String url=request.getParameter("url");
+		String mediaId=request.getParameter("mediaId");
+		String musicUrl=request.getParameter("musicUrl");
+		String hqMusicUrl=request.getParameter("hqMusicUrl");
+		String[][] s = { { mchtId, "15", "15" } ,{ keywords, "0", "32" },{ keywordType, "1", "1" },
+				{ respType, "4", "6" },{ msgType, "4", "25" },{ content, "0", "1000" },{ picUrl, "0", "256" }
+				,{ title, "0", "64" },{ dsc, "0", "1024" },{ url, "0", "256" },{ mediaId, "0", "256" }
+				,{ musicUrl, "0", "256" },{ hqMusicUrl, "0", "256" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			return null;
+		}
+		TblWechatRespMsg tblWechatRespMsg=new TblWechatRespMsg();
+		tblWechatRespMsg.setMchtId(mchtId);
+		tblWechatRespMsg.setRespMsgId(wechatRespMsgService.getRespMsgId());
+		tblWechatRespMsg.setKeywords(keywords);
+		tblWechatRespMsg.setKeywordType(keywordType);
+		tblWechatRespMsg.setRespType(respType);
+		tblWechatRespMsg.setMsgType(msgType);
+		tblWechatRespMsg.setContent(content);
+		tblWechatRespMsg.setPicUrl(picUrl);
+		tblWechatRespMsg.setUrl(url);
+		tblWechatRespMsg.setTitle(title);
+		tblWechatRespMsg.setDescription(dsc);
+		tblWechatRespMsg.setMediaId(mediaId);
+		tblWechatRespMsg.setMusicUrl(musicUrl);
+		tblWechatRespMsg.setHqMusicUrl(hqMusicUrl);
+		tblWechatRespMsg.setCreateTime(DateTime4J.getCurrentDateTime());
+		return tblWechatRespMsg;
+	}
+}

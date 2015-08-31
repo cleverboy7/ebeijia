@@ -1,0 +1,71 @@
+package com.ebeijia.service.wechat.inter;
+
+
+import net.sf.json.JSONObject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ebeijia.entity.vo.wechat.Menu;
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.util.wechat.WechatUtil;
+/** 
+ * 菜单管理器类 
+ * @author zhicheng.xu
+ * @date 2015-01-15 
+ */  
+
+@Service("MenuManager")
+public class MenuManagerImpl implements MenuManager{  
+  
+	
+	private static Logger logger = LoggerFactory.getLogger(MenuManagerImpl.class);
+	
+	@Autowired
+	private WechatTokenService wechatTokenService;
+    /** 
+     * 同步菜单 
+     * @param menu 菜单实例 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+    public JSONObject createMenu(Menu menu, String accessToken) {  
+        String url = WechatUtil.MENU_CREATE_URL.replace("ACCESS_TOKEN", accessToken);  
+        String jsonMenu = JSONObject.fromObject(menu).toString();  
+        JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", jsonMenu);  
+        return jsonObject;  
+    }  
+    
+    /** 
+     * 删除菜单 
+     * @param menu 菜单实例 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public  int deleteMenu(String accessToken) {
+		int result = -2; 
+	    String requestUrl = WechatUtil.MENU_DEL_URL.replace("ACCESS_TOKEN", accessToken);
+	    JSONObject jsonObject = wechatTokenService.httpRequest(requestUrl, "GET", null);
+	    if (null != jsonObject) {  
+            if (0 != jsonObject.getInt("errcode")) {  
+                result = jsonObject.getInt("errcode");  
+                logger.info("删除菜单失败 errcode:{"+ jsonObject.getInt("errcode")+"} errmsg:{,"+jsonObject.getString("errmsg")+"}");
+            }  
+        }  
+        return result;  
+	}
+	
+	/** 
+     * 查询菜单 
+     * @param menu 菜单实例 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public  JSONObject getMenu(String accessToken) {
+	    String requestUrl = WechatUtil.MENU_GET_URL.replace("ACCESS_TOKEN", accessToken);
+	    JSONObject jsonObject = wechatTokenService.httpRequest(requestUrl, "post", null);
+        return jsonObject;  
+	}
+}  

@@ -1,0 +1,97 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "TBL_WECHAT_FODDER")
+public class TblWechatFodder implements java.io.Serializable{
+	
+	private static final long serialVersionUID = 1L;
+
+    private String  media ; 
+    private String  mchtId ;
+    private String  name ;
+    private String   dsc ;
+    private String  type  ;
+    private String mediaType ;
+    private String url  ;
+    private String wechatUrl;
+    private String createTime ;
+    
+    /** default constructor */
+   	public TblWechatFodder() {
+   		
+   	}
+   	@Id
+	@Column(name = "MEDIA", unique = true, nullable = false, length = 100)
+   	public String getMedia() {
+		return media;
+	}
+	public void setMedia(String media) {
+		this.media = media;
+	}
+	
+	@Column(name = "MCHT_ID", nullable = false, length = 15)
+	public String getMchtId() {
+		return mchtId;
+	}
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+	@Column(name = "NAME", nullable = false, length = 30)
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Column(name = "DSC", nullable = false, length = 64)
+	public String getDsc() {
+		return dsc;
+	}
+	public void setDsc(String dsc) {
+		this.dsc = dsc;
+	}
+	@Column(name = "TYPE", nullable = false, length = 5)
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	@Column(name = "MEDIA_TYPE", nullable = false, length = 1)
+	public String getMediaType() {
+		return mediaType;
+	}
+	public void setMediaType(String mediaType) {
+		this.mediaType = mediaType;
+	}
+	@Column(name = "URL", nullable = false, length = 128)
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	@Column(name = "WECHAT_URL", nullable = false, length = 128)
+	public String getWechatUrl() {
+		return wechatUrl;
+	}
+	public void setWechatUrl(String wechatUrl) {
+		this.wechatUrl = wechatUrl;
+	}
+	@Column(name = "CREATE_TIME", nullable = false, length = 14)
+	public String getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+}

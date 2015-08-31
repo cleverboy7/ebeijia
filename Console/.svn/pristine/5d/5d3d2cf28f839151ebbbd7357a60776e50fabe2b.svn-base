@@ -1,0 +1,57 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+
+
+@Entity
+@Table(name = "TBL_WECHAT_KF")
+public class TblWechatKf implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	private TblWechatKfId id;
+
+    private String kfNick;
+    private String kfPwd;
+    
+	public TblWechatKf() {
+		
+	}
+	
+	@EmbeddedId
+	@AttributeOverrides( {
+			@AttributeOverride(name = "kfId", column = @Column(name = "KF_ID", nullable = false, length = 32)),
+			@AttributeOverride(name = "mchtId", column = @Column(name = "MCHT_ID", nullable = false, length = 32))})
+	public TblWechatKfId getId() {
+		return id;
+	}
+
+	public void setId(TblWechatKfId id) {
+		this.id = id;
+	}
+
+	@Column(name = "KF_NICK",length = 32)
+	public String getKfNick() {
+		return kfNick;
+	}
+
+	public void setKfNick(String kfNick) {
+		this.kfNick = kfNick;
+	}
+
+	@Column(name = "KF_PWD",length = 32)
+	public String getKfPwd() {
+		return kfPwd;
+	}
+
+	public void setKfPwd(String kfPwd) {
+		this.kfPwd = kfPwd;
+	}
+
+}

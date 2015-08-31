@@ -1,0 +1,30 @@
+package com.ebeijia.entity.vo.wechat.mass;
+
+/** 
+ * 群发所有，用户组 
+ *  
+ * @author zhicheng.xu 
+ * @date 2015-04-19
+ */  
+public class SendImageMass extends BaseMass {  
+	
+    private Filter filter;
+
+    private Image image;
+
+	public Filter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+}  

@@ -1,0 +1,28 @@
+package com.ebeijia.controller.list.wechat;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.service.wechat.menu.WechatMenuGroupService;
+
+@Controller
+@RequestMapping(value="/list")
+public class ListGroupId {
+	
+	@Autowired
+	private WechatMenuGroupService wechatMenuGroupService;
+	
+	//获取商户级别
+	@RequestMapping(value="groupId.html") 
+	public @ResponseBody Map<String, Object> listGroupId(HttpServletRequest request){
+		String mchtId =request.getParameter("mchtId");
+		Map<String, Object> map = wechatMenuGroupService.listFind(mchtId);
+		return map;
+	}
+}

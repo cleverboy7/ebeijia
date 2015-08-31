@@ -1,0 +1,44 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "TBL_WECHAT_SN")
+public class TblWechatSn implements java.io.Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
+    private TblWechatSnId id;
+    private String actType;
+    
+	public TblWechatSn() {
+	}
+	
+	@EmbeddedId
+	@AttributeOverrides( {
+			@AttributeOverride(name = "snCode", column = @Column(name = "SN_CODE", nullable = false, length = 20)),
+			@AttributeOverride(name = "mchtId", column = @Column(name = "MCHT_ID", nullable = false, length = 15))})
+	public TblWechatSnId getId() {
+		return id;
+	}
+
+	public void setId(TblWechatSnId id) {
+		this.id = id;
+	}
+	
+	@Column(name = "ACT_TYPE", length = 1)
+	public String getActType() {
+		return actType;
+	}
+
+	public void setActType(String actType) {
+		this.actType = actType;
+	}
+
+}

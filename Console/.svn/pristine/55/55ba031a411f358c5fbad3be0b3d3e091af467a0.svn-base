@@ -1,0 +1,7 @@
+package com.ebeijia.service.file;
+
+
+public interface FileService {
+	
+	public void generateHTML(String fileInfo) throws Exception;
+}

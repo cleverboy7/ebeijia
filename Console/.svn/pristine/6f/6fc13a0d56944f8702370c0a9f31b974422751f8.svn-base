@@ -1,0 +1,28 @@
+.notfound {
+	overflow-y: hidden;
+	padding: 70px;
+	text-align: center;
+}
+
+.notfound > h4 {
+	margin-bottom: 30px;
+	font-size: 24px;
+	font-weight: normal;
+}
+
+.notfound > span {
+	display: inline-block;
+	margin: 0 5px;
+	padding: 10px 30px;
+	background-color: #333;
+	font-size: 120px;
+	color: white;
+}
+
+.notfound > button {
+	width: 180px;
+	height: 44px;
+	margin-top: 20px;
+	cursor: pointer;
+	color: white;
+}

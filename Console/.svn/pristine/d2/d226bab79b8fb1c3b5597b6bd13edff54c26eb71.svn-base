@@ -1,0 +1,132 @@
+package com.ebeijia.controller.action.admin;
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.DateTime4J;
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.TblAdminInf;
+import com.ebeijia.service.adminInf.AdminInfService;
+import com.ebeijia.util.Constant;
+import com.ebeijia.util.EncryptMD5Util;
+
+@Controller
+@RequestMapping(value="/wechat/admin")
+public class AdminInfUpdAction {
+	
+	@Autowired
+	private AdminInfService adminInfService;
+	
+	private static Logger logger = LoggerFactory.getLogger(AdminInfUpdAction.class);
+	
+	@RequestMapping(value="upd.html",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> upd(HttpSession session,HttpServletRequest request) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String adminId =request.getParameter("adminId");
+		String adminName =request.getParameter("adminName");
+		String roleId =request.getParameter("roleId");
+		String adminDsc =request.getParameter("dsc");
+		String[][] s = { { adminId, "1", "10" },{ adminName, "4", "32" } ,
+				{ roleId, "1", "6" },{ adminDsc, "0", "128" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		TblAdminInf tblAdminInf =adminInfService.getById(adminId);
+		if(tblAdminInf == null){
+			map = AjaxResp.getReturn(Constant.ERROR_CODE,"该用户不存在", "");
+			return map;
+		}
+		tblAdminInf.setAdminId(adminId);
+		tblAdminInf.setAdminName(adminName);
+		tblAdminInf.setRoleId(roleId);
+		tblAdminInf.setAdminDsc(adminDsc);
+		tblAdminInf.setUpdTime(DateTime4J.getCurrentDateTime());
+		try{
+			adminInfService.update(tblAdminInf);
+			map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			return map;
+		}catch (Exception e) {
+			logger.info("修改管理员失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "修改管理员失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+
+	
+	@RequestMapping(value="passUpd.html",method = RequestMethod.POST)
+	@MyLog(remark="管理员修改密码") 
+	@ResponseBody
+	public Map<String, Object> passUpd(HttpSession session,HttpServletRequest request) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String adminId =request.getParameter("adminId");
+		String oldPwd=request.getParameter("oldPwd");
+		String newPwd=request.getParameter("newPwd");
+		String[][] s = {{ adminId, "1", "10" }, { newPwd, "6", "32" }, { oldPwd, "6", "32" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "密码格式不正确", "");
+			return map;
+		}
+		try{
+			List<TblAdminInf> list = adminInfService.checkAdmin(adminId,EncryptMD5Util.encrypt(oldPwd));
+			if(list.isEmpty()){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "账户不存在", "");
+				return map;
+			}else{
+				TblAdminInf tblAdminInf=list.get(0);
+				tblAdminInf.setAdminPwd(EncryptMD5Util.encrypt(newPwd));
+				tblAdminInf.setUpdTime(DateTime4J.getCurrentDateTime());
+				adminInfService.update(tblAdminInf);
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+				return map;
+			}
+		}catch (Exception e) {
+			logger.info("管理员修改密码失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "管理员修改密码失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	@RequestMapping(value="del.html",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> del(HttpSession session,HttpServletRequest request) {
+		String adminId = request.getParameter("adminId");
+		String[][] s = {{ adminId, "1", "10" }};
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "id格式不正确", "");
+			return map;
+		}
+		try{
+			TblAdminInf tblAdminInf =adminInfService.getById(adminId);
+			if(tblAdminInf ==null){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "账户不存在", "");
+				return map;
+			}else{
+				adminInfService.delById(tblAdminInf.getAdminId());
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+				return map;
+			}
+		}catch (Exception e) {
+			logger.info("删除管理员失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "删除管理员失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+}

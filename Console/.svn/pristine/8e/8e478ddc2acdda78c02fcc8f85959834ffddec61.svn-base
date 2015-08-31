@@ -1,0 +1,24 @@
+package com.ebeijia.service.wechat.media;
+
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatFodder;
+
+public interface WechatFodderService {
+	// 分页查询
+	public Map<String, Object> findBySql(String mchtId, String type,String mediaType,String aoData);
+	//修改素材(只修改本地)
+	public void upFodder(String media,String name,String dsc);
+	//删除素材(需和服务器同步)
+	public String delFodder(String mchtId,String media);
+//	//图片素材列表
+//	public Map<String, Object> imageList(String mchtId);
+	//根据类型素材列表
+	public Map<String, Object> mediaList(String mchtId,String msgType);
+	// 分页查询图文
+	public Map<String, Object> findBySqltoNews(String mchtId,String aoData);
+	//保存素材
+	public void save(TblWechatFodder data);
+	//根据id获取主键
+	public TblWechatFodder getById(String id);
+}

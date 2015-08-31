@@ -1,0 +1,63 @@
+package com.ebeijia.controller.action.wechat.template;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.service.wechat.template.WechatTemplateService;
+import com.ebeijia.util.Constant;
+import com.ebeijia.util.wechat.WechatError;
+
+/**
+ * @author zhicheng.xu
+ * @date 2015年5月4日
+ */
+@Controller
+@RequestMapping(value="/wechat/template")
+public class WechatTemplateAddAction {
+	@Autowired
+	private WechatTemplateService wechatTemplateService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatTemplateAddAction.class);
+	
+	@RequestMapping(value="add.html",method = RequestMethod.POST)
+	@MyLog(remark="设置行业模板")
+	@ResponseBody
+	public Map<String, Object> add(HttpSession session,HttpServletRequest request) {
+		String mchtId =request.getParameter("mchtId");
+		String id1 =request.getParameter("id1");
+		String id2 =request.getParameter("id2");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" } ,{ id1, "1", "6" },{ id2, "0", "6" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			String respMsg =wechatTemplateService.set(mchtId,id1,id2);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, WechatError.checkCode(respMsg), "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("设置行业模板失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "设置行业模板失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+}

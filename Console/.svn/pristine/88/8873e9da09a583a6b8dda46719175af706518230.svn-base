@@ -1,0 +1,98 @@
+package com.ebeijia.controller.action.wechat.mass;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.service.wechat.mass.WechatMassService;
+import com.ebeijia.util.Constant;
+import com.ebeijia.util.wechat.WechatError;
+
+@Controller
+@RequestMapping(value="/wechat/mass")
+public class WechatMassSendAction {
+
+	@Autowired
+	private WechatMassService wechatMassService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatMassSendAction.class);
+	
+
+	@RequestMapping(value="sendAll.html",method = RequestMethod.POST)
+	@MyLog(remark="微信群发消息")
+	@ResponseBody
+	public Map<String, Object> sendAll(HttpSession session,HttpServletRequest request) {
+		String mchtId =request.getParameter("mchtId");
+		String content =request.getParameter("content");
+		String type =request.getParameter("type");
+		String groupId =request.getParameter("groupId");
+		String media =request.getParameter("media");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" }, { content, "0", "128" },
+				{ type, "4", "5" }, { groupId, "1", "6" },
+				{ media, "0", "100" } };
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			String respMsg = wechatMassService.sendByGroup(mchtId,content,type,groupId,media);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, WechatError.checkCode(respMsg), "");
+			}
+			return map;
+		}catch(Exception e){
+			request.setAttribute("message", "群发消息失败");
+			logger.info("群发消息失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "群发消息失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	@RequestMapping(value="sendUsr.html",method = RequestMethod.POST)
+	@MyLog(remark="微信筛选群发消息")
+	@ResponseBody
+	public Map<String, Object> sendUsr(HttpSession session,HttpServletRequest request) {
+		String mchtId =request.getParameter("mchtId");
+		String content =request.getParameter("content");
+		String msgtype =request.getParameter("msgType");
+		String toUsr =request.getParameter("toUsr");
+		String media =request.getParameter("media");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" }, { content, "0", "128" },
+				{ msgtype, "4", "5" }, { toUsr, "1", null },
+				{ media, "0", "100" } };
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			String respMsg = wechatMassService.sendByUsr(mchtId,content,msgtype,toUsr,media);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, WechatError.checkCode(respMsg), "");
+			}
+			return map;
+		}catch(Exception e){
+			request.setAttribute("message", "筛选群发消息失败");
+			logger.info("筛选群发消息失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "筛选群发消息失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+}

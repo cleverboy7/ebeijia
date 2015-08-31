@@ -1,0 +1,21 @@
+package com.ebeijia.entity.vo.wechat.resp;
+
+/**
+ * 语音model
+ * 
+ * @author zhicheng.xu
+ * @date 2015-01-15
+ */
+public class Voice {
+	private String MediaId;
+
+	public String getMediaId() {
+		return MediaId;
+	}
+
+	public void setMediaId(String MediaId) {
+		this.MediaId = MediaId;
+	}
+
+	
+}

@@ -1,0 +1,235 @@
+package com.ebeijia.service.wechat.core;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.ConnectException;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.params.CookiePolicy;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+import com.ebeijia.entity.vo.wechat.AccessToken;
+import com.ebeijia.util.wechat.CustomizedHostnameVerifier;
+import com.ebeijia.util.wechat.MyX509TrustManager;
+import com.ebeijia.util.wechat.WechatUtil;
+
+@Service
+public final class WechatTokenServiceImpl implements WechatTokenService {
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatTokenServiceImpl.class);
+	/**
+	 * 发起https请求并获取结果
+	 * @param requestUrl 请求地址
+	 * @param requestMethod  请求方式（GET、POST）
+	 * @param outputStr  提交的数据
+	 * @return JSONObject(通过JSONObject.get(key)的方式获取json对象的属性值)
+	 */
+	public JSONObject httpRequest(String requestUrl, String requestMethod,
+			String outputStr) {
+		JSONObject jsonObject = null;
+		StringBuffer buffer = new StringBuffer();
+		try {
+			// 创建SSLContext对象，并使用我们指定的信任管理器初始化
+			TrustManager[] tm = { new MyX509TrustManager() };
+			SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
+			sslContext.init(null, tm, new java.security.SecureRandom());
+			// 从上述SSLContext对象中得到SSLSocketFactory对象
+			SSLSocketFactory ssf = sslContext.getSocketFactory();
+
+			URL url = new URL(requestUrl);
+			HttpsURLConnection httpUrlConn = (HttpsURLConnection) url
+					.openConnection();
+			httpUrlConn.setSSLSocketFactory(ssf);
+
+			httpUrlConn.setDoOutput(true);
+			httpUrlConn.setDoInput(true);
+			httpUrlConn.setUseCaches(false);
+			httpUrlConn.setHostnameVerifier(new CustomizedHostnameVerifier());
+			// 设置请求方式（GET/POST）
+			httpUrlConn.setRequestMethod(requestMethod);
+			System.setProperty("jsse.enableSNIExtension", "false");
+			if ("GET".equalsIgnoreCase(requestMethod))
+				httpUrlConn.connect();
+
+			// 当有数据需要提交时
+			if (null != outputStr) {
+				OutputStream outputStream = httpUrlConn.getOutputStream();
+				// 注意编码格式，防止中文乱码
+				outputStream.write(outputStr.getBytes("UTF-8"));
+				outputStream.close();
+			}
+
+			// 将返回的输入流转换成字符串
+			InputStream inputStream = httpUrlConn.getInputStream();
+			InputStreamReader inputStreamReader = new InputStreamReader(
+					inputStream, "utf-8");
+			BufferedReader bufferedReader = new BufferedReader(
+					inputStreamReader);
+
+			String str = null;
+			while ((str = bufferedReader.readLine()) != null) {
+				buffer.append(str);
+			}
+			bufferedReader.close();
+			inputStreamReader.close();
+			// 释放资源
+			inputStream.close();
+			inputStream = null;
+			httpUrlConn.disconnect();
+			jsonObject = JSONObject.fromObject(buffer.toString());
+		} catch (ConnectException ce) {
+			logger.info("Weixin server connection timed out.");
+		} catch (Exception e) {
+			logger.info("https request error:{}" + e);
+		}
+		return jsonObject;
+	}
+
+	/**
+	 * 获取access_token
+	 * @param appid 凭证
+	 * @param appsecret 密钥
+	 * @return AccessToken
+	 */
+	@Cacheable("wechatTokenCache")
+	public AccessToken getAccessToken(String appid, String appsecret) {
+		AccessToken accessToken = null;
+		String requestUrl = WechatUtil.ACCESS_TOKEN_URL.replace("APPID", appid)
+				.replace("APPSECRET", appsecret);
+		System.out.println(requestUrl);
+		JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
+		// 如果请求成功
+		if (null != jsonObject) {
+			try {
+				accessToken = new AccessToken();
+				accessToken.setToken(jsonObject.getString("access_token"));
+				accessToken.setExpiresIn(jsonObject.getInt("expires_in"));
+			} catch (JSONException e) {
+				accessToken = null;
+			}
+		}
+		return accessToken;
+	}
+
+	/**
+	 * 上传多媒体
+	 * @param url
+	 * @param access_token
+	 * @param file
+	 * @return result
+	 */
+	public JSONObject upload(String url, String access_token, File file,String type,String ext,String flag) {
+		HttpClient client = new HttpClient();
+		PostMethod post = new PostMethod(url);
+		try {
+			if (file != null && file.exists()) {
+				FilePart filepart = new FilePart("media", file, type+"/"+ext,"UTF-8");
+				Part[] parts=null;
+				//如果为永久视频则多提交一个表单
+				if(flag != null){
+					String tmp ="{\"title\":\"VIDEO_TITLE\",\"introduction\":\"INTRODUCTION\"}";
+					StringPart sp  =   new  StringPart("description",tmp);
+					parts = new Part[] { filepart,sp };
+				}else{
+					parts = new Part[] { filepart};
+				}
+				MultipartRequestEntity entity = new MultipartRequestEntity(
+						parts, post.getParams());
+				post.setRequestEntity(entity);
+				int status = client.executeMethod(post);
+				if (status == HttpStatus.SC_OK) {
+					String responseContent = post.getResponseBodyAsString();
+					return JSONObject.fromObject(responseContent);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null; 
+	}
+
+	/**
+	 * 下载多媒体
+	 * 
+	 * @param url
+	 * @param access_token
+	 * @return String
+	 */
+	public String dowload(String url,String method,String mediaId) {
+		HttpClient httpClient = new HttpClient();
+		httpClient.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");
+		BufferedReader br =null;
+		HttpResponse response =null;
+		httpClient.getParams().setCookiePolicy(CookiePolicy.IGNORE_COOKIES);
+		String result =null;
+		int statusCode = 0;
+		try {
+			GetMethod getMethod = new GetMethod(url);
+			HttpPost request = new HttpPost(url);  
+			if(method.equals("GET")){
+				statusCode = httpClient.executeMethod(getMethod);
+			}else{
+	            StringEntity se = new StringEntity("{\"media_id\":\""+mediaId+"\"}");  
+	            request.setEntity(se);  
+	            response = new DefaultHttpClient().execute(request);  
+	            statusCode = response.getStatusLine().getStatusCode();  
+			}
+			if (statusCode == 200) {
+				InputStream in = null;
+				if(method.equals("GET")){
+					in = getMethod.getResponseBodyAsStream();
+				}else{
+					in = response.getEntity().getContent();
+				}
+				br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+				String line = br.readLine();
+				if(line != null && line.indexOf("errcode") == -1){
+					result = url;
+				}else{
+					return line;
+				}
+				if (br != null)
+					br.close();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}finally{
+			if (br != null){
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+}

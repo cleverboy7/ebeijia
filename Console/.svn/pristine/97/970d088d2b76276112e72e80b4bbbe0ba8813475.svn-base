@@ -1,0 +1,24 @@
+package com.ebeijia.service.wechat.mass;
+
+import java.util.Map;
+
+
+public interface WechatMassService {
+
+	//上传图文素材
+	public String upGtMedia(String mchtId,String title ,String dsc ,String articles);
+	//上传视频素材
+	public String upVideoMedia(String mchtId ,String title,String dsc ,String mediaId);
+	//根据组别群发用户
+	public String sendByGroup(String mchtId,String content,String type,String groupId,String media);
+	//根据组别群发用户
+	public String sendByUsr(String mchtId,String content,String msgtype,String toUsr,String media);
+	//群发删除
+	public String sendDel(String mchtId,String mediaId);
+//	//群发预览
+//	public String sendPreview(String mchtId,ToGroupMass touserTextMass);
+	//群发状态查询
+	public String sendStatusFind(String mchtId,String msgId);
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String pagaData);
+}

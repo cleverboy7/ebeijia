@@ -1,0 +1,111 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "TBL_WECHAT_WINNING")
+public class TblWechatWinning implements java.io.Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
+	private String id;
+    private String mchtId;
+    private String openid;
+    private String prize;
+    private String mobile;
+    private String snCode;
+    private String actId;
+    private String actType;
+    private String createDate;
+    
+	public TblWechatWinning() {
+	}
+	
+	@Id
+	@Column(name = "MOD_ID", nullable = false, length = 20)
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+
+	@Column(name = "MCHT_ID", length = 15)
+	public String getMchtId() {
+		return mchtId;
+	}
+
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+
+
+	@Column(name = "ACT_TYPE", length = 1)
+	public String getActType() {
+		return actType;
+	}
+
+	public void setActType(String actType) {
+		this.actType = actType;
+	}
+
+	@Column(name = "OPENID", length = 256)
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+
+	@Column(name = "PRIZE", length = 32)
+	public String getPrize() {
+		return prize;
+	}
+
+	public void setPrize(String prize) {
+		this.prize = prize;
+	}
+
+	@Column(name = "MOBILE", length = 12)
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	@Column(name = "SN_CODE", length = 20)
+	public String getSnCode() {
+		return snCode;
+	}
+
+	public void setSnCode(String snCode) {
+		this.snCode = snCode;
+	}
+
+	@Column(name = "CREATE_DATE", length = 8)
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
+	}
+
+	@Column(name = "ACT_ID", length = 20)
+	public String getActId() {
+		return actId;
+	}
+
+	public void setActId(String actId) {
+		this.actId = actId;
+	}
+}

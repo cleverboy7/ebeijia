@@ -1,0 +1,75 @@
+package com.ebeijia.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "TBL_USR_BEHAV_POINT")
+public class TblUsrBehavPoint implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	private String txnCode;
+	private String txnName;
+	private String flag;
+	private Integer point;
+
+	public TblUsrBehavPoint(){
+		
+	}
+	
+	public TblUsrBehavPoint(String txnCode, String txnName, String flag,
+			Integer point) {
+		super();
+		this.txnCode = txnCode;
+		this.txnName = txnName;
+		this.flag = flag;
+		this.point = point;
+	}
+
+	@Id
+	@Column(name = "TXN_CODE", length = 6)
+	public String getTxnCode() {
+		return txnCode;
+	}
+
+	public void setTxnCode(String txnCode) {
+		this.txnCode = txnCode;
+	}
+
+	@Column(name = "TXN_NAME", length = 32)
+	public String getTxnName() {
+		return txnName;
+	}
+
+	public void setTxnName(String txnName) {
+		this.txnName = txnName;
+	}
+
+	@Column(name = "FLAG", length = 1)
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+
+	@Column(name = "POINT", length = 10)
+	public Integer getPoint() {
+		return point;
+	}
+
+	public void setPoint(Integer point) {
+		this.point = point;
+	}
+
+	@Override
+	public String toString() {
+		return "TblUsrBehavPoint [txnCode=" + txnCode + ", txnName=" + txnName
+				+ ", flag=" + flag + ", point=" + point + "]";
+	}
+
+}

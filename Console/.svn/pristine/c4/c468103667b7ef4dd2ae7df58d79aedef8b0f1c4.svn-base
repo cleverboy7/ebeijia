@@ -1,0 +1,64 @@
+package com.ebeijia.service.wechat.inter;
+
+
+import net.sf.json.JSONObject;
+
+import com.ebeijia.entity.vo.wechat.ModUsr;
+import com.ebeijia.entity.vo.wechat.UsrToGroup;
+import com.ebeijia.entity.vo.wechat.UsrsToGroup;
+
+/** 
+ * 用户管理器类 
+ * @author zhicheng.xu
+ * @date 2015-02-02
+ */  
+
+public interface UsrManager {  
+  
+    /** 
+     * 移动用户分组
+     * @param UsrToGroup 用户实例 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+    public JSONObject mvUsr(UsrToGroup utg, String accessToken) ;
+    
+    /** 
+     * 批量移动用户分组 
+     * @param UsrsToGroup 用户实例 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public JSONObject mvUsrs(UsrsToGroup utg,String accessToken) ;
+	
+	/** 
+     * 查询用户信息 
+     * @param openId 用户id
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public  JSONObject getUsrInf(String accessToken,String openId) ;
+	
+	/** 
+     * 查询关注者用户第一页 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public  JSONObject getUsr(String accessToken) ;
+	
+	/** 
+     * 查询关注者用户下一页 
+     * @param nextOpenid 下一页
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public  JSONObject getUsrNext(String accessToken,String nextOpenid);
+	
+	/** 
+     * 修改用户备注
+     * @param ModUsr 对象
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public  JSONObject upRemark(ModUsr modUsr,String accessToken);
+}  

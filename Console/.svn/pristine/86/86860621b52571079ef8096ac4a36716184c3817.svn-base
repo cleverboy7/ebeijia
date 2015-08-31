@@ -1,0 +1,26 @@
+package com.ebeijia.controller.list.wechat;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.service.mcht.MchtInfService;
+
+@Controller
+@RequestMapping(value="/list")
+public class ListWechatMchtId {
+	
+	@Autowired
+	private MchtInfService mchtInfService;
+	
+	@RequestMapping(value="mchtAll.html")
+	public @ResponseBody Map<String, Object> listMchtId(HttpServletRequest request){
+		Map<String, Object> map = mchtInfService.ListMchtId();
+		return map;
+	}
+}

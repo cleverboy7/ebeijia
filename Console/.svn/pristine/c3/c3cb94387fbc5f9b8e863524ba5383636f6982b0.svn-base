@@ -1,0 +1,28 @@
+package com.ebeijia.service.wechat.kf;
+
+import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.ebeijia.entity.vo.wechat.kf.Kf;
+import com.ebeijia.entity.wechat.TblWechatKf;
+import com.ebeijia.entity.wechat.TblWechatKfId;
+
+
+
+public interface WechatKfService {
+	//添加客服
+	public String save(String mchtId,Kf kf);
+	//修改客服
+	public String upd(String mchtId,Kf kf);
+	//删除客服
+	public String del(String mchtId,String account);
+	//上传客服头像
+	public String upHead(String mchtId,String type,MultipartFile f,String ext);
+	//验证客服限制
+	public int findCount(String mchtId);
+	//根据主键获取客服对象
+	public TblWechatKf getById(TblWechatKfId id);
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String pageData); 
+}

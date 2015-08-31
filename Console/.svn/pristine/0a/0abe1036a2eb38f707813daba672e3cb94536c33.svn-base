@@ -1,0 +1,45 @@
+package com.ebeijia.dao.usr;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.ebeijia.dao.base.BaseDao;
+import com.ebeijia.dao.base.BaseDaoImplHibernate;
+import com.ebeijia.entity.TblUsrInf;
+
+@Repository("UsrInfDao")
+public class UsrInfDao extends BaseDaoImplHibernate<TblUsrInf> implements BaseDao<TblUsrInf> {
+	
+	
+
+	public List<TblUsrInf> getUsrInfList(){
+		List<TblUsrInf> usrInfList = new ArrayList<TblUsrInf>();
+		String hql = "FROM TblUsrInf ";
+		usrInfList = getHibernateTemplate().find(hql);
+		return usrInfList;
+	}
+	
+	/**
+	 * 获取实体信息的总数
+	 * @return Integer 当前实体类在数据库的信息总数
+	 */
+	public Integer countTotalNum(TblUsrInf usrInf){
+		String hql ="SELECT COUNT(*) FROM TblUsrInf";
+		return ((Long) this.getHibernateTemplate().find(hql).get(0)).intValue();
+	}
+	
+	/**
+	 * 分页方法
+	 * @param page:当前第几页
+	 * @param size:当前页面每页显示信息的个数
+	 * @return List<T> 集合
+	 */
+	public List<TblUsrInf> findByPage(TblUsrInf usrInf,final int page, final int size){
+		String hql = "FROM TblUsrInf";
+		return super.findByPage(hql, page, size);
+	}
+	
+	
+}

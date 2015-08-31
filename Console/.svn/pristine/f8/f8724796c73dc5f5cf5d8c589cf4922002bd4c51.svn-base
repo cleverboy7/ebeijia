@@ -1,0 +1,70 @@
+package com.ebeijia.controller.action.login;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.TblAdminInf;
+import com.ebeijia.service.adminInf.AdminInfService;
+import com.ebeijia.service.roleInf.RoleInfService;
+import com.ebeijia.util.EncryptMD5Util;
+
+//后台登录
+@Controller
+public class LoginAction {
+	
+	@Autowired
+	private AdminInfService adminInfService;
+	@Autowired
+	private RoleInfService roleInfService;
+
+	@RequestMapping(value = "login.html", method = RequestMethod.POST)
+	@MyLog(remark = "用户登录")
+	public ModelAndView Login(HttpSession session, HttpServletRequest request) throws Exception {
+		ModelAndView mav = new ModelAndView();
+		String usrName = request.getParameter("usrName");
+		String loginPwd = request.getParameter("loginPwd");
+		if(loginPwd.trim()==null || "".equals(loginPwd.trim()) ||usrName.trim()==null || "".equals(usrName.trim())){
+			request.setAttribute("message", "用户名和密码不能为空！");
+			mav.setViewName("login");
+			return mav;
+		}
+		if (loginPwd.length() < 6) {
+			request.setAttribute("message", "密码不合法，请重新输入！");
+			mav.setViewName("login");
+			return mav;
+		}
+		List<TblAdminInf> adminInfs = adminInfService.login(usrName);
+		if (adminInfs.isEmpty()) {
+			request.setAttribute("message", "用户名不存在，请重新输入！");
+			mav.setViewName("login");
+			return mav;
+		} 
+		TblAdminInf tblAdminInf = adminInfs.get(0);
+		if (!EncryptMD5Util.encrypt(loginPwd).equals(tblAdminInf.getAdminPwd())) {
+			request.setAttribute("message", "用户名或密码有误，请重新输入！");
+			mav.setViewName("login");
+			return mav;
+		}
+		List l =adminInfService.usrInfHead(tblAdminInf.getAdminId());
+		String role = roleInfService.funcFind(tblAdminInf.getAdminId());
+		if(role == null){
+			request.setAttribute("message", "该用户没用权限!请联系管理员分配权限!");
+			mav.setViewName("login");
+			return mav;
+		}
+		session.setAttribute("admin", l.get(0));
+		session.setAttribute("role", role);
+		session.setAttribute("operator", tblAdminInf);
+		mav.setViewName("index");
+		return mav;
+	}
+}

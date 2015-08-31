@@ -1,0 +1,16 @@
+package com.ebeijia.util.wechat;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+
+/**
+ * @author zhicheng.xu
+ * @date 2015年5月6日
+ */
+public class CustomizedHostnameVerifier implements HostnameVerifier {
+
+	@Override
+	public boolean verify(String arg0, SSLSession arg1) {
+		return true;
+	}
+}

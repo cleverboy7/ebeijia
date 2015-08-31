@@ -1,0 +1,139 @@
+package com.ebeijia.service.wechat.msg;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatRespMsgDao;
+import com.ebeijia.entity.wechat.TblArticlesInf;
+import com.ebeijia.entity.wechat.TblWechatRespMsg;
+import com.ebeijia.service.wechat.media.ArticlesService;
+import com.ebeijia.util.StringUtil;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+@Service
+public final class WechatRespMsgServiceImpl implements WechatRespMsgService {
+
+	@Autowired
+	private WechatRespMsgDao wechatRespMsgDao;
+	@Autowired
+	private ArticlesService articlesService;
+
+	@Transactional
+	@CacheEvict(value="wechatRespMsgCache",allEntries=true)
+	public Map<String,Object> findBySql(String mchtId,String pagaData) {
+		StringBuilder query =new StringBuilder();
+		query.append("from TblWechatRespMsg");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND mchtId like '%").append(mchtId).append("%'");
+		}
+		query.append( " ORDER BY id.mchtId");
+		Map<String,Object> m =wechatRespMsgDao.findByPage(query.toString(), pagaData);
+		return m;
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatRespMsgCache",allEntries=true)
+	public void save(TblWechatRespMsg data,String articlesJson){
+		//图文Id，以逗号隔开
+		StringBuilder articleId =new StringBuilder();
+		//如果传送的是图文消息，则保存简易图文表
+		if(articlesJson != null){
+			JsonParser jsonparer = new JsonParser();
+			JsonObject json = jsonparer.parse(articlesJson).getAsJsonObject();
+			JsonArray array =json.get("articles").getAsJsonArray();
+			for(int i =0;i<array.size();i++){
+				String id =articlesService.getArticlesId();
+				TblArticlesInf artData = new TblArticlesInf();
+				JsonObject jsonElement =array.get(i).getAsJsonObject();
+				String title = jsonElement.get("title").getAsString();
+				String picUrl = jsonElement.get("picUrl").getAsString();
+				String description = jsonElement.get("description").getAsString();
+				String url = jsonElement.get("url").getAsString();
+				artData.setDescription(description);
+				artData.setId(id);
+				artData.setPicUrl(picUrl);
+				artData.setTitle(title);
+				artData.setUrl(url);
+				articlesService.Save(artData);
+				articleId.append(id).append(",");
+			}
+			data.setArticleIds(articleId.toString().substring(0,articleId.length()-1));
+			wechatRespMsgDao.save(data);
+		}else{
+			wechatRespMsgDao.save(data);
+		}
+	}
+
+	@Transactional
+	@CacheEvict(value="wechatRespMsgCache",allEntries=true)
+	public void update(TblWechatRespMsg data,String articlesJson){
+		//图文Id，以逗号隔开
+		StringBuilder articleId =new StringBuilder();
+		//如果传送的是图文消息，则保存简易图文表
+		if(articlesJson != null){
+			String id =articlesService.getArticlesId();
+			articleId.append(id).append(",");
+			data.setArticleIds(articleId.toString());
+			wechatRespMsgDao.save(data);
+		}else{
+			wechatRespMsgDao.save(data);
+		}
+	}
+	
+	//根据商户和回复类型查询回复数据
+	@Transactional
+	@Cacheable(value="wechatRespMsgCache")
+	public List<TblWechatRespMsg> findByMchtType(String mchtId ,String type,String keywords){
+		StringBuilder sb = new StringBuilder();
+		sb.append("from TblWechatRespMsg where mchtId='");
+		sb.append(mchtId).append("' ");
+		sb.append(" and respType ='").append(type).append("'");
+		if(keywords !=null){
+			sb.append(" and keywords ='").append(keywords).append("'");
+		}
+		List<TblWechatRespMsg> result =wechatRespMsgDao.find(sb.toString());
+		return result;
+	}
+	
+	//根据id获取对象
+	@Transactional
+	@Cacheable(value="wechatRespMsgCache",key = "#root.method.name+#id")
+	public TblWechatRespMsg getById(String id){
+		return wechatRespMsgDao.getById(id);
+	}
+	
+	//根据id删除对象
+	public void delete(String id){
+		wechatRespMsgDao.deleteById(id);
+	}
+	
+	//验证回复是否重复
+	public int check(String respId,String mchtId,String keywords){
+		StringBuilder sb = new StringBuilder();
+		sb.append("from TblWechatRespMsg where mchtId='");
+		sb.append(mchtId).append("' ");
+		sb.append(" and keywords ='").append(keywords).append("'");
+		if(respId!=null && !"".equals(respId)){
+			sb.append(" AND respMsgId <>'").append(respId).append("'");
+		}
+		int total =wechatRespMsgDao.getTotalRows(sb.toString());
+		return total;
+	}
+	
+	
+	@Transactional
+	public String getRespMsgId() {
+		String sql = "SELECT SEQ_WECHAT_RESP_ID.NEXTVAL FROM DUAL";
+		String respMsgId = wechatRespMsgDao.getListSQL(sql).get(0).toString();
+		return StringUtil.beforFillValue(respMsgId, 20, '0');
+	}
+}

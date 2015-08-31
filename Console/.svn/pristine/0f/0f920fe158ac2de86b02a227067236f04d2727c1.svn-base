@@ -1,0 +1,14 @@
+package com.ebeijia.jms.service.impl;
+
+import javax.jms.JMSException;
+
+import com.ebeijia.jms.service.ConsumerService;
+
+public class ConsumerServiceImpl implements ConsumerService {
+
+	public void receiveMessage(String message) throws JMSException {
+		System.out.println("------------------11111-----------------");
+		System.out.println("-----------------111111111" + message);
+	}
+
+}

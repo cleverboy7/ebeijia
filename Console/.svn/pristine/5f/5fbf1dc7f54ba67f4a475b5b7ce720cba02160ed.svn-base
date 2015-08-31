@@ -1,0 +1,31 @@
+package com.ebeijia.dao.dictInf;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.ebeijia.dao.base.BaseDao;
+import com.ebeijia.dao.base.BaseDaoImplHibernate;
+import com.ebeijia.entity.TblDictInf;
+
+@Repository("DictInfDao")
+public class DictInfDao extends BaseDaoImplHibernate<TblDictInf> implements BaseDao<TblDictInf> {
+
+	public List<TblDictInf> getDictInfList(){
+		List<TblDictInf> dictInfList = new ArrayList<TblDictInf>();
+		String hql = "FROM TblDictInf ";
+		dictInfList = getHibernateTemplate().find(hql);
+		return dictInfList;
+	}
+	
+	/**
+	 * 获取实体信息的总数
+	 * @return Integer 当前实体类在数据库的信息总数
+	 */
+	public Integer countTotalNum(TblDictInf dictInf){
+		String hql ="SELECT COUNT(*) FROM TblDictInf";
+		return ((Long) this.getHibernateTemplate().find(hql).get(0)).intValue();
+	}
+	
+}

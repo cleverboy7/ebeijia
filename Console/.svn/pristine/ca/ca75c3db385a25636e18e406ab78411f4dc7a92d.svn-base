@@ -1,0 +1,122 @@
+package com.ebeijia.service.wechat.act;
+
+import com.ebeijia.dao.wechat.WechatModDao;
+import com.ebeijia.entity.wechat.TblWechatMod;
+import com.ebeijia.entity.wechat.TblWechatRule;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+
+@Service
+public final class WechatModServiceImpl implements WechatModService {
+
+    @Autowired
+    private WechatModDao wechatModDao;
+    @Autowired
+    private WechatRuleService wechatRuleService;
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "wechatModCache", allEntries = true)
+    public String save(String mchtId, String modName, String prizeJson, String type) {
+        TblWechatMod data = new TblWechatMod();
+        data.setModId(getModId());
+        data.setActType(type);
+        data.setMchtId(mchtId);
+        data.setModName(modName);
+        wechatModDao.save(data);
+        JsonParser jsonparer = new JsonParser();
+        JsonObject json = jsonparer.parse(prizeJson).getAsJsonObject();
+        JsonArray array = json.get("prizes").getAsJsonArray();
+        for (int i = 0; i < array.size(); i++) {
+            TblWechatRule ruleData = new TblWechatRule();
+            JsonObject jsonElement = array.get(i).getAsJsonObject();
+            String probability = jsonElement.get("probability").getAsString();
+            String prName = jsonElement.get("prName").getAsString();
+            String prize = jsonElement.get("prize").getAsString();
+            String winNum = jsonElement.get("winNum").getAsString();
+            ruleData.setPrize(prize);
+            ruleData.setPrName(prName);
+            ruleData.setProbability(Integer.parseInt(probability));
+            ruleData.setWinNum(winNum);
+            wechatRuleService.save(ruleData, data.getModId());
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "wechatModCache", allEntries = true)
+    public String upd(TblWechatMod data) {
+        wechatModDao.update(data);
+        return null;
+    }
+
+    @Override
+    @Transactional
+    @Cacheable(value = "wechatModCache", key = "#root.method.name+#mchtId+#pageDate")
+    public Map<String, Object> findBySql(String mchtId, String pageData) {
+        StringBuilder query = new StringBuilder();
+        query.append(" from TblWechatMod ");
+        query.append(" where 1=1");
+        if (mchtId != null && !"".equals(mchtId)) {
+            query.append(" AND mchtId like '%").append(mchtId).append("%'");
+        }
+        query.append(" order by createTime");
+        Map<String, Object> m = wechatModDao.findByPage(query.toString(), pageData);
+        return m;
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "wechatModCache", allEntries = true)
+    public String del(String id) {
+        wechatModDao.deleteById(id);
+        return null;
+    }
+
+    @Override
+    @Transactional
+    @Cacheable(value = "wechatModCache", key = "#root.method.name+#id")
+    public TblWechatMod getById(String id) {
+        return wechatModDao.getById(id);
+    }
+
+    //根据类型查询模板
+    @Override
+    @Transactional
+    @Cacheable(value = "wechatModCache", key = "#root.method.name+#mchtId+#type")
+    public Map<String, Object> modList(String mchtId, String type) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        StringBuilder hql = new StringBuilder();
+        hql.append("FROM TblWechatMod WHERE mchtId='").append(mchtId).append("'");
+        hql.append(" and actType ='").append(type).append("' ");
+        List<TblWechatMod> dataList = wechatModDao.find(hql.toString());
+        List<Object> list = new LinkedList<Object>();
+        for (TblWechatMod data : dataList) {
+            Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+            hashMap.put("key", data.getModId() + "-" + data.getModName());
+            hashMap.put("value", data.getModId());
+            hashMap.put("url", data.getUrl());
+            list.add(hashMap);
+        }
+        map.put("info", list);
+        return map;
+    }
+
+    private String getModId() {
+        String sql = "SELECT SEQ_MOD_ID.NEXTVAL FROM DUAL";
+        String modNo = wechatModDao.getListSQL(sql).get(0).toString();
+        return modNo;
+    }
+}

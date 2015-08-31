@@ -1,0 +1,19 @@
+package com.ebeijia.entity.vo.wechat.mass;
+
+/**
+ * 文本model
+ * 
+ * @author zhicheng.xu
+ * @date 2015-04-19
+ */
+public class Text {
+	private String content;
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+}

@@ -1,0 +1,64 @@
+package com.ebeijia.controller.action.wechat.subGroup;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.service.wechat.group.WechatSubGroupService;
+import com.ebeijia.util.Constant;
+import com.ebeijia.util.wechat.WechatError;
+
+@Controller
+@RequestMapping(value="/wechat/subGroup")
+public class WechatGroupAddAction {
+	@Autowired
+	private WechatSubGroupService wechatSubGroupService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatGroupAddAction.class);
+	
+	@RequestMapping(value="add.html",method = RequestMethod.POST)
+	@MyLog(remark="新增用户组别")
+	@ResponseBody
+	public Map<String, Object> add(HttpSession session,HttpServletRequest request) {
+		String mchtId =request.getParameter("mchtId");
+		String name =request.getParameter("name");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" } ,{ name, "1", "64" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			//验证分组限制
+			int total = wechatSubGroupService.findCount(mchtId);
+			if(total >=100){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "一个公众账号，最多支持创建100个分组", "");
+				return map;
+			}
+			String respMsg =wechatSubGroupService.save(mchtId,name);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, WechatError.checkCode(respMsg), "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("新增用户组别失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "新增用户组别失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+}

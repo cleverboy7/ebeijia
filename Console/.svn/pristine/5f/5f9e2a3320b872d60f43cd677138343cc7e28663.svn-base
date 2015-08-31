@@ -1,0 +1,33 @@
+package com.ebeijia.entity;
+
+import java.io.Serializable;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "TBL_ROLE_MAP")
+public class TblRoleMap implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private TblRoleMapId id;
+
+
+	@EmbeddedId
+	@AttributeOverrides( {
+			@AttributeOverride(name = "roleId", column = @Column(name = "ROLE_ID", nullable = false, length = 6)),
+			@AttributeOverride(name = "funcId", column = @Column(name = "FUNC_ID", nullable = false, length = 6))})
+	public TblRoleMapId getId() {
+		return id;
+	}
+
+	public void setId(TblRoleMapId id) {
+		this.id = id;
+	}
+
+}

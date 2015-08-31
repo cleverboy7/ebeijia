@@ -1,0 +1,39 @@
+package com.ebeijia.service.dictInf;
+
+import com.ebeijia.dao.dictInf.DictInfDao;
+import com.ebeijia.entity.TblDictInf;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public final class DictInfServiceImpl implements DictInfService {
+
+	@Autowired
+	private DictInfDao dictInfDao;
+
+	//根据dictType查字典
+	@Transactional
+	@Cacheable(value="dictCache",key = "#root.method.name+#dictType")
+	public Map<String, Object> findByDictType(String dictType) {
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		StringBuilder sb = new StringBuilder();
+		sb.append("from TblDictInf where id.dictType ='").append(dictType).append("'");
+		sb.append(" order by id.dictId");
+		List<TblDictInf> tblDictInfs = dictInfDao.find(sb.toString());
+		List<Object> list = new LinkedList<Object>();
+		for (TblDictInf tblDictInf: tblDictInfs){
+			Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+			hashMap.put("key", tblDictInf.getFieldType() + "-" + tblDictInf.getFieldName());
+			hashMap.put("value", tblDictInf.getDictId());
+			list.add(hashMap);
+		}
+		map.put("info", list);
+		return map;
+	}
+}

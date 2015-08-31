@@ -1,0 +1,147 @@
+package com.ebeijia.dao.mcht;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
+
+import com.ebeijia.dao.base.BaseDao;
+import com.ebeijia.dao.base.BaseDaoImplHibernate;
+import com.ebeijia.entity.TblMchtInf;
+import com.ebeijia.entity.page.Page;
+import com.ebeijia.entity.page.PageEntity;
+
+@Repository("MchtInfDao")
+public class MchtInfDao extends BaseDaoImplHibernate<TblMchtInf> implements BaseDao<TblMchtInf> {
+
+	@SuppressWarnings("unchecked")
+	public List<TblMchtInf> getMchtInfList(){
+		List<TblMchtInf> mchtInfList = new ArrayList<TblMchtInf>();
+		String hql = "FROM TblMchtInf ";
+		mchtInfList = getHibernateTemplate().find(hql);
+		return mchtInfList;
+	}
+	
+	/**
+	 * 获取实体信息的总数
+	 * @return Integer 当前实体类在数据库的信息总数
+	 */
+	public Integer countTotalNum(TblMchtInf mchtInf){
+		String hql ="SELECT COUNT(*) FROM TblMchtInf";
+		return ((Long) this.getHibernateTemplate().find(hql).get(0)).intValue();
+	}
+	
+	/**
+	 * 分页方法
+	 * @param page:当前第几页
+	 * @param size:当前页面每页显示信息的个数
+	 * @return List<T> 集合
+	 */
+	public List<TblMchtInf> findByPage(TblMchtInf mchtInf,final int page, final int size){
+		String hql = "FROM TblMchtInf";
+		return super.findByPage(hql, page, size);
+	}
+	
+	/**
+	 * 分页方法(商户平台ID)
+	 * @param mchtInf
+	 * @param page 当前第几页
+	 * @param size 当前页面每页显示信息的个数
+	 * @param mchtPlatId 商户平台ID
+	 * @return
+	 */
+	public List<TblMchtInf> findByPage(String mchtPlatId, TblMchtInf mchtInf,final int page, final int size){
+		String hql = "FROM TblMchtInf WHERE mchtPlatId ='" + mchtPlatId + "' AND mchtType != '99' ORDER BY mchtId"; //根据商户ID排序
+		return super.findByPage(hql, page, size);
+	}
+	
+	/**
+	 * 获取商户ID(根据商户平台ID和request商户ID)
+	 * 
+	 * @param mchtPlatId 商户平台ID
+	 * @param merchantId request商户ID
+	 * @return String 商户ID
+	 */
+	@SuppressWarnings("unchecked")
+	public String findMchtIdByMerchant(String mchtPlatId, String merchantId){
+		String mchtId = "";
+		String hql = "select mcht_id,mcht_stat FROM Tbl_Mcht_Inf WHERE TRIM(mcht_Plat_Id) = '"+mchtPlatId+"' AND TRIM(ptr_Mcht_Id) = '"+merchantId+"' ";
+		List<Object[]> tblMchtInfList = super.getListSQL(hql);
+		if(!tblMchtInfList.isEmpty()){
+			if("1".equals(tblMchtInfList.get(0)[1].toString())){
+				mchtId = tblMchtInfList.get(0)[0].toString();
+			}
+		}
+		return mchtId;
+	}
+	
+	/**
+	 * 分页获取商户列表
+	 * 
+	 * @param hql
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findObject(String hql, final int page, final int size){
+		Session session = getHibernateTemplate().getSessionFactory().openSession();
+		Query q = session.createQuery(hql);
+		q.setFirstResult((page-1)*size);
+		q.setMaxResults(size);
+		return q.list();
+	}
+	/**
+	 * 获得查询的所有数据  返回的是数组
+	 * @param hql
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findObject(String hql){
+		Session session = getHibernateTemplate().getSessionFactory().openSession();
+		Query q = session.createQuery(hql);
+		return q.list();
+	}
+	
+	/**
+	 * 获得查询的所有数据  返回的是非数组
+	 * @param hql
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Object> findObject2(String hql){
+		Session session = getHibernateTemplate().getSessionFactory().openSession();
+		Query q = session.createQuery(hql);
+		return q.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Object[]> findAllObject(String hql) {
+		return getHibernateTemplate().find(hql);
+	}
+	
+	public List<Object[]> findMchtList(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("select MCHT_ID,MCHT_NAME ");
+		sb.append("from Tbl_MCHT_INF ");
+		sb.append(" where MCHT_ID not in(select MCHT_ID from TBL_WECHAT_MCHT_INF) ");
+		sb.append("order by MCHT_LVL,MCHT_ID");
+		@SuppressWarnings("unchecked")
+		List<Object[]> mchtList = super.getListSQL(sb.toString());
+		return mchtList;
+	}
+	
+	/**
+	 * 分页方法
+	 * @param query:sql语句
+	 * @param aoData:分页对象
+	 * @return Map<String,Object>
+	 */
+	public Map<String,Object> findByPage(String query , String aoData){
+		PageEntity page =new PageEntity();
+		page=Page.init(aoData);
+		Map<String,Object> m = this.findByPageAndTotal(query.toString(),page.getiDisplayStart(),page.getiDisplayLength());
+		return m;
+	}
+}

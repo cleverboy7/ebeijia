@@ -1,0 +1,105 @@
+package com.ebeijia.service.wechat.inter;
+
+import java.io.File;
+
+import net.sf.json.JSONObject;
+
+
+
+/** 
+ * 用户管理器类 
+ * @author zhicheng.xu
+ * @date 2015-02-02
+ */  
+
+public interface MediaManager {  
+  
+	/** 
+     * 上传临时素材
+     * @param accessToken 有效的access_token 
+     * @param type 素材类型
+     * @param f 文件对象 
+     * @param ext 后缀
+     * @return JSONObject 
+     */   
+    public JSONObject upLoadTmpMedia(String accessToken,String Type,File f,String ext) ;
+    /** 
+     * 上传永久素材
+     * @param accessToken 有效的access_token 
+     * @param type 素材类型
+     * @param f 文件对象 
+     * @param ext 后缀
+     * @return JSONObject 
+     */  
+    public JSONObject upLoadMedia(String accessToken,String type,File f,String ext);
+
+    /** 
+     * 下载临时素材
+     * @param accessToken 有效的access_token 
+     * @param mediaId
+     * @return String 
+     */  
+    public String dowLoadTmpMedia(String accessToken,String mediaId) ;
+    /** 
+     * 下载素材
+     * @param accessToken 有效的access_token 
+     * @param mediaId
+     * @return String 
+     */  
+    public String dowLoadMedia(String accessToken,String mediaId) ;
+    /** 
+     * 获得素材总数
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */
+    public JSONObject mediaCountAll(String accessToken);
+    /** 
+     * 删除永久素材
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */
+    public JSONObject mediaDel(String accessToken,String media);
+    
+    /** 
+     * 上传图文素材
+     * @param accessToken 有效的access_token 
+     * @param ArticleMedia 图文对象
+     * @return JSONObject 
+     */  
+    public JSONObject upGtMedia(String accessToken,String articles);
+    /** 
+     * 获得素材列表
+     * @param accessToken 有效的access_token 
+     * @param type 素材类型
+     * @param offset 起始数 
+     * @param count 条数
+     * @return JSONObject 
+     */  
+	public JSONObject newsGet(String accessToken,String type,String offset,String count);
+	
+	/** 
+     * 修改图文素材
+     * @param accessToken 有效的access_token 
+     * @param ArticleMedia 图文对象
+     * @return JSONObject 
+     */  
+    public JSONObject updateMedia(String accessToken,String media,String articles);
+    
+    /** 
+     * 群发上传图文素材
+     * @param accessToken 有效的access_token 
+     * @param ArticleMedia 图文对象
+     * @return JSONObject 
+     */  
+    public JSONObject massUpNews(String accessToken,String articles);
+    
+    /** 
+     * 群发上传群发视频
+     * @param accessToken 有效的access_token 
+     * @param mediaId 
+     * @param title 标题
+     * @param description描述
+     * @return JSONObject 
+     */  
+    public JSONObject massUpVideo(String accessToken,String mediaId,String title,String description);
+}  

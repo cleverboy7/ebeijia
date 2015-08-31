@@ -1,0 +1,23 @@
+package com.ebeijia.service.wechat.group;
+
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatSubGroup;
+
+
+public interface WechatSubGroupService {
+	//添加关注者组别
+	public String save(String mchtId,String name);
+	//修改关注者组别
+	public String update(String mchtId,String groupId,String name);
+	//删除关注者组别
+	public String del(String mchtId,String groupId);
+	//验证分组限制
+	public int findCount(String mchtId);
+	//通过条件查询结果
+	public Map<String,Object> findBySql(String name,String pageData);  
+	//根据商户id查组别列表
+	public Map<String, Object> listGroupByMchtId(String mchtId);
+	//根据id获取实体对象
+	public TblWechatSubGroup getById(String id);
+}

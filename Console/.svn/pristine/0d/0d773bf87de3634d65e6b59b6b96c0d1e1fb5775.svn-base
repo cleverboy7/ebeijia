@@ -1,0 +1,34 @@
+package com.ebeijia.service.mcht;
+
+import com.ebeijia.dao.mcht.MchtInfDao;
+import com.ebeijia.entity.TblMchtInf;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+@Service("mchtInfService")
+public class MchtInfServiceImpl implements MchtInfService {
+
+    @Autowired
+    private MchtInfDao mchtInfDao;
+
+    @Cacheable(value = "mchtCache", key = "#root.method.name")
+    public Map<String, Object> ListMchtId() {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        String hql = "FROM TblMchtInf ORDER BY mchtLvl,mchtId";
+        List<TblMchtInf> tblMchtInfs = mchtInfDao.find(hql);
+        List<Object> list = new LinkedList<Object>();
+        for (TblMchtInf tblMchtInf : tblMchtInfs) {
+            Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+            hashMap.put("key", tblMchtInf.getMchtId() + "-" + tblMchtInf.getMchtName());
+            hashMap.put("value", tblMchtInf.getMchtId());
+            list.add(hashMap);
+        }
+        map.put("info", list);
+        return map;
+    }
+}

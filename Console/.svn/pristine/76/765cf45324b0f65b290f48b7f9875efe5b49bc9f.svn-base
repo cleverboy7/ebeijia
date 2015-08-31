@@ -1,0 +1,27 @@
+package com.ebeijia.entity.vo.interf;
+
+import java.io.Serializable;
+
+public class CommonReq implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	//操作名称
+	private String txnCd;
+	//操作员
+	private String operator;
+	public String getTxnCd() {
+		return txnCd;
+	}
+	public void setTxnCd(String txnCd) {
+		this.txnCd = txnCd;
+	}
+	public String getOperator() {
+		return operator;
+	}
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+	
+
+	
+}

@@ -1,0 +1,139 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "TBL_WECHAT_ACT")
+public class TblWechatAct implements java.io.Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
+	private String actId;
+    private String mchtId;
+    private String actName;
+    private String dsc;
+    private String actType;
+    private String modId;
+    private String dayFlag;
+    private int lotNum;
+    private String beginDate;
+    private String endDate;
+    private String status;
+    private String url;
+    
+	public TblWechatAct() {
+	}
+	
+	@Id
+	@Column(name = "ACT_ID", nullable = false, length = 20)
+	public String getActId() {
+		return actId;
+	}
+
+	public void setActId(String actId) {
+		this.actId = actId;
+	}
+	
+	@Column(name = "URL", length = 256)
+	public String getUrl() {
+		return url;
+	}
+
+	@Column(name = "MCHT_ID", length = 15)
+	public String getMchtId() {
+		return mchtId;
+	}
+
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+
+	@Column(name = "ACT_NAME", length = 32)
+	public String getActName() {
+		return actName;
+	}
+
+	public void setActName(String actName) {
+		this.actName = actName;
+	}
+
+	@Column(name = "DSC", length = 128)
+	public String getDsc() {
+		return dsc;
+	}
+
+	public void setDsc(String dsc) {
+		this.dsc = dsc;
+	}
+
+	@Column(name = "ACT_TYPE", length = 1)
+	public String getActType() {
+		return actType;
+	}
+
+	public void setActType(String actType) {
+		this.actType = actType;
+	}
+
+	@Column(name = "MOD_ID", length = 20)
+	public String getModId() {
+		return modId;
+	}
+
+	public void setModId(String modId) {
+		this.modId = modId;
+	}
+
+	@Column(name = "DAY_FLAG", length = 1)
+	public String getDayFlag() {
+		return dayFlag;
+	}
+
+	public void setDayFlag(String dayFlag) {
+		this.dayFlag = dayFlag;
+	}
+
+	@Column(name = "LOT_NUM", length = 2)
+	public int getLotNum() {
+		return lotNum;
+	}
+
+	public void setLotNum(int lotNum) {
+		this.lotNum = lotNum;
+	}
+
+	@Column(name = "BEGIN_DATE", length = 8)
+	public String getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(String beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	@Column(name = "END_DATE", length = 8)
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	@Column(name = "STATUS", length = 1)
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+}

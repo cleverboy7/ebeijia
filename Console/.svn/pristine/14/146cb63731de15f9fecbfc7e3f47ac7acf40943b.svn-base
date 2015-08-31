@@ -1,0 +1,59 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
+
+
+@Embeddable
+public class TblWechatMassId implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	private String msgId;
+
+    private String mchtId;
+
+    
+    /** default constructor */
+	public TblWechatMassId() {
+		
+	}
+	
+	@Column(name = "MSG_ID", unique = true, nullable = false, length = 10)
+	public String getMsgId() {
+		return msgId;
+	}
+
+	public void setMsgId(String msgId) {
+		this.msgId = msgId;
+	}
+
+	@Column(name = "MCHT_ID",length = 15)
+	public String getMchtId() {
+		return mchtId;
+	}
+
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+	
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TblWechatMassId)) {
+			return false;
+		}
+		TblWechatMassId data = (TblWechatMassId) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj))
+				.append(this.msgId, data.msgId)
+				.append(this.mchtId, data.mchtId).isEquals();
+	}
+
+	public int hashCode() {
+		return new HashCodeBuilder(-528253723, -475504089)
+				.appendSuper(super.hashCode()).append(this.msgId)
+				.append(this.mchtId).toHashCode();
+	}
+}

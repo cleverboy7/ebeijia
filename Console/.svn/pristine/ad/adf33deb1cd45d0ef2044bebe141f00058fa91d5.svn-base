@@ -1,0 +1,97 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+
+
+@Entity
+@Table(name = "TBL_WECHAT_MASS")
+public class TblWechatMass implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	private TblWechatMassId id;
+	private String type;
+	private String msgType ;
+	private String content ;
+	private String media ;
+	private int toUsr ;
+	private String createTime ;
+    
+    /** default constructor */
+	public TblWechatMass() {
+		
+	}
+	
+	@EmbeddedId
+	@AttributeOverrides( {
+			@AttributeOverride(name = "msgId", column = @Column(name = "MSG_ID", nullable = false, length = 10)),
+			@AttributeOverride(name = "mchtId", column = @Column(name = "MCHT_ID", nullable = false, length = 32))})
+	public TblWechatMassId getId() {
+		return id;
+	}
+
+	public void setId(TblWechatMassId id) {
+		this.id = id;
+	}
+
+	@Column(name = "TYPE",length = 1)
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Column(name ="MSG_TYPE",length = 6)
+	public String getMsgType() {
+		return msgType;
+	}
+
+	public void setMsgType(String msgType) {
+		this.msgType = msgType;
+	}
+
+	@Column(name = "CONTENT",length = 128)
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	@Column(name = "MEDIA_ID",length = 100)
+	public String getMedia() {
+		return media;
+	}
+
+	public void setMedia(String media) {
+		this.media = media;
+	}
+
+	@Column(name = "TO_USR",length = 6)
+	public int getToUsr() {
+		return toUsr;
+	}
+
+	public void setToUsr(int toUsr) {
+		this.toUsr = toUsr;
+	}
+
+	@Column(name = "CREATE_TIME",length = 14)
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+}

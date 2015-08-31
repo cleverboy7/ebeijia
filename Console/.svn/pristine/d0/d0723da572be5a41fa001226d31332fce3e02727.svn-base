@@ -1,0 +1,141 @@
+body > header {
+	overflow: hidden;
+}
+
+body > header > .logo > img {
+	display: block;
+	margin: 15px auto;
+}
+
+body > header > .topbar > .topmenu > li {
+	float: left;
+	width: 110px;
+	height: 110px;
+	border-right: 1px solid rgba(255, 255, 255, 0.1);
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+body > header > .topbar > .topmenu > li:first-child {
+	border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body > header > .topbar > .topmenu > li > a {
+	display: block;
+	opacity: 0.5;
+	width: 100%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	transition: opacity 0.2s;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+	color: white;
+}
+body > header > .topbar > .topmenu > li > a:hover {
+	opacity: 1;
+}
+
+body > header > .topbar > .topmenu > li > a:before {
+	display: block;
+	width: 50px;
+	height: 50px;
+	margin-left: auto;
+	margin-right: auto;
+	background-image: url(../image/head-icons.png);
+	background-repeat: no-repeat;
+	content: "";
+}
+body > header > .topbar > .topmenu > li:nth-child(1) > a:before {
+	background-position: 0 0;
+}
+body > header > .topbar > .topmenu > li:nth-child(2) > a:before {
+	background-position: -50px 0;
+}
+body > header > .topbar > .topmenu > li:nth-child(3) > a:before {
+	background-position: -100px 0;
+}
+body > header > .topbar > .topmenu > li:nth-child(4) > a:before {
+	background-position: -150px 0;
+}
+body > header > .topbar > .topmenu > li:nth-child(5) > a:before {
+	background-position: -200px 0;
+}
+
+body > header > .topbar > .user-info {
+	float: right;
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+
+body > header > .topbar > .user-info > .avatar {
+	float: left;
+	box-sizing: content-box;
+	width: 80px;
+	height: 80px;
+	padding: 3px;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+body > header > .topbar > .user-info > .info {
+	float: left;
+	margin: 10px;
+	font-size: 14px;
+	color: white;
+}
+
+body > header > .topbar > .user-info > .info > header {
+	margin-bottom: 5px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+body > header > .topbar > .user-info > .info > ul > li {
+	margin-top: 1px;
+	margin-bottom: 1px;
+}
+
+body > header > .topbar > .user-info > .info > ul > li > a {
+	display: block;
+	padding: 4px 5px;
+	background-color: rgba(255, 255, 255, 0.1);
+	font-size: 12px;
+	color: white;
+}
+
+body > header > .topbar > .time {
+	float: right;
+	margin: 25px 10px;
+	-webkit-perspective: 200px;
+	        perspective: 200px;
+	font-family: "Microsoft YaHei", Arial, sans-serif;
+}
+
+body > header > .topbar > .time > li {
+	float: left;
+	width: 40px;
+	height: 60px;
+	margin-left: 1px;
+	margin-right: 1px;
+	border: 1px solid #fafafa;
+	border-radius: 10px;
+	background: #fafafa;
+	background-image: -webkit-linear-gradient(top, #fafafa, #dcdcdc);
+	background-image:    -moz-linear-gradient(top, #fafafa, #dcdcdc);
+	background-image:         linear-gradient(top, #fafafa, #dcdcdc);
+	-webkit-transform-style: preserve-3d;
+	        transform-style: preserve-3d;
+	text-align: center;
+	font-size: 50px;
+	line-height: 58px;
+	color: #333;
+
+	background-iamge: -ms-linear-gradient(top, #fafafa, #dcdcdc);
+}
+body > header > .topbar > .time > li.separator {
+	width: 30px;
+}
+body > header > .topbar > .time > li.separator:before {
+	position: relative;
+	top: -5px;
+	content: ":";
+}

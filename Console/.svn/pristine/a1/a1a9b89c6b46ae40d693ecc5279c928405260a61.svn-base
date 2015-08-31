@@ -1,0 +1,63 @@
+package com.ebeijia.service.wechat.act;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatRedpacketDao;
+import com.ebeijia.entity.wechat.TblWechatRedpacket;
+import com.ebeijia.entity.wechat.TblWechatRedpacketId;
+
+@Service
+public final class WechatRedpacketServiceImpl implements WechatRedpacketService {
+
+    @Autowired
+    private WechatRedpacketDao wechatRedpacketDao;
+
+    @Override
+    @Transactional
+    @CacheEvict(value="wechatRedpacketCache",allEntries=true)
+    public String save(TblWechatRedpacket data) {
+        wechatRedpacketDao.save(data);
+        return null;
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value="wechatRedpacketCache",allEntries=true)
+    public String upd(TblWechatRedpacket data) {
+        wechatRedpacketDao.update(data);
+        return null;
+    }
+
+    @Override
+    @Transactional
+    @Cacheable(value="wechatRedpacketCache",key = "#root.method.name+#mchtId+#pageDate")
+    public Map<String, Object> findBySql(String mchtId, String pageData) {
+        StringBuilder query = new StringBuilder();
+        query.append(" from TblWechatRedpacket ").append(" where 1=1");
+        if (mchtId != null && !"".equals(mchtId)) {
+            query.append(" AND mchtId like '%").append(mchtId).append("%'");
+        }
+        query.append(" order by createTime");
+        Map<String, Object> m = wechatRedpacketDao.findByPage(query.toString(), pageData);
+        return m;
+    }
+
+    @Override
+    @CacheEvict(value="wechatRedpacketCache",allEntries=true)
+    public String del(TblWechatRedpacketId id) {
+        wechatRedpacketDao.deleteById(id);
+        return null;
+    }
+
+    @Override
+    @Cacheable(value="wechatRedpacketCache",key = "#root.method.name+#id")
+    public TblWechatRedpacket getById(TblWechatRedpacketId id) {
+        return wechatRedpacketDao.getById(id);
+    }
+}

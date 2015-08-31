@@ -1,0 +1,89 @@
+package com.ebeijia.controller.action.wechat.act;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.wechat.TblWechatAct;
+import com.ebeijia.service.wechat.act.WechatActService;
+import com.ebeijia.util.Constant;
+
+@Controller
+@RequestMapping(value="/wechat/act")
+public class WechatActAddAction {
+	@Autowired
+	private WechatActService wechatActService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatActAddAction.class);
+	
+	@RequestMapping(value="add.html",method = RequestMethod.POST)
+	@MyLog(remark="新增活动")
+	@ResponseBody
+	public Map<String, Object> add(HttpSession session,HttpServletRequest request) {
+		TblWechatAct data = this.build(request);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(data == null){
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			String respMsg =wechatActService.save(data);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "新增活动失败,请联系管理员或稍后再试", "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("新增活动失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "新增活动失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	private TblWechatAct build(HttpServletRequest request){
+		String mchtId = request.getParameter("mchtId");
+		String actName= request.getParameter("actName");
+		String dsc = request.getParameter("dsc");
+		String actType = request.getParameter("actType");
+		String modId = request.getParameter("modId");
+		String dayFlag = request.getParameter("dayFlag");
+		String lotNum  = request.getParameter("lotNum");
+		String beginDate = request.getParameter("beginDate");
+		String endDate = request.getParameter("endDate");
+		String url = request.getParameter("url");
+		String[][] s = { { mchtId, "15", "15" } ,{ actName, "1", "32" },{ dsc, "0", "128" },
+				{ actType,  "1", "1" },{ modId,  "1", "20" },{ dayFlag,  "1", "1" },{ lotNum, "1", "2" },
+				{ beginDate, "8", "8" },{ endDate, "8", "8" },{ url, "1", "256" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			return null;
+		}
+		TblWechatAct data = new TblWechatAct();
+		//默认“未开启”状态
+		data.setActName(actName);
+		data.setActType(actType);
+		data.setBeginDate(beginDate);
+		data.setDayFlag(dayFlag);
+		data.setDsc(dsc);
+		data.setEndDate(endDate);
+		data.setLotNum(Integer.parseInt(lotNum));
+		data.setMchtId(mchtId);
+		data.setModId(modId);
+		data.setUrl(url);
+		data.setStatus("0");
+		return data;
+	}
+}

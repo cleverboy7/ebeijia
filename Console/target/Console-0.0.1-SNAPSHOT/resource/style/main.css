@@ -1,0 +1,75 @@
+body > main {
+	background-color: white;
+	-webkit-perspective: 1200px;
+	        perspective: 1200px;
+}
+
+body > main.switching {
+	overflow: hidden;
+}
+
+.breadcrumb-wrapper {
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 30px;
+	background-color: #ddd;
+}
+
+.container {
+	position: absolute;
+	top: 30px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	overflow-x: auto;
+	padding: 20px;
+	background-image: url(../image/main-background.png);
+	-webkit-transition: -webkit-transform 1s;
+	        transition:         transform 1s;
+	-webkit-transform-style: preserve-3d;
+	        transform-style: preserve-3d;
+	-webkit-transform-origin: center right;
+	    -ms-transform-origin: center right;
+	        transform-origin: center right;
+	-webkit-backface-visibility: hidden;
+	        backface-visibility: hidden;
+}
+.container.old {
+	-webkit-transform: translateX(-100%) rotateY(-90deg);
+	    -ms-transform: translateX(-100%) rotateY(-90deg);
+	        transform: translateX(-100%) rotateY(-90deg);
+}
+.container.current {
+	-webkit-transform: translateX(100%);
+	    -ms-transform: translateX(100%);
+	        transform: translateX(100%);
+}
+
+.container-inner {
+	min-width: 404px;
+	min-height: calc(100% - 60px);
+}
+
+.footer {
+	float: left;
+	width: 100%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+	font-size: 12px;
+	line-height: 20px;
+}
+
+.loadingGif {
+	position: absolute;
+	z-index: 99;
+	top: 50%;
+	left: 50%;
+	width: 300px;
+	height: 100px;
+	margin-top: -50px;
+	margin-left: -150px;
+}

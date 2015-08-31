@@ -1,0 +1,28 @@
+package com.ebeijia.service.wechat.core;
+
+import java.util.List;
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+
+public interface WechatMchtInfService {
+	
+	public void updateWechatMchtInf(TblWechatMchtInf wechatMchtInf);				//修改实体信息
+	
+	public List<TblWechatMchtInf> queryWechatMchtInfList();					//返回实体信息
+	
+	//查询已绑定公众号的商户
+	public Map<String, Object> findMchtList();
+	
+	public Map<String,Object> findBySql(String mchtId,String pagaData);
+	
+	public TblWechatMchtInf findByNikeName(String nikeName);
+	//绑定微信账号
+	public String addWechatMchtInf(TblWechatMchtInf wechatMchtInf);		
+	//解除绑定
+	public void deleteWechatMchtInf(TblWechatMchtInf wechatMchtInf);	
+	//通过主键获取微信账号信息
+	public TblWechatMchtInf getById(String id);	
+	//通过appid查询商户号
+	public TblWechatMchtInf getByAppid(String appid);
+}

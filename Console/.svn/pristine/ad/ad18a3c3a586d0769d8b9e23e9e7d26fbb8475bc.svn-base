@@ -1,0 +1,25 @@
+package com.ebeijia.nosql.redis.until;
+
+
+
+/**
+ * @author zhicheng.xu
+ * redis key生成策略
+ */
+public class RedisKeyMaker {
+
+	public static String makeKey(Class<?> clazz, String string) {
+		String tableName = clazz.getSimpleName();
+		StringBuilder sb = new StringBuilder();
+		sb.append(RedisConstant.KEY);
+		sb.append(tableName);
+		sb.append('_');
+		sb.append(string);
+		return sb.toString();
+	}
+	
+	public static byte[] makeKey(String key) {
+		return key.getBytes();
+	}
+	
+}

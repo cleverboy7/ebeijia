@@ -1,0 +1,122 @@
+package com.ebeijia.entity.vo.interf;
+
+import java.io.Serializable;
+import java.util.List;
+
+public class PartyReq extends CommonReq implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String partyId;
+	private String usrId;
+	private List<String> picList;
+	private String partyName;
+	private String partyType;
+	private String partyDate;
+	private String partyTime;
+	private String partyCity;
+	private String partyAddr;
+	private String partyNum;
+	private String partyFee;
+	private String partyCondition;
+	private String partyDetail;
+	private String picHead;
+	private String attendId;
+	
+	public String getAttendId() {
+		return attendId;
+	}
+	public void setAttendId(String attendId) {
+		this.attendId = attendId;
+	}
+	public String getPicHead() {
+		return picHead;
+	}
+	public void setPicHead(String picHead) {
+		this.picHead = picHead;
+	}
+	public String getPartyId() {
+		return partyId;
+	}
+	public void setPartyId(String partyId) {
+		this.partyId = partyId;
+	}
+	public String getUsrId() {
+		return usrId;
+	}
+	public void setUsrId(String usrId) {
+		this.usrId = usrId;
+	}
+	public List<String> getPicList() {
+		return picList;
+	}
+	public void setPicList(List<String> picList) {
+		this.picList = picList;
+	}
+	public String getPartyName() {
+		return partyName;
+	}
+	public void setPartyName(String partyName) {
+		this.partyName = partyName;
+	}
+	public String getPartyType() {
+		return partyType;
+	}
+	public void setPartyType(String partyType) {
+		this.partyType = partyType;
+	}
+	public String getPartyDate() {
+		return partyDate;
+	}
+	public void setPartyDate(String partyDate) {
+		this.partyDate = partyDate;
+	}
+	public String getPartyTime() {
+		return partyTime;
+	}
+	public void setPartyTime(String partyTime) {
+		this.partyTime = partyTime;
+	}
+	public String getPartyCity() {
+		return partyCity;
+	}
+	public void setPartyCity(String partyCity) {
+		this.partyCity = partyCity;
+	}
+	public String getPartyAddr() {
+		return partyAddr;
+	}
+	public void setPartyAddr(String partyAddr) {
+		this.partyAddr = partyAddr;
+	}
+	public String getPartyNum() {
+		return partyNum;
+	}
+	public void setPartyNum(String partyNum) {
+		this.partyNum = partyNum;
+	}
+	public String getPartyFee() {
+		return partyFee;
+	}
+	public void setPartyFee(String partyFee) {
+		this.partyFee = partyFee;
+	}
+	public String getPartyCondition() {
+		return partyCondition;
+	}
+	public void setPartyCondition(String partyCondition) {
+		this.partyCondition = partyCondition;
+	}
+	public String getPartyDetail() {
+		return partyDetail;
+	}
+	public void setPartyDetail(String partyDetail) {
+		this.partyDetail = partyDetail;
+	}
+	
+	
+
+}

@@ -1,0 +1,117 @@
+package com.ebeijia.controller.action.wechat.mcht;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.DateTime4J;
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+import com.ebeijia.service.wechat.core.WechatMchtInfService;
+import com.ebeijia.util.Constant;
+
+@Controller
+@RequestMapping(value="/wechat/mcht")
+public class WechatMchtInfUpdAction {
+
+	@Autowired
+	private WechatMchtInfService wechatMchtInfService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatMchtInfUpdAction.class);
+	
+	@RequestMapping(value="upd.html",method = RequestMethod.POST)
+	@MyLog(remark="微信账号修改")
+	@ResponseBody
+	public Map<String, Object> upd(HttpSession session,HttpServletRequest request){
+		Map<String, Object> map = new HashMap<String, Object>();
+		TblWechatMchtInf tblWechatMchtInf = this.build(request);
+		if(tblWechatMchtInf == null){
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			if(wechatMchtInfService.getById(tblWechatMchtInf.getMchtId()) ==null){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "微信账号不存在", "");
+				return map;
+			}
+			wechatMchtInfService.updateWechatMchtInf(tblWechatMchtInf);
+			map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			return map;
+		}catch(Exception e){
+			logger.info("微信账户修改失败,请联系管理员或稍后再试");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "微信账户修改失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+
+	
+
+	@RequestMapping(value="del.html",method = RequestMethod.POST)
+	@MyLog(remark="微信账户删除")
+	@ResponseBody
+	public  Map<String, Object>  del(HttpSession session,HttpServletRequest request) {
+		String mchtId = request.getParameter("mchtId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		try{
+			TblWechatMchtInf tblWechatMchtInf=wechatMchtInfService.getById(mchtId);
+			if(tblWechatMchtInf ==null){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "没有找到该商户的微信信息", "");
+				return map;
+			}else{
+				wechatMchtInfService.deleteWechatMchtInf(tblWechatMchtInf);
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "微信账号不存在", "");
+				return map;
+			}
+		}catch (Exception e) {
+			logger.info("微信账户删除失败,请联系管理员或稍后再试");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "微信账户删除失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	
+	//绑定实体类
+	private TblWechatMchtInf build(HttpServletRequest request){
+		String mchtId=request.getParameter("mchtId");
+		String url=request.getParameter("url");
+		String token=request.getParameter("token");
+		String appid=request.getParameter("appid");
+		String appsecret=request.getParameter("appsecret");
+		String nickName=request.getParameter("nickName");
+		String wechatType=request.getParameter("wechatType");
+		String[][] s = { { mchtId, "15", "15" } ,{ url, "1", "256" },{ token, "1", "64" },
+				{ appid, "1", "64" },{ appsecret, "1", "64" },{ wechatType, "1", "1" }
+				,{ nickName, "1", "256" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			return null;
+		}
+		List<TblWechatMchtInf> tblWechatMchtInfs = wechatMchtInfService.queryWechatMchtInfList();
+		TblWechatMchtInf tblWechatMchtInf=new TblWechatMchtInf();
+		if(tblWechatMchtInfs.isEmpty()){
+		}else{
+			tblWechatMchtInf=tblWechatMchtInfs.get(0);
+			tblWechatMchtInf.setMchtId(mchtId);
+			tblWechatMchtInf.setUrl(url);
+			tblWechatMchtInf.setToken(token);
+			tblWechatMchtInf.setAppid(appid);
+			tblWechatMchtInf.setAppsecret(appsecret);
+			tblWechatMchtInf.setNickname(nickName);
+			tblWechatMchtInf.setWechatType(wechatType);
+			tblWechatMchtInf.setUpdateTime(DateTime4J.getCurrentDateTime());
+		}
+		return tblWechatMchtInf;
+	}
+}

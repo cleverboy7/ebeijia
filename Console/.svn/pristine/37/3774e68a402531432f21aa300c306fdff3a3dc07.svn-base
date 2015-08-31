@@ -1,0 +1,33 @@
+package com.ebeijia.entity.vo.wechat.mass;
+
+import java.util.List;
+
+/** 
+ * 群发筛选用户
+ *  
+ * @author zhicheng.xu 
+ * @date 2015-05-09
+ */  
+public class SendMpnewsMassByUsr extends BaseMass {  
+	
+
+    private Mpnews mpnews;
+
+    private List<?> touser;
+
+   	public List<?> getTouser() {
+   		return touser;
+   	}
+
+   	public void setTouser(List<?> touser) {
+   		this.touser = touser;
+   	}
+	public Mpnews getMpnews() {
+		return mpnews;
+	}
+
+	public void setMpnews(Mpnews mpnews) {
+		this.mpnews = mpnews;
+	}
+
+}  

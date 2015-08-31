@@ -1,0 +1,85 @@
+package com.ebeijia.controller.action.wechat.mcht;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.DateTime4J;
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+import com.ebeijia.service.wechat.core.WechatMchtInfService;
+import com.ebeijia.util.Constant;
+
+@Controller
+@RequestMapping(value="/wechat/mcht")
+public class WechatMchtInfAddAction {
+
+	@Autowired
+	private WechatMchtInfService wechatMchtInfService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatMchtInfAddAction.class);
+	
+	@RequestMapping(value="add.html",method = RequestMethod.POST)
+	@MyLog(remark="绑定微信账户")
+	@ResponseBody
+	public Map<String, Object> add(HttpSession session,HttpServletRequest request) {
+		TblWechatMchtInf tblWechatMchtInf = this.build(request);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(tblWechatMchtInf == null){
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			String respMsg =wechatMchtInfService.addWechatMchtInf(tblWechatMchtInf);
+			if("0".equals(respMsg)){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "该账户已经绑定", "");
+				return map;
+			}
+			map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			return map;
+		}catch(Exception e){
+			logger.info("绑定失败,请联系管理员或稍后再试");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "绑定失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	
+	private TblWechatMchtInf build(HttpServletRequest request){
+		String mchtId=request.getParameter("mchtId");
+		String url=request.getParameter("url");
+		String token=request.getParameter("token");
+		String appid=request.getParameter("appid");
+		String appsecret=request.getParameter("appsecret");
+		String wechatType=request.getParameter("wechatType");
+		String nickName=request.getParameter("nickName");
+		String[][] s = { { mchtId, "15", "15" } ,{ url, "1", "256" },{ token, "1", "64" },
+				{ appid, "1", "64" },{ appsecret, "1", "64" },{ wechatType, "1", "1" }
+				,{ nickName, "1", "256" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			return null;
+		}
+		TblWechatMchtInf tblWechatMchtInf=new TblWechatMchtInf();
+		tblWechatMchtInf.setMchtId(mchtId);
+		tblWechatMchtInf.setUrl(url);
+		tblWechatMchtInf.setToken(token);
+		tblWechatMchtInf.setAppid(appid);
+		tblWechatMchtInf.setAppsecret(appsecret);
+		tblWechatMchtInf.setWechatType(wechatType);
+		tblWechatMchtInf.setNickname(nickName);
+		tblWechatMchtInf.setCreateTime(DateTime4J.getCurrentDateTime());
+		return tblWechatMchtInf;
+	}
+}

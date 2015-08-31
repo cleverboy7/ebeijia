@@ -1,0 +1,61 @@
+package com.ebeijia.controller.action.wechat.act;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.service.wechat.act.WechatModService;
+import com.ebeijia.util.Constant;
+
+@Controller
+@RequestMapping(value="/wechat/act")
+public class WechatActLuckydrawAction {
+	@Autowired
+	private WechatModService wechatModService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatActLuckydrawAction.class);
+
+//	活动类型 0大转盘 1刮刮卡 2老虎机
+	
+	@RequestMapping(value="luckydrawAdd.html",method = RequestMethod.POST)
+	@MyLog(remark="新增大转盘活动")
+	@ResponseBody
+	public Map<String, Object> add(HttpSession session,HttpServletRequest request) {
+		String mchtId =request.getParameter("mchtId");
+		String modName = request.getParameter("modName");
+		String prizeJson = request.getParameter("prizeJson");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" } ,{ modName, "1", "64" },{ prizeJson, "1", "0" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			String respMsg =wechatModService.save(mchtId,modName,prizeJson,"0");
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "新增大转盘活动失败,请联系管理员或稍后再试", "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("新增大转盘活动失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "新增大转盘活动失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+}

@@ -1,0 +1,76 @@
+.ui-datepicker {
+	padding: 0;
+	border: none;
+	background: white;
+}
+.ui-datepicker.ui-corner-all,
+.ui-datepicker .ui-corner-all {
+	border-radius: 0;
+}
+
+.ui-datepicker .ui-datepicker-header {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border: none;
+	background: #333;
+}
+.ui-datepicker .ui-datepicker-title {
+	margin: 0;
+	line-height: 20px;
+}
+
+.ui-datepicker .ui-datepicker-prev:hover {
+	border: none;
+	background: transparent;
+	cursor: pointer;
+}
+.ui-datepicker .ui-datepicker-prev:hover .ui-icon {
+	border: none;
+	background-image: url("images/ui-icons_ffffff_256x240.png");
+}
+
+.ui-datepicker .ui-datepicker-next:hover {
+	border: none;
+	background: transparent;
+	cursor: pointer;
+}
+.ui-datepicker .ui-datepicker-next:hover .ui-icon {
+	border: none;
+	background-image: url("images/ui-icons_ffffff_256x240.png");
+}
+
+.ui-datepicker .ui-datepicker-calendar {
+	margin-bottom: 0;
+	color: #666;
+}
+
+.ui-datepicker-calendar thead tr {
+	height: 24px;
+	background-color: #eee;
+}
+.ui-datepicker-calendar th {
+	padding: 0;
+	font-weight: normal;
+}
+
+.ui-datepicker-calendar tbody td {
+	padding: 0;
+	border: 1px solid #ddd;
+}
+
+.ui-datepicker-calendar .ui-state-default {
+	padding-right: 8px;
+	border: none;
+	background: transparent;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 24px;
+	color: #666;
+}
+.ui-datepicker-calendar .ui-state-default.ui-state-active {
+	background: #ddd;
+}
+.ui-datepicker-calendar .ui-datepicker-today .ui-state-default {
+	color: white;
+	text-shadow: none;
+}

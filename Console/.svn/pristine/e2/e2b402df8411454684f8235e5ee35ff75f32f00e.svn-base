@@ -1,0 +1,134 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "TBL_WECHAT_MENU")
+public class TblWechatMenu implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	private String menuId;
+
+    private String mchtId;
+
+    private String orderNo;
+
+    private String menuName;
+
+    private String parentId;
+
+    private String type;
+
+    private String menuKey;
+
+    private String url;
+
+    private String createTime;
+
+    private String updateTime;
+    
+    private String groupId;
+
+    /** default constructor */
+	public TblWechatMenu() {
+		
+	}
+
+	@Id
+	@Column(name = "MENU_ID", unique = true, nullable = false, length = 10)
+	public String getMenuId() {
+		return menuId;
+	}
+
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
+	@Column(name = "MCHT_ID", nullable = false, length = 15)
+	public String getMchtId() {
+		return mchtId;
+	}
+
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+	
+	@Column(name = "ORDER_NO", length = 4)
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+	@Column(name = "MENU_NAME", nullable = false, length = 64)
+	public String getMenuName() {
+		return menuName;
+	}
+
+	public void setMenuName(String menuName) {
+		this.menuName = menuName;
+	}
+
+	@Column(name = "PARENT_ID", nullable = false, length = 10)
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+	@Column(name = "TYPE",  length = 2)
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	@Column(name = "MENU_KEY",  length = 128)
+	public String getMenuKey() {
+		return menuKey;
+	}
+
+	public void setMenuKey(String menuKey) {
+		this.menuKey = menuKey;
+	}
+	@Column(name = "URL",  length = 256)
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	@Column(name = "CREATE_TIME",  length = 14)
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+	@Column(name = "UPDATE_TIME",  length = 14)
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	@Column(name = "GROUP_ID",  length = 3)
+	public String getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
+	
+}

@@ -1,0 +1,33 @@
+package com.ebeijia.service.adminInf;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.ebeijia.entity.TblAdminInf;
+
+public interface AdminInfService {
+	
+	
+	//通过条件查询结果
+	public Map<String,Object> findBySql(String adminId,String adminName ,String adminStat,String pageData);  
+	//新增管理员
+	public void save(TblAdminInf data,String type,MultipartFile f,String ext);	
+	//管理员id序列
+	public String getAdminId() ;
+	//查询最近登录状况
+	public List<Object> listAdminByUpTime();
+	//登录
+	public List<TblAdminInf> login(String usrName);
+	//查用户带头像信息
+	public List usrInfHead(String usrId);
+	//更新管理员
+	public void update(TblAdminInf data);	
+	//验证管理员
+	public List<TblAdminInf> checkAdmin(String id,String pwd);
+	//根据id查信息
+	public TblAdminInf getById(String id);
+	//删除管理员
+	public void delById(String id);
+}

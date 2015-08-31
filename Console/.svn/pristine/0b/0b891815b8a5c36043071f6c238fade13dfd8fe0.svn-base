@@ -1,0 +1,49 @@
+package com.ebeijia.entity.vo.interf;
+
+import java.io.Serializable;
+
+public class PartyAttendReq extends CommonReq implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String partyId;
+	private String usrId;
+	private String timeSign;
+	private String stat;
+	private String flag;
+	public String getPartyId() {
+		return partyId;
+	}
+	public void setPartyId(String partyId) {
+		this.partyId = partyId;
+	}
+	public String getUsrId() {
+		return usrId;
+	}
+	public void setUsrId(String usrId) {
+		this.usrId = usrId;
+	}
+	public String getTimeSign() {
+		return timeSign;
+	}
+	public void setTimeSign(String timeSign) {
+		this.timeSign = timeSign;
+	}
+	public String getStat() {
+		return stat;
+	}
+	public void setStat(String stat) {
+		this.stat = stat;
+	}
+	public String getFlag() {
+		return flag;
+	}
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+	
+	
+}

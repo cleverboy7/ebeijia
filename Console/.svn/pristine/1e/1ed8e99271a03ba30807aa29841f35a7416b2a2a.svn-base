@@ -1,0 +1,21 @@
+package com.ebeijia.entity.vo.wechat.resp;
+
+
+/**
+ * 图文model
+ * 
+ * @author zhicheng.xu
+ * @date 2015-04-15
+ */
+public class ArticleMedia {
+	private Articles[] articles;
+
+	public Articles[] getArticles() {
+		return articles;
+	}
+
+	public void setArticles(Articles[] articles) {
+		this.articles = articles;
+	}
+	
+}

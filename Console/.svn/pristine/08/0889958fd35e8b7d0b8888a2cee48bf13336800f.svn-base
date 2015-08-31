@@ -1,0 +1,88 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+
+@Entity
+@Table(name = "TBL_WECHAT_CONFIG")
+public class TblWechatConfig implements java.io.Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String seq;
+
+    private String mchtId;
+
+    private String reply;
+
+    private String noMatch;
+
+    private String noMatch2;
+
+    private String lsRange;
+    
+    /** default constructor */
+	public TblWechatConfig() {
+		
+	}
+	
+	@Id
+	@Column(name = "SEQ", unique = true, nullable = false, length = 20)
+	public String getSeq() {
+		return seq;
+	}
+
+	public void setSeq(String seq) {
+		this.seq = seq;
+	}
+	@Column(name = "MCHT_ID", nullable = false, length = 15)
+	public String getMchtId() {
+		return mchtId;
+	}
+
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+	@Column(name = "REPLY", length = 1)
+	public String getReply() {
+		return reply;
+	}
+
+	public void setReply(String reply) {
+		this.reply = reply;
+	}
+	@Column(name = "NO_MATCH", length = 1)
+	public String getNoMatch() {
+		return noMatch;
+	}
+
+	public void setNoMatch(String noMatch) {
+		this.noMatch = noMatch;
+	}
+	@Column(name = "NO_MATCH2", length = 200)
+	public String getNoMatch2() {
+		return noMatch2;
+	}
+
+	public void setNoMatch2(String noMatch2) {
+		this.noMatch2 = noMatch2;
+	}
+	@Column(name = "LS_RANGE", length = 20)
+	public String getLsRange() {
+		return lsRange;
+	}
+
+	public void setLsRange(String lsRange) {
+		this.lsRange = lsRange;
+	}
+	
+	
+
+}

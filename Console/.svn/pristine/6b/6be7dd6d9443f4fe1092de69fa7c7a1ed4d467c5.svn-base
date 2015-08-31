@@ -1,0 +1,32 @@
+package com.ebeijia.entity.page;
+
+import com.ebeijia.util.Constant;
+
+public class PageEntity {
+
+	String sEcho = null;
+	// 起始索引
+	int iDisplayStart = 0;
+	// 每页显示的行数
+	int iDisplayLength = Constant.PAGE_SIZE;
+	
+	public String getsEcho() {
+		return sEcho;
+	}
+	public void setsEcho(String sEcho) {
+		this.sEcho = sEcho;
+	}
+	public int getiDisplayStart() {
+		return iDisplayStart;
+	}
+	public void setiDisplayStart(int iDisplayStart) {
+		this.iDisplayStart = iDisplayStart;
+	}
+	public int getiDisplayLength() {
+		return iDisplayLength;
+	}
+	public void setiDisplayLength(int iDisplayLength) {
+		this.iDisplayLength = iDisplayLength;
+	} 
+	
+}

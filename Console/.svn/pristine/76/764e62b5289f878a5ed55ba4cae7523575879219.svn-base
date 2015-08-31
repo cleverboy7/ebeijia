@@ -1,0 +1,185 @@
+package com.ebeijia.service.roleInf;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.role.RoleInfDao;
+import com.ebeijia.dao.role.RoleMapDao;
+import com.ebeijia.entity.TblRoleInf;
+import com.ebeijia.entity.TblRoleMap;
+import com.ebeijia.entity.TblRoleMapId;
+
+@Service
+public final class RoleInfServiceImpl implements RoleInfService {
+
+	@Autowired
+	private RoleInfDao roleInfDao;
+	@Autowired
+	private RoleMapDao roleMapDao;
+	
+	@Transactional
+	@Cacheable(value="roleCache",key = "#root.method.name+#usrId")
+	public String funcFind(String usrId){
+		StringBuilder sb = new StringBuilder();
+		sb.append("select f.funcName from TblAdminInf a ,TblRoleMap r ,TblFuncInf f ");
+		sb.append("where a.adminId = '").append(usrId).append("' and a.roleId =r.id.roleId");
+		sb.append(" and r.id.funcId = f.funcId");
+		List<?> list =roleInfDao.find(sb.toString());
+		StringBuilder result = new StringBuilder();
+		if(list.isEmpty()){
+			return null;
+		}else{
+			for(int i = 0 ; i <list.size();i++){
+				result.append(list.get(i)).append(",");
+			}
+		}
+		return result.toString().substring(0,result.length()-1);
+	}
+	
+	//查询已有权限和未添加权限列表
+	@Transactional
+	@Cacheable(value="roleCache",key = "#root.method.name+#roleId")
+	public Map<String,Object> findRoleDef(String roleId){
+		Map<String,Object> map = new HashMap<String,Object> ();
+		StringBuilder exis = new StringBuilder();
+		exis.append("select f.funcId,f.funcName from TblFuncInf f , TblRoleMap r ");
+		exis.append("where f.funcId = r.id.funcId and r.id.roleId = '").append(roleId).append("' ");
+		exis.append(" order by f.funcId");
+		List<?> list =roleInfDao.find(exis.toString());
+		map.put("exis", list);
+		
+		StringBuilder noexis = new StringBuilder();
+		noexis.append("select funcId,funcName from TblFuncInf where funcId not in(");
+		noexis.append("select f.funcId from TblRoleMap r,TblFuncInf f ");
+		noexis.append("where r.id.funcId = f.funcId and r.id.roleId='").append(roleId).append("') and parentId <>'-'");
+		noexis.append(" order by funcId");
+		List<?> noexisList =roleInfDao.find(noexis.toString());
+		map.put("noexis",noexisList);
+		return map;
+	}
+	
+	@Transactional
+	@Cacheable(value="funcCache",key = "#root.method.name")
+	public Map<String, Object> funcFindAll(){
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		StringBuilder sb = new StringBuilder();
+		sb.append("select f.funcId,f.funcName  from TblFuncInf f where f.parentId <> '-'");
+		sb.append(" order by f.funcId");
+		List<?> datas = roleInfDao.find(sb.toString());
+		Iterator<?> it = datas.iterator();
+		List<Object> list = new LinkedList<Object>();
+		while(it.hasNext()){
+			Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+			Object[] o  = (Object[])it.next();
+			hashMap.put("key", o[0] + "-" + o[1]);
+			hashMap.put("value", o[0]);
+			list.add(hashMap);
+		}
+		map.put("info", list);
+		return map;
+	}
+	
+	@Transactional
+	@CacheEvict(value="roleCache" ,allEntries=true)
+	public void save(String name,String dsc,String roleList){
+		TblRoleInf data = new TblRoleInf();
+		data.setRoleId(getRoleId());
+		data.setRoleName(name);
+		data.setDsc(dsc);
+		roleInfDao.save(data);
+		String[] list =roleList.split(",");
+		for(String funcId : list){
+			TblRoleMap roleMap = new TblRoleMap();
+			TblRoleMapId id = new TblRoleMapId();
+			id.setFuncId(funcId);
+			id.setRoleId(data.getRoleId());
+			roleMap.setId(id);
+			roleMapDao.save(roleMap);
+		}
+	}
+	
+	@Transactional
+	@Cacheable(value="roleCache")
+	public Map<String,Object> findBySql(String roleId,String roleName,String pageData){
+		StringBuilder query =new StringBuilder();
+		query.append(" from TblRoleInf where 1=1");
+		if(roleId!=null && !"".equals(roleId)){
+			query.append(" AND roleId = '").append(roleId).append("'");
+		}
+		if(roleName!=null && !"".equals(roleName)){
+			query.append(" AND roleName like '").append(roleName).append("'");
+		}
+		Map<String,Object> m =roleInfDao.findByPage(query.toString(), pageData);
+		return m;
+	}
+	
+	@Transactional
+	@Cacheable(value="roleCache",key = "#root.method.name")
+	public Map<String, Object> findRole(){
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		StringBuilder sb = new StringBuilder();
+		sb.append("select roleId,roleName from TblRoleInf f");
+		sb.append(" order by roleId");
+		List<?> datas = roleInfDao.find(sb.toString());
+		Iterator<?> it = datas.iterator();
+		List<Object> list = new LinkedList<Object>();
+		while(it.hasNext()){
+			Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+			Object[] o  = (Object[])it.next();
+			hashMap.put("key", o[0] + "-" + o[1]);
+			hashMap.put("value", o[0]);
+			list.add(hashMap);
+		}
+		map.put("info", list);
+		return map;
+	}
+	
+	@Transactional
+	@Cacheable(value="roleCache",key = "#root.method.name+#id")
+	public TblRoleInf getById(String id){
+		return roleInfDao.getById(id);
+	}
+	
+	@Transactional
+	@CacheEvict(value="roleCache" ,allEntries=true)
+	public void delById(String id){
+		roleInfDao.deleteById(id);
+		String sqlDelete = "delete from TblRoleMap where id.roleId = '" + id +"'";
+		roleMapDao.updateAll(sqlDelete);
+	}
+	
+	//更新角色
+	@Transactional
+	@CacheEvict(value="roleCache" ,allEntries=true)
+	public void update(TblRoleInf tblRoleInf ,String roleList){
+		roleInfDao.update(tblRoleInf);
+		//先删除 然后添加
+		String sqlDelete = "delete from TblRoleMap where id.roleId = '" + tblRoleInf.getRoleId() +"'";
+		roleMapDao.updateAll(sqlDelete);
+		String[] list =roleList.split(",");
+		for(String funcId : list){
+			TblRoleMap roleMap = new TblRoleMap();
+			TblRoleMapId id = new TblRoleMapId();
+			id.setFuncId(funcId);
+			id.setRoleId(tblRoleInf.getRoleId());
+			roleMap.setId(id);
+			roleMapDao.save(roleMap);
+		}
+	}
+	
+	private String getRoleId() {
+		String sql = "SELECT SEQ_ROLE_ID.NEXTVAL FROM DUAL";
+		String txnNo = roleInfDao.getListSQL(sql).get(0).toString();
+		return txnNo;	
+	}
+}

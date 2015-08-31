@@ -1,0 +1,160 @@
+package com.ebeijia.service.wechat.media;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.ebeijia.dao.wechat.WechatFodderDao;
+import com.ebeijia.dao.wechat.WechatMchtInfDao;
+import com.ebeijia.entity.vo.wechat.AccessToken;
+import com.ebeijia.entity.wechat.TblWechatFodder;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.service.wechat.inter.MediaManager;
+import com.ebeijia.util.wechat.WechatUtil;
+
+@Service
+public final class WechatFodderServiceImpl implements WechatFodderService {
+
+    @Autowired
+    private WechatFodderDao wechatFodderDao;
+    @Autowired
+    private WechatMchtInfDao wechatMchtInfDao;
+    @Autowired
+    private WechatTokenService wechatTokenService;
+    @Autowired
+    private MediaManager mediaManager;
+
+    @Transactional
+    @Cacheable(value = "wechatFooderCache")
+    public Map<String, Object> findBySql(String mchtId, String type, String mediaType, String aoData) {
+        StringBuilder query = new StringBuilder();
+        query.append("from TblWechatFodder");
+        query.append(" where type <> 'news' ");
+        if (mchtId != null && !"".equals(mchtId)) {
+            query.append(" AND mchtId like '%").append(mchtId).append("%'");
+        }
+        if (type != null && !"".equals(type)) {
+            query.append(" AND type ='").append(type).append("'");
+        }
+        if (mediaType != null && !"".equals(mediaType)) {
+            query.append(" AND mediaType like '%").append(mediaType).append("%'");
+        }
+        query.append(" ORDER BY createTime desc");
+        Map<String, Object> m = wechatFodderDao.findByPage(query.toString(), aoData);
+        return m;
+    }
+
+    @Transactional
+    @Cacheable(value = "wechatFooderCache")
+    public Map<String, Object> findBySqltoNews(String mchtId, String aoData) {
+        StringBuilder query = new StringBuilder();
+        query.append("from TblWechatFodder");
+        query.append(" where type ='news' ");
+        if (mchtId != null && !"".equals(mchtId)) {
+            query.append(" AND mchtId like '%").append(mchtId).append("%'");
+        }
+        Map<String, Object> m = wechatFodderDao.findByPage(query.toString(), aoData);
+        return m;
+    }
+
+    @Transactional
+    @CacheEvict(value = "wechatFooderCache", allEntries = true)
+    public void upFodder(String media, String name, String dsc) {
+        TblWechatFodder data = wechatFodderDao.getById(media);
+        data.setName(name);
+        data.setDsc(dsc);
+        wechatFodderDao.update(data);
+    }
+
+    @Transactional
+    @CacheEvict(value = "wechatFooderCache", allEntries = true)
+    public String delFodder(String mchtId, String media) {
+        // 查询该商户的appId appSecret
+        StringBuilder sb = new StringBuilder();
+        sb.append("from TblWechatMchtInf where mchtId = '").append(mchtId).append("'");
+        TblWechatMchtInf tblWechatMchtInf = wechatMchtInfDao.find(sb.toString()).get(0);
+        // 调用接口获取access_token
+        AccessToken at = wechatTokenService.getAccessToken(tblWechatMchtInf.getAppid(), tblWechatMchtInf.getAppsecret());
+        JSONObject jsonObject = null;
+        // 异常时返回内容
+        String result = null;
+        if (null != at) {
+            jsonObject = mediaManager.mediaDel(at.getToken(), media);
+            if (null != jsonObject) {
+                if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+                    result = jsonObject.getString("errcode");
+                } else {
+                    wechatFodderDao.deleteById(media);
+                }
+            } else {
+                result = "8888888";
+            }
+        } else {
+            result = "9999999";
+        }
+        return result;
+    }
+
+//	//图片素材列表
+//	public Map<String, Object> imageList(String mchtId) {
+//		Map<String, Object> map = new LinkedHashMap<String, Object>();
+//		StringBuilder hql =new StringBuilder();
+//		hql.append("FROM TblWechatFodder WHERE mchtId='").append(mchtId).append("'");
+//		hql.append(" and type ='image' and mediaType ='1'");
+//		hql.append("ORDER BY createTime desc");
+//		List<TblWechatFodder> dataList = wechatFodderDao.find(hql.toString());
+//		Iterator<TblWechatFodder> it = dataList.iterator();
+//		List<Object> list = new LinkedList<Object>();
+//		while(it.hasNext()){
+//			Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+//			TblWechatFodder data = it.next();
+//			hashMap.put("key", data.getMedia());
+//			hashMap.put("value", data.getMedia()+"-"+data.getName());
+//			list.add(hashMap);
+//		}
+//		map.put("info", list);
+//		return map;
+//	}
+
+    @Transactional
+    @Cacheable(value = "wechatFooderCache", key = "#root.method.name+#id")
+    public TblWechatFodder getById(String id) {
+        return wechatFodderDao.getById(id);
+    }
+
+    //根据类型素材列表
+    @Transactional
+    @Cacheable(value = "wechatFooderCache")
+    public Map<String, Object> mediaList(String mchtId, String msgType) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        StringBuilder hql = new StringBuilder();
+        hql.append("FROM TblWechatFodder WHERE mchtId='").append(mchtId).append("'");
+        hql.append(" and type ='").append(msgType).append("' and mediaType ='1'");
+        hql.append("ORDER BY createTime desc");
+        List<TblWechatFodder> dataList = wechatFodderDao.find(hql.toString());
+        List<Object> list = new LinkedList<Object>();
+        for (TblWechatFodder data : dataList) {
+            Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+            hashMap.put("key", data.getMedia() + "-" + data.getName());
+            hashMap.put("value", data.getMedia());
+            hashMap.put("url", data.getUrl());
+            list.add(hashMap);
+        }
+        map.put("info", list);
+        return map;
+    }
+
+    //保存素材
+    @Transactional
+    @CacheEvict(value = "wechatFooderCache", allEntries = true)
+    public void save(TblWechatFodder data) {
+        wechatFodderDao.save(data);
+    }
+}

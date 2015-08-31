@@ -1,0 +1,19 @@
+package com.ebeijia.ajax.resp;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author zhicheng.xu
+ * @date 2015年4月22日
+ */
+public  class AjaxResp {
+
+	public static Map<String, Object> getReturn(String respCode ,String msg ,Object o){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("respCode", respCode);
+		map.put("errorInfo", msg);
+		map.put("content", o);
+		return map;
+	}
+}

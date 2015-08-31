@@ -1,0 +1,179 @@
+package com.ebeijia.service.wechat.inter;
+
+
+import java.io.File;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.util.wechat.WechatUtil;
+
+/** 
+ * 用户管理器类 
+ * @author zhicheng.xu
+ * @date 2015-02-02
+ */  
+
+@Service("MediaManager")
+public class MediaManagerImpl implements MediaManager{  
+  
+	@Autowired
+	private WechatTokenService wechatTokenService;
+	/** 
+     * 上传临时素材
+     * @param accessToken 有效的access_token 
+     * @param type 素材类型
+     * @param o 素材对象 
+     * @return String 
+     */  
+	public JSONObject upLoadTmpMedia(String accessToken, String type, File f,String ext) {
+		String url = WechatUtil.MEDIA_UPLOAD_TMP_URL.replace("ACCESS_TOKEN",accessToken).replace("TYPE", type);
+		JSONObject result = wechatTokenService.upload(url, accessToken, f,type,ext,null);
+		return result;
+	}
+	
+	/** 
+     * 上传永久素材
+     * @param accessToken 有效的access_token 
+     * @param type 素材类型
+     * @param o 素材对象 
+     * @return JSONObject 
+     */  
+    public JSONObject upLoadMedia(String accessToken,String type,File f,String ext) {  
+        String url = WechatUtil.MEDIA_UPLOAD_URL.replace("ACCESS_TOKEN", accessToken);
+        //永久视频标识
+        String flag =null;
+        if("video".equals(type)){
+        	flag="video";
+        }
+        JSONObject result = wechatTokenService.upload(url, accessToken, f,type,ext,flag);
+		return result;
+    }
+    
+    /** 
+     * 下载临时素材
+     * @param accessToken 有效的access_token 
+     * @param mediaId 素材id 
+     * @return JSONObject
+     */  
+	@Override
+	public String dowLoadTmpMedia(String accessToken, String mediaId) {
+		String url = WechatUtil.MEDIA_DOWLOAD_TMP_URL.replace("ACCESS_TOKEN",accessToken).replace("MEDIA_ID", mediaId);
+		String result = wechatTokenService.dowload(url,"GET","");
+		return result;
+	}
+    
+	/** 
+     * 下载永久素材
+     * @param accessToken 有效的access_token 
+     * @param mediaId 素材id 
+     * @return String
+     */  
+	@Override
+	public String dowLoadMedia(String accessToken, String mediaId) {
+		String url = WechatUtil.MEDIA_DOWLOAD_URL.replace("ACCESS_TOKEN",accessToken);
+		String result = wechatTokenService.dowload(url,"POST",mediaId);
+		return result;
+	}
+	
+    /** 
+     * 获得素材总数
+     * @param accessToken 有效的access_token 
+     * @param type 素材类型
+     * @param o 素材对象 
+     * @return JSONObject 
+     */  
+	@Override
+	public JSONObject mediaCountAll(String accessToken) {
+		String url = WechatUtil.MEDIA_COUNTALL_URL.replace("ACCESS_TOKEN", accessToken);
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", null);
+		return jsonObject;
+	}
+	
+	/** 
+     * 素材删除
+     * @param accessToken 有效的access_token 
+     * @param type 素材类型
+     * @param o 素材对象 
+     * @return JSONObject 
+     */  
+	@Override
+	public JSONObject mediaDel(String accessToken,String media) {
+		String url = WechatUtil.MEDIA_DEL_URL.replace("ACCESS_TOKEN", accessToken);
+		media ="{\"media_id\":\""+media+"\"}";
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", media);
+		return jsonObject;
+	}
+	
+	 /** 
+     * 上传图文素材
+     * @param accessToken 有效的access_token 
+     * @param ArticleMedia 图文对象
+     * @return JSONObject 
+     */  
+    public JSONObject upGtMedia(String accessToken,String articles){
+    	String url = WechatUtil.MEDIA_UPLOAD_GT_URL.replace("ACCESS_TOKEN", accessToken);
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", articles);
+		return jsonObject;
+    }
+    
+    /** 
+     * 修改图文素材
+     * @param accessToken 有效的access_token 
+     * @param ArticleMedia 图文对象
+     * @return JSONObject 
+     */  
+    public JSONObject updateMedia(String accessToken,String media,String articles){
+    	//组装修改图文json 加入mediaId
+    	media ="\"media_id\":\""+media+"\",\"index\":\"0\",";
+    	articles=articles.substring(0,1)+media+articles.substring(1);
+    	String url = WechatUtil.MEDIA_NEWS_UPDATE.replace("ACCESS_TOKEN", accessToken);
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", articles);
+		return jsonObject;
+    }
+    
+    /** 
+     * 获得素材对象
+     * @param accessToken 有效的access_token 
+     * @param type 素材类型
+     * @param o 素材对象 
+     * @return JSONObject 
+     */  
+	@Override
+	public JSONObject newsGet(String accessToken,String type,String offset,String count) {
+		String url = WechatUtil.MEDIA_NEWS_GET.replace("ACCESS_TOKEN", accessToken);
+		String sendJson ="{\"type\":\""+type+"\",\"offset\":\""+offset+"\",\"count\":\""+count+"\"}";
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", sendJson);
+		return jsonObject;
+	}
+	
+	/** 
+     * 群发上传群发图文素材
+     * @param accessToken 有效的access_token 
+     * @param ArticleMedia 图文对象
+     * @return JSONObject 
+     */  
+    public JSONObject massUpNews(String accessToken,String articles){
+    	String url = WechatUtil.MASS_UP_NEWS.replace("ACCESS_TOKEN", accessToken);
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", articles);
+		return jsonObject;
+    }
+    
+    /** 
+     * 群发上传群发视频
+     * @param accessToken 有效的access_token 
+     * @param mediaId 
+     * @param title 标题
+     * @param description描述
+     * @return JSONObject 
+     */  
+    public JSONObject massUpVideo(String accessToken,String mediaId,String title,String description){
+    	String url = WechatUtil.MASS_VIDEO_SEND.replace("ACCESS_TOKEN", accessToken);
+    	String sendJson ="{\"media_id\": \""+mediaId+"\", \"title\":\""+title+"\",\"description\": \""+description+"\"}";
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", sendJson);
+		return jsonObject;
+    }
+}  

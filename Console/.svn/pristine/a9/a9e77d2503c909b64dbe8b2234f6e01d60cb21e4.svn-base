@@ -1,0 +1,266 @@
+package com.ebeijia.service.wechat.media;
+
+import java.io.File;
+import java.util.Map;
+
+import net.sf.json.JSONObject;
+
+import org.ebeijia.tools.DateTime4J;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.ebeijia.dao.wechat.WechatFodderDao;
+import com.ebeijia.entity.vo.wechat.AccessToken;
+import com.ebeijia.entity.wechat.TblWechatFodder;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+import com.ebeijia.service.wechat.core.WechatMchtInfService;
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.service.wechat.inter.MediaManager;
+import com.ebeijia.util.SystemProperties;
+import com.ebeijia.util.UpLoad;
+import com.ebeijia.util.wechat.WechatUtil;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+@Service("wechatMediaService")
+public final class WechatMediaServiceImpl implements WechatMediaService {
+
+	@Autowired
+	private WechatMchtInfService wechatMchtInfService;
+	@Autowired
+	private WechatTokenService wechatTokenService;
+	@Autowired
+	private MediaManager mediaManager;
+	@Autowired
+	private WechatFodderDao wechatFodderDao;
+
+	//上传素材
+	@Override
+	@Transactional
+	@CacheEvict(value="wechatFooderCache",allEntries=true)
+	public String upLoadMedia(String mchtId,String type,MultipartFile f,String mediaType,String ext,String name,String dsc) {
+		UpLoad upload = new UpLoad();
+		//上传文件本地到服务器
+		File file = upload.getFile(f,SystemProperties.getProperties("image.path1"),type,ext);
+ 		TblWechatMchtInf data =wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(), data.getAppsecret());
+		JSONObject jsonObject = null;
+		//异常时返回内容
+		String result = null;
+		if (null != at) {
+			if("0".equals(mediaType)){
+				jsonObject = mediaManager.upLoadTmpMedia(at.getToken(),type,file,ext);
+			}else{
+				jsonObject = mediaManager.upLoadMedia(at.getToken(),type,file,ext);
+			}
+			if (null != jsonObject) {
+				if (jsonObject.toString().indexOf("errcode") !=-1) {
+					result = jsonObject.getString("errcode");
+				} else {
+					// 保存meida
+					TblWechatFodder fodder = new TblWechatFodder();
+					fodder.setCreateTime(DateTime4J.getCurrentDateTime());
+					fodder.setMedia(jsonObject.getString("media_id"));
+					fodder.setMediaType(mediaType);
+					fodder.setMchtId(mchtId);
+					String url = SystemProperties.getProperties("mediaPath")+SystemProperties.getProperties("image.path1")+
+							"/"+type+"/"+file.getName();
+					fodder.setUrl(url);
+					fodder.setType(type);
+					fodder.setName(name);
+					fodder.setDsc(dsc);
+					wechatFodderDao.save(fodder);
+				}
+			}else{
+				result="8888888";
+			}
+		}else{
+        	result="9999999";
+        }
+		return result;
+	}
+
+	//下载素材
+	@Override
+	@Transactional
+	public String dowLoadMedia(String mchtId,String mediaId,String mediaType) {
+		TblWechatMchtInf data =wechatMchtInfService.getById(mchtId);
+		String result =null;
+		String jsonObject = null;
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(), data.getAppsecret());
+		if (null != at) {
+			if("0".equals(mediaType)){
+				jsonObject = mediaManager.dowLoadTmpMedia(at.getToken(), mediaId);
+			}else{
+				jsonObject = mediaManager.dowLoadMedia(at.getToken(), mediaId);
+			}
+			if (null != jsonObject) {
+				result = jsonObject.toString();
+			}else{
+				result = "8888888";
+			}
+		}else{
+        	result="9999999";
+        }
+		return result;
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatFooderCache",allEntries=true)
+	public String upGtMedia(String mchtId,String name ,String dsc ,String articles) {
+		// 调用接口获取access_token
+		TblWechatMchtInf data =wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(), data.getAppsecret());
+		JSONObject jsonObject = null;
+		String result =null;
+		if (null != at) {
+			jsonObject = mediaManager.upGtMedia(at.getToken(), articles);
+			if (null != jsonObject) {
+				if (jsonObject.toString().indexOf("errcode") !=-1) {
+					result = jsonObject.getString("errcode");
+				} else {
+					String tmp =jsonObject.get("media_id").toString();
+					//保存meida
+					TblWechatFodder fodder = new TblWechatFodder();
+					fodder.setCreateTime(DateTime4J.getCurrentDateTime());
+					fodder.setMedia(tmp);
+					fodder.setMediaType("1");
+					fodder.setMchtId(mchtId);
+					fodder.setUrl(" ");
+					fodder.setType("news");
+					fodder.setName(name);
+					fodder.setDsc(dsc);
+					wechatFodderDao.save(fodder);
+				}
+			}else{
+				result = "8888888";
+			}
+		}else{
+        	result="9999999";
+        }
+		return result;
+	}
+	
+//	@Transactional
+//	@CacheEvict(value="wechatFooderCache",allEntries=true)
+//	public String upGtMedia(String mchtId,String name ,String dsc ,String articles) {
+//		// 调用接口获取access_token
+//		TblWechatMchtInf data =wechatMchtInfService.getById(mchtId);
+//		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(), data.getAppsecret());
+//		String result = "0";
+//		if (null != at) {
+//			result = mediaManager.upGtMedia(at.getToken(), articles);
+//		}
+//		JsonObject resultJson = null;
+//		JSONObject resultJ;
+//		if (null != at) {
+//			//微信分页从0开始
+//			resultJ = mediaManager.newsGet(at.getToken(),"0","20");
+//			JsonParser jsonparer = new JsonParser();
+//			JsonObject json = jsonparer.parse(result.toString()).getAsJsonObject();
+//			JsonArray array =json.get("item").getAsJsonArray();
+//			for(int i =0;i<array.size();i++){
+//				JsonObject jsonElement =array.get(i).getAsJsonObject();
+//				String respMedia = jsonElement.get("media_id").getAsString();
+//				if(result.equals(respMedia)){
+//					resultJson =jsonElement.get("content").getAsJsonObject();
+//					System.out.println("==="+resultJson.toString());
+//				}
+//			}
+//		}
+//		//保存meida
+//		TblWechatFodder fodder = new TblWechatFodder();
+//		fodder.setCreateTime(DateTime4J.getCurrentDateTime());
+//		fodder.setMedia(result);
+//		fodder.setMediaType("1");
+//		fodder.setMchtId(mchtId);
+//		fodder.setUrl(" ");
+//		fodder.setType("news");
+//		fodder.setName(name);
+//		fodder.setDsc(dsc);
+//		wechatFodderDao.save(fodder);
+//		return result;
+//	}
+	
+	@Transactional
+	@CacheEvict(value="wechatFooderCache",allEntries=true)
+	public String updateGtMedia(String mchtId,String name,String dsc,String media,String articles) {
+		// 调用接口获取access_token
+		TblWechatMchtInf data =wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(), data.getAppsecret());
+		JSONObject jsonObject = null;
+		// 异常时返回内容
+		String result = null;
+		if (null != at) {
+			jsonObject = mediaManager.updateMedia(at.getToken(), media,articles);
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					TblWechatFodder fodder =wechatFodderDao.getById(media);
+					fodder.setName(name);
+					fodder.setDsc(dsc);
+					wechatFodderDao.update(fodder);
+				}
+			}else{
+				result = "8888888";
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatFooderCache",key = "#root.method.name+#mchtId")
+	public Map<String,Object> mediaAllCount(String mchtId){
+		TblWechatMchtInf data =wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(), data.getAppsecret());
+		JSONObject result ;
+		if (null != at) {
+			result = mediaManager.mediaCountAll(at.getToken());
+			@SuppressWarnings("unchecked")
+			Map<String,Object> map =WechatUtil.jsonToMap(result.toString());
+			return map;
+		}
+		return null;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatFooderCache")
+	public String newsGet(String mchtId,String media){
+		TblWechatMchtInf data =wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(), data.getAppsecret());
+		JsonObject resultJson = null;
+		JSONObject result;
+		// 异常时返回内容
+		String resultMsg = null;
+		if (null != at) {
+			//微信分页从0开始
+			result = mediaManager.newsGet(at.getToken(),"news","0","20");
+			JsonParser jsonparer = new JsonParser();
+			JsonObject json = jsonparer.parse(result.toString()).getAsJsonObject();
+			JsonArray array =json.get("item").getAsJsonArray();
+			for(int i =0;i<array.size();i++){
+				JsonObject jsonElement =array.get(i).getAsJsonObject();
+				String respMedia = jsonElement.get("media_id").getAsString();
+				if(media.equals(respMedia)){
+					resultJson =jsonElement.get("content").getAsJsonObject();
+					System.out.println("==="+resultJson.toString());
+					return resultJson.toString();
+				}
+			}
+			if(resultJson==null){
+				resultMsg = "8888888";
+			}
+		} else {
+			resultMsg = "9999999";
+		}
+		return resultMsg;
+	}
+}

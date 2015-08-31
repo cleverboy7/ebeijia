@@ -1,0 +1,500 @@
+.breadcrumb-wrapper .fullscreen-wrapper,
+.breadcrumb-wrapper > .breadcrumb > li.fa:hover,
+.breadcrumb-wrapper > .breadcrumb > li[href]:hover,
+.color-scheme-switcher > ul > li > a[href="#default"],
+#popup_ok,
+#popup_ok:hover,
+#popup_cancel,
+.homepage .loginlist .usrlist > li h5,
+.ulTag .fa,
+.face-content,
+.menuList li:first-child span {
+	-webkit-transition: color 0.6s;
+	        transition: color 0.6s;
+}
+
+
+/*default*/
+body.color-scheme-default > header,
+body.color-scheme-default > nav .nav-item.active,
+body.color-scheme-default .breadcrumb-wrapper .nav-switcher > .center-bar,
+body.color-scheme-default .breadcrumb-wrapper .nav-switcher:before,
+body.color-scheme-default .breadcrumb-wrapper .nav-switcher:after,
+.color-scheme-switcher > ul > li > a[href="#default"]:hover,
+body.color-scheme-default widget > widget-title,
+body.color-scheme-default widget .btn.btn-primary,
+body.color-scheme-default widget form .input-wrapper.required .required-mark:after,
+body.color-scheme-default widget dual-select > ul > li.active,
+body.color-scheme-default widget .form-nav li.current a,
+body.color-scheme-default widget.media-widget .thumb div,
+body.color-scheme-default .notfound button,
+body.color-scheme-default #popup_title,
+body.color-scheme-default .ui-datepicker-calendar .ui-datepicker-today .ui-state-default,
+body.color-scheme-default.loginpage,
+body.color-scheme-default .homepage .ulTag > li.tagSelected,
+body.color-scheme-default .homepage .ulTag,
+body.color-scheme-default .homepage .mainUl li,
+body.color-scheme-default .homepage .mainUl li a,
+body.color-scheme-default .jGrowl-notification,
+body.color-scheme-default .jGrowl-closer {
+	background-color: #0866c6;
+}
+body.color-scheme-default .breadcrumb-wrapper .fullscreen-wrapper,
+body.color-scheme-default .breadcrumb-wrapper > .breadcrumb > li.fa:hover,
+body.color-scheme-default .breadcrumb-wrapper > .breadcrumb > li[href]:hover,
+.color-scheme-switcher > ul > li > a[href="#default"],
+body.color-scheme-default #popup_ok,
+body.color-scheme-default #popup_ok:hover,
+body.color-scheme-default #popup_cancel,
+body.color-scheme-default .homepage .loginlist .usrlist > li h5,
+body.color-scheme-default .ulTag .fa,
+body.color-scheme-default .face-content,
+body.color-scheme-default .menuList li:first-child span {
+	color: #0866c6;
+}
+body.color-scheme-default widget > widget-content,
+body.color-scheme-default widget .btn.btn-primary,
+body.color-scheme-default widget form input:focus,
+body.color-scheme-default widget form select:focus,
+body.color-scheme-default widget form textarea:focus,
+body.color-scheme-default widget form dual-select > ul.selected-list,
+body.color-scheme-default widget td input:focus,
+body.color-scheme-default widget .form-nav li,
+body.color-scheme-default widget.media-widget .thumb img,
+body.color-scheme-default #popup_content,
+body.color-scheme-default #popup_ok,
+body.color-scheme-default #popup_ok:hover,
+body.color-scheme-default #popup_cancel,
+body.color-scheme-default .homepage .loginlist .color,
+body.color-scheme-default .homepage .ulTag,
+body.color-scheme-default .homepage .chart {
+	border-color: #0866c6;
+}
+body.color-scheme-default widget form .input-wrapper.required .required-mark {
+	border-color: #0866c6 transparent transparent #0866c6;
+}
+
+body.color-scheme-default .homepage .loginlist .skinimg > div:first-child {
+	background-color: rgba(8,102,198,0.6);
+}
+
+body.color-scheme-default widget form input:focus,
+body.color-scheme-default widget form select:focus,
+body.color-scheme-default widget form textarea:focus,
+body.color-scheme-default widget form dual-select > ul.selected-list,
+body.color-scheme-default widget td input:focus {
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1), 0 0 8px rgba(8, 102, 198, 0.6);
+}
+body.color-scheme-default widget button:focus,
+body.color-scheme-default widget.media-widget widget-content .thumb:hover {
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.4), 0 0 8px 1px rgba(8, 102, 198, 0.6);
+}
+body.color-scheme-default .inputwrapper #login {
+	border-color: #0c57a3;
+	background-color: #1e82e8;
+}
+
+/* 玫红 */
+body.color-scheme-rose-red > header,
+body.color-scheme-rose-red > nav .nav-item.active,
+body.color-scheme-rose-red .breadcrumb-wrapper .nav-switcher > .center-bar,
+body.color-scheme-rose-red .breadcrumb-wrapper .nav-switcher:before,
+body.color-scheme-rose-red .breadcrumb-wrapper .nav-switcher:after,
+.color-scheme-switcher > ul > li > a[href="#rose-red"]:hover,
+body.color-scheme-rose-red widget > widget-title,
+body.color-scheme-rose-red widget .btn.btn-primary,
+body.color-scheme-rose-red widget form .input-wrapper.required .required-mark:after,
+body.color-scheme-rose-red widget dual-select > ul > li.active,
+body.color-scheme-rose-red widget .form-nav li.current a,
+body.color-scheme-rose-red widget.media-widget .thumb div,
+body.color-scheme-rose-red .notfound button,
+body.color-scheme-rose-red #popup_title,
+body.color-scheme-rose-red .ui-datepicker-calendar .ui-datepicker-today .ui-state-default,
+body.color-scheme-rose-red.loginpage,
+body.color-scheme-rose-red .homepage .ulTag > li.tagSelected,
+body.color-scheme-rose-red .homepage .ulTag,
+body.color-scheme-rose-red .homepage .mainUl li,
+body.color-scheme-rose-red .homepage .mainUl li a,
+body.color-scheme-rose-red .jGrowl-notification,
+body.color-scheme-rose-red .jGrowl-closer {
+	background-color: #f1757b;
+}
+body.color-scheme-rose-red .breadcrumb-wrapper .fullscreen-wrapper,
+body.color-scheme-rose-red .breadcrumb-wrapper > .breadcrumb > li.fa:hover,
+body.color-scheme-rose-red .breadcrumb-wrapper > .breadcrumb > li[href]:hover,
+.color-scheme-switcher > ul > li > a[href="#rose-red"],
+body.color-scheme-rose-red #popup_ok,
+body.color-scheme-rose-red #popup_ok:hover,
+body.color-scheme-rose-red #popup_cancel,
+body.color-scheme-rose-red .homepage .loginlist .usrlist > li h5,
+body.color-scheme-rose-red .ulTag .fa,
+body.color-scheme-rose-red .face-content,
+body.color-scheme-rose-red .menuList li:first-child span {
+	color: #f1757b;
+}
+body.color-scheme-rose-red widget > widget-content,
+body.color-scheme-rose-red widget .btn.btn-primary,
+body.color-scheme-rose-red widget form input:focus,
+body.color-scheme-rose-red widget form select:focus,
+body.color-scheme-rose-red widget form textarea:focus,
+body.color-scheme-rose-red widget form dual-select > ul.selected-list,
+body.color-scheme-rose-red widget td input:focus,
+body.color-scheme-rose-red widget .form-nav li,
+body.color-scheme-rose-red widget.media-widget .thumb img,
+body.color-scheme-rose-red #popup_content,
+body.color-scheme-rose-red #popup_ok,
+body.color-scheme-rose-red #popup_ok:hover,
+body.color-scheme-rose-red #popup_cancel,
+body.color-scheme-rose-red .homepage .loginlist .color,
+body.color-scheme-rose-red .homepage .ulTag,
+body.color-scheme-rose-red .homepage .chart {
+	border-color: #f1757b;
+}
+body.color-scheme-rose-red widget form .input-wrapper.required .required-mark {
+	border-color: #f1757b transparent transparent #f1757b;
+}
+
+body.color-scheme-rose-red .homepage .loginlist .skinimg > div:first-child {
+	background-color: rgba(241, 117, 123, 0.6);
+}
+
+body.color-scheme-rose-red widget form input:focus,
+body.color-scheme-rose-red widget form select:focus,
+body.color-scheme-rose-red widget form textarea:focus,
+body.color-scheme-rose-red widget form dual-select > ul.selected-list,
+body.color-scheme-rose-red widget td input:focus {
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1), 0 0 8px rgba(241, 117, 123, 0.6);
+}
+body.color-scheme-rose-red widget button:focus,
+body.color-scheme-rose-red widget.media-widget widget-content .thumb:hover {
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.4), 0 0 8px 1px rgba(241, 117, 123, 0.6);
+}
+body.color-scheme-rose-red .inputwrapper #login {
+	border-color: #eb4f38;
+	background-color: #eb4f38;
+	color: white;
+}
+
+/* 紫色 */
+body.color-scheme-purple > header,
+body.color-scheme-purple > nav .nav-item.active,
+body.color-scheme-purple .breadcrumb-wrapper .nav-switcher > .center-bar,
+body.color-scheme-purple .breadcrumb-wrapper .nav-switcher:before,
+body.color-scheme-purple .breadcrumb-wrapper .nav-switcher:after,
+.color-scheme-switcher > ul > li > a[href="#purple"]:hover,
+body.color-scheme-purple widget > widget-title,
+body.color-scheme-purple widget .btn.btn-primary,
+body.color-scheme-purple widget form .input-wrapper.required .required-mark:after,
+body.color-scheme-purple widget dual-select > ul > li.active,
+body.color-scheme-purple widget .form-nav li.current a,
+body.color-scheme-purple widget.media-widget .thumb div,
+body.color-scheme-purple .notfound button,
+body.color-scheme-purple #popup_title,
+body.color-scheme-purple .ui-datepicker-calendar .ui-datepicker-today .ui-state-default,
+body.color-scheme-purple.loginpage,
+body.color-scheme-purple .homepage .ulTag > li.tagSelected,
+body.color-scheme-purple .homepage .ulTag,
+body.color-scheme-purple .homepage .mainUl li,
+body.color-scheme-purple .homepage .mainUl li a,
+body.color-scheme-purple .jGrowl-notification,
+body.color-scheme-purple .jGrowl-closer {
+	background-color: #442b64;
+}
+body.color-scheme-purple .breadcrumb-wrapper .fullscreen-wrapper,
+body.color-scheme-purple .breadcrumb-wrapper > .breadcrumb > li.fa:hover,
+body.color-scheme-purple .breadcrumb-wrapper > .breadcrumb > li[href]:hover,
+.color-scheme-switcher > ul > li > a[href="#purple"],
+body.color-scheme-purple #popup_ok,
+body.color-scheme-purple #popup_ok:hover,
+body.color-scheme-purple #popup_cancel,
+body.color-scheme-purple .homepage .loginlist .usrlist > li h5,
+body.color-scheme-purple .ulTag .fa,
+body.color-scheme-purple .face-content,
+body.color-scheme-purple .menuList li:first-child span {
+	color: #442b64;
+}
+body.color-scheme-purple widget > widget-content,
+body.color-scheme-purple widget .btn.btn-primary,
+body.color-scheme-purple widget form input:focus,
+body.color-scheme-purple widget form select:focus,
+body.color-scheme-purple widget form textarea:focus,
+body.color-scheme-purple widget form dual-select > ul.selected-list,
+body.color-scheme-purple widget td input:focus,
+body.color-scheme-purple widget .form-nav li,
+body.color-scheme-purple widget.media-widget .thumb img,
+body.color-scheme-purple #popup_content,
+body.color-scheme-purple #popup_ok,
+body.color-scheme-purple #popup_ok:hover,
+body.color-scheme-purple #popup_cancel,
+body.color-scheme-purple .homepage .loginlist .color,
+body.color-scheme-purple .homepage .ulTag,
+body.color-scheme-purple .homepage .chart {
+	border-color: #442b64;
+}
+body.color-scheme-purple widget form .input-wrapper.required .required-mark {
+	border-color: #442b64 transparent transparent #442b64;
+}
+
+body.color-scheme-purple .homepage .loginlist .skinimg > div:first-child {
+	background-color: rgba(68, 43, 100, 0.6);
+}
+
+body.color-scheme-purple widget form input:focus,
+body.color-scheme-purple widget form select:focus,
+body.color-scheme-purple widget form textarea:focus,
+body.color-scheme-purple widget form dual-select > ul.selected-list,
+body.color-scheme-purple widget td input:focus {
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1), 0 0 8px rgba(68, 43, 100, 0.6);
+}
+body.color-scheme-purple widget button:focus,
+body.color-scheme-purple widget.media-widget widget-content .thumb:hover {
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.4), 0 0 8px 1px rgba(68, 43, 100, 0.6);
+}
+body.color-scheme-purple .inputwrapper #login {
+	border-color: #f9bf00;
+	background-color: #f9bf00;
+	color: #f9e2b1;
+}
+
+/* 青灰蓝 */
+body.color-scheme-steel-blue > header,
+body.color-scheme-steel-blue > nav .nav-item.active,
+body.color-scheme-steel-blue .breadcrumb-wrapper .nav-switcher > .center-bar,
+body.color-scheme-steel-blue .breadcrumb-wrapper .nav-switcher:before,
+body.color-scheme-steel-blue .breadcrumb-wrapper .nav-switcher:after,
+.color-scheme-switcher > ul > li > a[href="#steel-blue"]:hover,
+body.color-scheme-steel-blue widget > widget-title,
+body.color-scheme-steel-blue widget .btn.btn-primary,
+body.color-scheme-steel-blue widget form .input-wrapper.required .required-mark:after,
+body.color-scheme-steel-blue widget dual-select > ul > li.active,
+body.color-scheme-steel-blue widget .form-nav li.current a,
+body.color-scheme-steel-blue widget.media-widget .thumb div,
+body.color-scheme-steel-blue .notfound button,
+body.color-scheme-steel-blue #popup_title,
+body.color-scheme-steel-blue .ui-datepicker-calendar .ui-datepicker-today .ui-state-default,
+body.color-scheme-steel-blue.loginpage,
+body.color-scheme-steel-blue .homepage .ulTag > li.tagSelected,
+body.color-scheme-steel-blue .homepage .ulTag,
+body.color-scheme-steel-blue .homepage .mainUl li,
+body.color-scheme-steel-blue .homepage .mainUl li a,
+body.color-scheme-steel-blue .jGrowl-notification,
+body.color-scheme-steel-blue .jGrowl-closer {
+	background-color: #3a749c;
+}
+body.color-scheme-steel-blue .breadcrumb-wrapper .fullscreen-wrapper,
+body.color-scheme-steel-blue .breadcrumb-wrapper > .breadcrumb > li.fa:hover,
+body.color-scheme-steel-blue .breadcrumb-wrapper > .breadcrumb > li[href]:hover,
+.color-scheme-switcher > ul > li > a[href="#steel-blue"],
+body.color-scheme-steel-blue #popup_ok,
+body.color-scheme-steel-blue #popup_ok:hover,
+body.color-scheme-steel-blue #popup_cancel,
+body.color-scheme-steel-blue .homepage .loginlist .usrlist > li h5,
+body.color-scheme-steel-blue .ulTag .fa,
+body.color-scheme-steel-blue .face-content,
+body.color-scheme-steel-blue .menuList li:first-child span {
+	color: #3a749c;
+}
+body.color-scheme-steel-blue widget > widget-content,
+body.color-scheme-steel-blue widget .btn.btn-primary,
+body.color-scheme-steel-blue widget form input:focus,
+body.color-scheme-steel-blue widget form select:focus,
+body.color-scheme-steel-blue widget form textarea:focus,
+body.color-scheme-steel-blue widget form dual-select > ul.selected-list,
+body.color-scheme-steel-blue widget td input:focus,
+body.color-scheme-steel-blue widget .form-nav li,
+body.color-scheme-steel-blue widget.media-widget .thumb img,
+body.color-scheme-steel-blue #popup_content,
+body.color-scheme-steel-blue #popup_ok,
+body.color-scheme-steel-blue #popup_ok:hover,
+body.color-scheme-steel-blue #popup_cancel,
+body.color-scheme-steel-blue .homepage .loginlist .color,
+body.color-scheme-steel-blue .homepage .ulTag,
+body.color-scheme-steel-blue .homepage .chart {
+	border-color: #3a749c;
+}
+body.color-scheme-steel-blue widget form .input-wrapper.required .required-mark {
+	border-color: #3a749c transparent transparent #3a749c;
+}
+
+body.color-scheme-steel-blue .homepage .loginlist .skinimg > div:first-child {
+	background-color: rgba(58, 116, 156, 0.6);
+}
+
+body.color-scheme-steel-blue widget form input:focus,
+body.color-scheme-steel-blue widget form select:focus,
+body.color-scheme-steel-blue widget form textarea:focus,
+body.color-scheme-steel-blue widget form dual-select > ul.selected-list,
+body.color-scheme-steel-blue widget td input:focus {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(58, 116, 156, 0.6);
+}
+body.color-scheme-steel-blue widget button:focus,
+body.color-scheme-steel-blue widget.media-widget widget-content .thumb:hover {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px 1px rgba(58, 116, 156, 0.6);
+}
+body.color-scheme-steel-blue .inputwrapper #login {
+	border-color: #f9bf00;
+	background-color: #f9bf00;
+	color: white;
+}
+
+/* 绿色 */
+body.color-scheme-green > header,
+body.color-scheme-green > nav .nav-item.active,
+body.color-scheme-green .breadcrumb-wrapper .nav-switcher > .center-bar,
+body.color-scheme-green .breadcrumb-wrapper .nav-switcher:before,
+body.color-scheme-green .breadcrumb-wrapper .nav-switcher:after,
+.color-scheme-switcher > ul > li > a[href="#green"]:hover,
+body.color-scheme-green widget > widget-title,
+body.color-scheme-green widget .btn.btn-primary,
+body.color-scheme-green widget form .input-wrapper.required .required-mark:after,
+body.color-scheme-green widget dual-select > ul > li.active,
+body.color-scheme-green widget .form-nav li.current a,
+body.color-scheme-green widget.media-widget .thumb div,
+body.color-scheme-green .notfound button,
+body.color-scheme-green #popup_title,
+body.color-scheme-green .ui-datepicker-calendar .ui-datepicker-today .ui-state-default,
+body.color-scheme-green.loginpage,
+body.color-scheme-green .homepage .ulTag > li.tagSelected,
+body.color-scheme-green .homepage .ulTag,
+body.color-scheme-green .homepage .mainUl li,
+body.color-scheme-green .homepage .mainUl li a,
+body.color-scheme-green .jGrowl-notification,
+body.color-scheme-green .jGrowl-closer {
+	background-color: #45b29a;
+}
+body.color-scheme-green .breadcrumb-wrapper .fullscreen-wrapper,
+body.color-scheme-green .breadcrumb-wrapper > .breadcrumb > li.fa:hover,
+body.color-scheme-green .breadcrumb-wrapper > .breadcrumb > li[href]:hover,
+.color-scheme-switcher > ul > li > a[href="#green"],
+body.color-scheme-green #popup_ok,
+body.color-scheme-green #popup_ok:hover,
+body.color-scheme-green #popup_cancel,
+body.color-scheme-green .homepage .loginlist .usrlist > li h5,
+body.color-scheme-green .ulTag .fa,
+body.color-scheme-green .face-content,
+body.color-scheme-green .menuList li:first-child span {
+	color: #45b29a;
+}
+body.color-scheme-green widget > widget-content,
+body.color-scheme-green widget .btn.btn-primary,
+body.color-scheme-green widget form input:focus,
+body.color-scheme-green widget form select:focus,
+body.color-scheme-green widget form textarea:focus,
+body.color-scheme-green widget form dual-select > ul.selected-list,
+body.color-scheme-green widget td input:focus,
+body.color-scheme-green widget .form-nav li,
+body.color-scheme-green widget.media-widget .thumb img,
+body.color-scheme-green #popup_content,
+body.color-scheme-green #popup_ok,
+body.color-scheme-green #popup_ok:hover,
+body.color-scheme-green #popup_cancel,
+body.color-scheme-green .homepage .loginlist .color,
+body.color-scheme-green .homepage .ulTag,
+body.color-scheme-green .homepage .chart {
+	border-color: #45b29a;
+}
+body.color-scheme-green widget form .input-wrapper.required .required-mark {
+	border-color: #45b29a transparent transparent #45b29a;
+}
+
+body.color-scheme-green .homepage .loginlist .skinimg > div:first-child {
+	background-color: rgba(69, 178, 154, 0.6);
+}
+
+body.color-scheme-green widget form input:focus,
+body.color-scheme-green widget form select:focus,
+body.color-scheme-green widget form textarea:focus,
+body.color-scheme-green widget form dual-select > ul.selected-list,
+body.color-scheme-green widget td input:focus {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(69, 178, 154, 0.6);
+}
+body.color-scheme-green widget button:focus,
+body.color-scheme-green widget.media-widget widget-content .thumb:hover {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px 1px rgba(69, 178, 154, 0.6);
+}
+body.color-scheme-green .inputwrapper #login {
+	border-color: #e0ebe8;
+	background-color: #e0ebe8;
+	color: #4ab09a;
+}
+
+/* 天蓝*/
+body.color-scheme-sky-blue > header,
+body.color-scheme-sky-blue > nav .nav-item.active,
+body.color-scheme-sky-blue .breadcrumb-wrapper .nav-switcher > .center-bar,
+body.color-scheme-sky-blue .breadcrumb-wrapper .nav-switcher:before,
+body.color-scheme-sky-blue .breadcrumb-wrapper .nav-switcher:after,
+.color-scheme-switcher > ul > li > a[href="#sky-blue"]:hover,
+body.color-scheme-sky-blue widget > widget-title,
+body.color-scheme-sky-blue widget .btn.btn-primary,
+body.color-scheme-sky-blue widget form .input-wrapper.required .required-mark:after,
+body.color-scheme-sky-blue widget dual-select > ul > li.active,
+body.color-scheme-sky-blue widget .form-nav li.current a,
+body.color-scheme-sky-blue widget.media-widget .thumb div,
+body.color-scheme-sky-blue .notfound button,
+body.color-scheme-sky-blue #popup_title,
+body.color-scheme-sky-blue .ui-datepicker-calendar .ui-datepicker-today .ui-state-default,
+body.color-scheme-sky-blue.loginpage,
+body.color-scheme-sky-blue .homepage .ulTag > li.tagSelected,
+body.color-scheme-sky-blue .homepage .ulTag,
+body.color-scheme-sky-blue .homepage .mainUl li,
+body.color-scheme-sky-blue .homepage .mainUl li a,
+body.color-scheme-sky-blue .jGrowl-notification,
+body.color-scheme-sky-blue .jGrowl-closer {
+	background-color: #56abe4;
+}
+body.color-scheme-sky-blue .breadcrumb-wrapper .fullscreen-wrapper,
+body.color-scheme-sky-blue .breadcrumb-wrapper > .breadcrumb > li.fa:hover,
+body.color-scheme-sky-blue .breadcrumb-wrapper > .breadcrumb > li[href]:hover,
+.color-scheme-switcher > ul > li > a[href="#sky-blue"],
+body.color-scheme-sky-blue #popup_ok,
+body.color-scheme-sky-blue #popup_ok:hover,
+body.color-scheme-sky-blue #popup_cancel,
+body.color-scheme-sky-blue .homepage .loginlist .usrlist > li h5,
+body.color-scheme-sky-blue .ulTag .fa,
+body.color-scheme-sky-blue .face-content,
+body.color-scheme-sky-blue .menuList li:first-child span {
+	color: #56abe4;
+}
+body.color-scheme-sky-blue widget > widget-content,
+body.color-scheme-sky-blue widget .btn.btn-primary,
+body.color-scheme-sky-blue widget form input:focus,
+body.color-scheme-sky-blue widget form select:focus,
+body.color-scheme-sky-blue widget form textarea:focus,
+body.color-scheme-sky-blue widget form dual-select > ul.selected-list,
+body.color-scheme-sky-blue widget td input:focus,
+body.color-scheme-sky-blue widget .form-nav li,
+body.color-scheme-sky-blue widget.media-widget .thumb img,
+body.color-scheme-sky-blue #popup_content,
+body.color-scheme-sky-blue #popup_ok,
+body.color-scheme-sky-blue #popup_ok:hover,
+body.color-scheme-sky-blue #popup_cancel,
+body.color-scheme-sky-blue .homepage .loginlist .color,
+body.color-scheme-sky-blue .homepage .ulTag,
+body.color-scheme-sky-blue .homepage .chart {
+	border-color: #56abe4;
+}
+body.color-scheme-sky-blue widget form .input-wrapper.required .required-mark {
+	border-color: #56abe4 transparent transparent #56abe4;
+}
+
+body.color-scheme-sky-blue .homepage .loginlist .skinimg > div:first-child {
+	background-color: rgba(86, 171, 228, 0.6);
+}
+
+body.color-scheme-sky-blue widget form input:focus,
+body.color-scheme-sky-blue widget form select:focus,
+body.color-scheme-sky-blue widget form textarea:focus,
+body.color-scheme-sky-blue widget form dual-select > ul.selected-list,
+body.color-scheme-sky-blue widget td input:focus {
+	box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.1), 0 0 8px rgba(86, 171, 228, 0.6);
+}
+body.color-scheme-sky-blue widget button:focus,
+body.color-scheme-sky-blue widget.media-widget widget-content .thumb:hover {
+	box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.4), 0 0 8px 1px rgba(86, 171, 228, 0.6);
+}
+body.color-scheme-sky-blue .inputwrapper #login {
+	border-color: #8fdaff;
+	background-color: #8fdaff;
+	color: white;
+}

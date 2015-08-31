@@ -1,0 +1,6 @@
+package com.ebeijia.service.wechat.msg;
+
+
+public interface WechatConfigService {
+	
+}

@@ -1,0 +1,400 @@
+package com.ebeijia.service.wechat.mass;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.json.JSONObject;
+
+import org.ebeijia.tools.DateTime4J;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatMassDao;
+import com.ebeijia.entity.vo.wechat.AccessToken;
+import com.ebeijia.entity.vo.wechat.mass.Filter;
+import com.ebeijia.entity.vo.wechat.mass.Image;
+import com.ebeijia.entity.vo.wechat.mass.Mpnews;
+import com.ebeijia.entity.vo.wechat.mass.Mpvideo;
+import com.ebeijia.entity.vo.wechat.mass.SendImageMass;
+import com.ebeijia.entity.vo.wechat.mass.SendImageMassByUsr;
+import com.ebeijia.entity.vo.wechat.mass.SendMpnewsMass;
+import com.ebeijia.entity.vo.wechat.mass.SendMpnewsMassByUsr;
+import com.ebeijia.entity.vo.wechat.mass.SendMpvideoMass;
+import com.ebeijia.entity.vo.wechat.mass.SendMpvideoMassByUsr;
+import com.ebeijia.entity.vo.wechat.mass.SendTextMass;
+import com.ebeijia.entity.vo.wechat.mass.SendTextMassByUsr;
+import com.ebeijia.entity.vo.wechat.mass.SendVoiceMass;
+import com.ebeijia.entity.vo.wechat.mass.SendVoiceMassByUsr;
+import com.ebeijia.entity.vo.wechat.mass.Text;
+import com.ebeijia.entity.vo.wechat.mass.ToUser;
+import com.ebeijia.entity.vo.wechat.mass.Voice;
+import com.ebeijia.entity.wechat.TblWechatFodder;
+import com.ebeijia.entity.wechat.TblWechatMass;
+import com.ebeijia.entity.wechat.TblWechatMassId;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+import com.ebeijia.service.wechat.core.WechatMchtInfService;
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.service.wechat.inter.MassManager;
+import com.ebeijia.service.wechat.inter.MediaManager;
+import com.ebeijia.service.wechat.media.WechatFodderService;
+import com.ebeijia.util.wechat.MessageUtil;
+import com.ebeijia.util.wechat.WechatUtil;
+
+@Service("wechatMassService")
+public final class WechatMassServiceImpl implements WechatMassService {
+
+	@Autowired
+	private WechatMchtInfService wechatMchtInfService;
+	@Autowired
+	private WechatTokenService wechatTokenService;
+	@Autowired
+	private MediaManager mediaManager;
+	@Autowired
+	private MassManager massManager;
+	@Autowired
+	private WechatFodderService wechatFodderService;
+	@Autowired
+	private WechatMassDao wechatMassDao;
+
+	
+	
+	@Transactional
+	@CacheEvict(value="wechatFooderCache",allEntries=true)
+	public String upGtMedia(String mchtId,String title ,String dsc ,String articles) {
+		// 调用接口获取access_token
+		TblWechatMchtInf data =wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(), data.getAppsecret());
+		String result = null;
+		if (null != at) {
+			JSONObject jsonObject = mediaManager.massUpNews(at.getToken(),articles);
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					// 保存meida
+					TblWechatFodder fodder = new TblWechatFodder();
+					fodder.setCreateTime(DateTime4J.getCurrentDateTime());
+					fodder.setMedia(result);
+					fodder.setMediaType("1");
+					fodder.setMchtId(mchtId);
+					fodder.setUrl(" ");
+					fodder.setType("news");
+					fodder.setName(title);
+					fodder.setDsc(dsc);
+					wechatFodderService.save(fodder);
+				}
+			}else{
+				result = "8888888";
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatFooderCache",allEntries=true)
+	public String upVideoMedia(String mchtId ,String title,String dsc ,String mediaId){
+		// 调用接口获取access_token
+		TblWechatMchtInf data =wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(), data.getAppsecret());
+		String result = null;
+		if (null != at) {
+			JSONObject jsonObject = mediaManager.massUpVideo(at.getToken(),mediaId,title,dsc);
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					// 保存meida
+					TblWechatFodder fodder = new TblWechatFodder();
+					fodder.setCreateTime(DateTime4J.getCurrentDateTime());
+					fodder.setMedia(result);
+					fodder.setMediaType("1");
+					fodder.setMchtId(mchtId);
+					fodder.setUrl(" ");
+					fodder.setType("mpvideo");
+					fodder.setName(title);
+					fodder.setDsc(dsc);
+					wechatFodderService.save(fodder);
+				}
+			}else{
+				result = "8888888";
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;
+	}
+	
+	//群发所有用户
+	@Transactional
+	@CacheEvict(value="wechatMassCache",allEntries=true)
+	public String sendByGroup(String mchtId,String content,String type,String groupId,String media){
+		//根据group和type生产对象
+		Filter filter = new Filter();
+		if(groupId == null || "".equals(groupId)){
+			filter.setIs_to_all(true);
+		}else{
+			filter.setIs_to_all(false);
+			filter.setGroup_id(groupId);
+		}
+		String sendJson =this.build(content, filter, type, media);
+		// 调用接口获取access_token
+		TblWechatMchtInf data = wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(),data.getAppsecret());
+		String result = null;
+		if (null != at) {
+			JSONObject jsonObject = massManager.massAll(at.getToken(), sendJson);
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					// 保存群发消息
+					TblWechatMass tblWechatMass = new TblWechatMass();
+					TblWechatMassId id = new TblWechatMassId();
+					id.setMchtId(mchtId);
+					id.setMsgId(jsonObject.getString("msg_id"));
+					tblWechatMass.setId(id);
+					tblWechatMass.setContent(content);
+					tblWechatMass.setCreateTime(DateTime4J.getCurrentDateTime());
+					tblWechatMass.setMedia(media);
+					tblWechatMass.setMsgType(type);
+					//根据组别发送
+					tblWechatMass.setType("0");
+					wechatMassDao.save(tblWechatMass);
+				}
+			}else{
+				result = "8888888";
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;
+	}
+	
+	//群发所有用户
+	@Transactional
+	@CacheEvict(value="wechatMassCache",allEntries=true)
+	public String sendByUsr(String mchtId,String content,String msgType,String toUsr,String media){
+		//根据group和type生产对象
+		ToUser toUser = new ToUser();
+		List toUserList  = new ArrayList();
+		for (String usr: toUsr.split(",")) {
+			toUserList.add(usr);
+		}
+		toUser.setToUser(toUserList);
+		String sendJson =this.buildUsr(content, toUserList, msgType, media);
+		// 调用接口获取access_token
+		TblWechatMchtInf data = wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(),data.getAppsecret());
+		String result = null;
+		if (null != at) {
+			JSONObject jsonObject = massManager.massUsr(at.getToken(), sendJson);
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					// 保存群发消息
+					TblWechatMass tblWechatMass = new TblWechatMass();
+					TblWechatMassId id = new TblWechatMassId();
+					id.setMchtId(mchtId);
+					id.setMsgId(jsonObject.getString("msg_id"));
+					tblWechatMass.setId(id);
+					tblWechatMass.setContent(content);
+					tblWechatMass.setCreateTime(DateTime4J.getCurrentDateTime());
+					tblWechatMass.setMedia(media);
+					tblWechatMass.setMsgType(msgType);
+					//根据组别发送
+					tblWechatMass.setType("1");
+					tblWechatMass.setToUsr(toUserList.size());
+					wechatMassDao.save(tblWechatMass);
+				}
+			}else{
+				result = "8888888";
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;
+	}
+		
+	//群发删除
+	@Transactional
+	@CacheEvict(value="wechatMassCache",allEntries=true)
+	public String sendDel(String mchtId,String mediaId){
+		// 调用接口获取access_token
+		TblWechatMchtInf data = wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(),data.getAppsecret());
+		String result = "0";
+		if (null != at) {
+			JSONObject jsonObject = massManager.massDel(at.getToken(), mediaId);
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					// 数据库操作？
+				}
+			}else{
+				result = "8888888";
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;
+	}
+	
+//	//群发预览
+//	@Transactional
+//	public String sendPreview(String mchtId,ToGroupMass touserTextMass){
+//		// 调用接口获取access_token
+//		TblWechatMchtInf data = wechatMchtInfService.getById(mchtId);
+//		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(),data.getAppsecret());
+//		String result = "0";
+//		String sendJson =JSONObject.fromObject(touserTextMass).toString();
+//		if (null != at) {
+//			JSONObject jsonObject = massManager.massAll(at.getToken(), sendJson);
+//			if (null != jsonObject) {
+//				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+//					result = jsonObject.getString("errcode");
+//				} else {
+//					// 数据库操作？
+//				}
+//			}else{
+//				result = "8888888";
+//			}
+//		} else {
+//			result = "9999999";
+//		}
+//		return result;
+//	}
+	
+	
+	//群发状态查询
+	@Transactional
+	@Cacheable(value="wechatMassCache")
+	public String sendStatusFind(String mchtId,String msgId){
+		// 调用接口获取access_token
+		TblWechatMchtInf data = wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(),data.getAppsecret());
+		String result = "0";
+		if (null != at) {
+			result = massManager.massStatus(at.getToken(), msgId);
+		}
+		return result;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMassCache")
+	public Map<String,Object> findBySql(String mchtId,String pagaData) {
+		StringBuffer query = new StringBuffer();
+		query.append("from TblWechatMass");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND id.mchtId like '%").append(mchtId).append("%'");
+		}
+		query.append( " ORDER BY id.mchtId");
+		Map<String,Object> m =wechatMassDao.findByPage(query.toString(), pagaData);
+		return m;
+	}
+	
+	
+	//构建发送群发消息对象
+	private String build(String content,Filter filter ,String type,String media){
+		String sendJson =null;
+		if(MessageUtil.RESP_MESSAGE_TYPE_TEXT.equals(type)){
+			Text text = new Text();
+			text.setContent(content);
+			SendTextMass sendTextMass = new SendTextMass();
+			sendTextMass.setFilter(filter);
+			sendTextMass.setText(text);
+			sendTextMass.setMsgtype(type);
+			sendJson =JSONObject.fromObject(sendTextMass).toString();
+		}else if (MessageUtil.RESP_MESSAGE_TYPE_IMAGE.equals(type)){
+			Image image =new Image();
+			image.setMedia_id(media);
+			SendImageMass sendImageMass = new SendImageMass();
+			sendImageMass.setFilter(filter);
+			sendImageMass.setImage(image);
+			sendImageMass.setMsgtype(type);
+			sendJson =JSONObject.fromObject(sendImageMass).toString();
+		}else if (MessageUtil.RESP_MESSAGE_TYPE_VOICE.equals(type)){
+			Voice voice =new Voice();
+			voice.setMedia_id(media);
+			SendVoiceMass sendVoiceMass = new SendVoiceMass();
+			sendVoiceMass.setFilter(filter);
+			sendVoiceMass.setVoice(voice);
+			sendVoiceMass.setMsgtype(type);
+			sendJson =JSONObject.fromObject(sendVoiceMass).toString();
+		}else if (MessageUtil.RESP_MESSAGE_TYPE_VIDEO.equals(type)){
+			Mpvideo video =new Mpvideo();
+			video.setMedia_id(media);
+			SendMpvideoMass sendVideoMass = new SendMpvideoMass();
+			sendVideoMass.setFilter(filter);
+			sendVideoMass.setMpvideo(video);
+			sendVideoMass.setMsgtype(type);
+			sendJson =JSONObject.fromObject(sendVideoMass).toString();
+		}
+		else if (MessageUtil.RESP_MESSAGE_TYPE_NEWS.equals(type)){
+			Mpnews news =new Mpnews();
+			news.setMedia_id(media);
+			SendMpnewsMass sendMpnewsMass = new SendMpnewsMass();
+			sendMpnewsMass.setFilter(filter);
+			sendMpnewsMass.setMpnews(news);
+			sendMpnewsMass.setMsgtype(type);
+			sendJson =JSONObject.fromObject(sendMpnewsMass).toString();
+		}
+		return sendJson;
+	}
+	
+	//构建发送群发消息筛选用户对象
+	private String buildUsr(String content,List toUser ,String type,String media){
+		String sendJson =null;
+		if(MessageUtil.RESP_MESSAGE_TYPE_TEXT.equals(type)){
+			Text text = new Text();
+			text.setContent(content);
+			SendTextMassByUsr sendTextMass = new SendTextMassByUsr();
+			sendTextMass.setTouser(toUser);
+			sendTextMass.setText(text);
+			sendTextMass.setMsgtype(type);
+			sendJson =JSONObject.fromObject(sendTextMass).toString();
+		}else if (MessageUtil.RESP_MESSAGE_TYPE_IMAGE.equals(type)){
+			Image image =new Image();
+			image.setMedia_id(media);
+			SendImageMassByUsr sendImageMass = new SendImageMassByUsr();
+			sendImageMass.setTouser(toUser);
+			sendImageMass.setImage(image);
+			sendImageMass.setMsgtype(type);
+			sendJson =JSONObject.fromObject(sendImageMass).toString();
+		}else if (MessageUtil.RESP_MESSAGE_TYPE_VOICE.equals(type)){
+			Voice voice =new Voice();
+			voice.setMedia_id(media);
+			SendVoiceMassByUsr sendVoiceMass = new SendVoiceMassByUsr();
+			sendVoiceMass.setTouser(toUser);
+			sendVoiceMass.setVoice(voice);
+			sendVoiceMass.setMsgtype(type);
+			sendJson =JSONObject.fromObject(sendVoiceMass).toString();
+		}else if (MessageUtil.RESP_MESSAGE_TYPE_VIDEO.equals(type)){
+			Mpvideo video =new Mpvideo();
+			video.setMedia_id(media);
+			SendMpvideoMassByUsr sendVideoMass = new SendMpvideoMassByUsr();
+			sendVideoMass.setTouser(toUser);
+			sendVideoMass.setMpvideo(video);
+			sendVideoMass.setMsgtype(type);
+			sendJson =JSONObject.fromObject(sendVideoMass).toString();
+		}
+		else if (MessageUtil.RESP_MESSAGE_TYPE_NEWS.equals(type)){
+			Mpnews news =new Mpnews();
+			news.setMedia_id(media);
+			SendMpnewsMassByUsr sendMpnewsMass = new SendMpnewsMassByUsr();
+			sendMpnewsMass.setTouser(toUser);
+			sendMpnewsMass.setMpnews(news);
+			sendMpnewsMass.setMsgtype(type);
+			sendJson =JSONObject.fromObject(sendMpnewsMass).toString();
+		}
+		return sendJson;
+	}
+}

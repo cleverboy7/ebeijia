@@ -1,0 +1,187 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "TBL_WECHAT_SUBSCRIBE")
+public class TblWechatSubscribe implements java.io.Serializable{
+	
+	private static final long serialVersionUID = 1L;
+
+	private String subcribeId;
+
+    private String mchtId;
+
+    private int subscribeTiny;
+
+    private String openid;
+
+    private String nickname;
+
+    private int sex;
+
+    private String city;
+
+    private String country;
+
+    private String province;
+
+    private String language;
+
+    private String headimgurl;
+
+    private String subscribeTime;
+
+    private String createTime;
+
+    private String updateTime;
+    
+    private String groupId;
+    
+    private String groupName;
+    
+    private String remarks;
+    
+    /** default constructor */
+   	public TblWechatSubscribe() {
+   		
+   	}
+   	@Id
+	@Column(name = "SUBCRIBE_ID", unique = true, nullable = false, length = 20)
+	public String getSubcribeId() {
+		return subcribeId;
+	}
+
+	public void setSubcribeId(String subcribeId) {
+		this.subcribeId = subcribeId;
+	}
+	@Column(name = "MCHT_ID", nullable = false, length = 15)
+	public String getMchtId() {
+		return mchtId;
+	}
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+	@Column(name = "SUBSCRIBE_TINY", length = 4)
+	public int getSubscribeTiny() {
+		return subscribeTiny;
+	}
+	public void setSubscribeTiny(int subscribeTiny) {
+		this.subscribeTiny = subscribeTiny;
+	}
+	
+	@Column(name = "OPENID", length = 256)
+	public String getOpenid() {
+		return openid;
+	}
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+	@Column(name = "NICKNAME", length = 256)
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	@Column(name = "SEX", length = 4)
+	public int getSex() {
+		return sex;
+	}
+
+	public void setSex(int sex) {
+		this.sex = sex;
+	}
+	@Column(name = "CITY", length = 256)
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+	@Column(name = "COUNTRY", length = 256)
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	@Column(name = "PROVINCE", length = 256)
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	@Column(name = "LANGUAGE", length = 32)
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+	@Column(name = "HEADIMGURL", length = 256)
+	public String getHeadimgurl() {
+		return headimgurl;
+	}
+
+	public void setHeadimgurl(String headimgurl) {
+		this.headimgurl = headimgurl;
+	}
+	@Column(name = "SUBSCRIBE_TIME", length = 14)
+	public String getSubscribeTime() {
+		return subscribeTime;
+	}
+
+	public void setSubscribeTime(String subscribeTime) {
+		this.subscribeTime = subscribeTime;
+	}
+	@Column(name = "CREATE_TIME", length = 14)
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+	@Column(name = "UPDATE_TIME", length = 14)
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+	
+	@Column(name = "GROUP_ID", length = 6)
+	public String getGroupId() {
+		return groupId;
+	}
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
+	
+	@Column(name = "REMARKS", length = 16)
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+	@Column(name = "GROUP_NAME", length = 32)
+	public String getGroupName() {
+		return groupName;
+	}
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+}

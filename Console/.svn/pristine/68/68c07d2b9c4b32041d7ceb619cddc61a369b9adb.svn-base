@@ -1,0 +1,81 @@
+package com.ebeijia.controller.action.wechat.menu;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.vo.wechat.Menu;
+import com.ebeijia.service.wechat.menu.WechatMenuService;
+import com.ebeijia.util.Constant;
+
+@Controller
+@RequestMapping(value="/wechat/menu")
+public class WechatMenuQueryAction {
+	@Autowired
+	private WechatMenuService wechatMenuService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatMenuQueryAction.class);
+	
+	@RequestMapping(value="query.html",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> query(HttpSession session,HttpServletRequest request){
+		String mchtId=request.getParameter("mchtId");
+		String groupId =request.getParameter("groupId");
+		String pageData =request.getParameter("aoData");
+		Map<String, Object> map = new HashMap<String, Object>();
+		try{
+			Map<String,Object> mapTmp =wechatMenuService.findBySql(mchtId,groupId,pageData);
+			map.put("mchtList", mapTmp.get("list"));
+			map.put("current", mapTmp.get("current"));
+			map.put("total",mapTmp.get("total"));
+			map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", map);
+			return map;
+		}catch (Exception e) {
+			logger.info("微信菜单查询失败,请联系管理员或稍后再试");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "微信菜单查询失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	@RequestMapping(value="menuSyn.html",method = RequestMethod.POST)
+	@MyLog(remark="微信菜单同步")
+	@ResponseBody
+	public Map<String, Object> menuSyn(HttpSession session,HttpServletRequest request){
+		String mchtId=request.getParameter("mchtId");
+		String groupId =request.getParameter("groupId");
+		String[][] s = { { mchtId, "15", "15" },{ groupId, "1", "3" }};
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		Menu menu = null ;
+		try{
+			menu =wechatMenuService.SynchToMenu(mchtId, groupId);
+			if(menu !=null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", menu);
+			}else{
+				//返回菜单特殊处理
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "同步微信菜单失败", "");
+			}
+			return map;
+		}catch (Exception e) {
+			logger.info("同步微信菜单失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "同步微信菜单失败", "");
+			return map;
+		}
+	}
+}

@@ -1,0 +1,8 @@
+package com.ebeijia.service.mcht;
+
+import java.util.Map;
+
+public interface MchtInfService {
+	
+	public Map<String, Object> ListMchtId ();
+}

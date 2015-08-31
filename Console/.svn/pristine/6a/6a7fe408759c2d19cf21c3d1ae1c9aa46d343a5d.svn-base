@@ -1,0 +1,48 @@
+package com.ebeijia.service.wechat.inter;
+
+
+import java.io.File;
+
+import net.sf.json.JSONObject;
+
+import com.ebeijia.entity.vo.wechat.kf.Kf;
+
+/** 
+ * 分组管理器类 
+ * @author zhicheng.xu
+ * @date 2015-04-22
+ */  
+public interface KfManager {  
+  
+	
+    /** 
+     * 添加客服
+     * @param Kf 客服对象
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+    public JSONObject createKf(Kf kf, String accessToken);
+    /** 
+     * 修改客服
+     * @param Kf 客服对象
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+    public JSONObject updKf(Kf kf, String accessToken);
+    /** 
+     * 删除客服
+     * @param account 客服账号
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+    public JSONObject delKf(String account, String accessToken);
+    /** 
+     * 上传客服头像
+     * @param type 素材类型
+     * @param f 文件对象 
+     * @param ext 后缀
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+    public JSONObject upHeadKf(String accessToken,String type,File f,String ext);
+}  

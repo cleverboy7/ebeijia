@@ -1,0 +1,138 @@
+package com.ebeijia.service.adminInf;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
+import org.ebeijia.tools.DateTime4J;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.ebeijia.dao.adminInf.AdminInfDao;
+import com.ebeijia.entity.TblAdminInf;
+import com.ebeijia.entity.TblPicInf;
+import com.ebeijia.service.picInf.PicInfService;
+import com.ebeijia.util.Constant;
+import com.ebeijia.util.SystemProperties;
+import com.ebeijia.util.UpLoad;
+
+@Service
+public final class AdminInfServiceImpl implements AdminInfService {
+
+	@Autowired
+	private AdminInfDao adminInfDao;
+	@Autowired
+	private PicInfService picInfService;
+	
+	@Transactional
+	@Cacheable(value="adminCache",key = "#root.method.name+#id")
+	public TblAdminInf getById(String id){
+		return adminInfDao.getById(id);
+	}
+	
+	@Transactional
+	@Cacheable(value="adminCache")
+	public Map<String,Object> findBySql(String adminId,String adminName ,String adminStat,String pageData) {
+		StringBuilder query =new StringBuilder();
+		query.append("select p.picUrl,a.adminId,a.adminName,a.roleId,a.adminDsc,a.adminStat");
+		query.append(" from TblAdminInf a ,TblPicInf p ");
+		query.append(" where a.adminHead = p.picId ");
+		if(adminId!=null && !"".equals(adminId)){
+			query.append(" AND a.adminId like '%").append(adminId).append("%'");
+		}
+		if(adminName!=null && !"".equals(adminName)){
+			query.append(" AND a.adminName like '%").append(adminName).append("%'");
+		}
+		if(adminStat!=null && !"".equals(adminStat) ){
+			query.append(" AND a.adminStat ='").append(adminStat).append("'");
+		}
+		Map<String,Object> m =adminInfDao.findByPage(query.toString(), pageData);
+		return m;
+	}
+
+	@Transactional
+	@Cacheable(value="adminCache",key = "#root.method.name")
+	public List<Object> listAdminByUpTime(){
+		StringBuilder sb  = new StringBuilder();
+		sb.append("select u.adminId,u.adminName,u.lastLogTime,p.picUrl from TblAdminInf u, TblPicInf p");
+		sb.append(" where u.adminHead = p.picId order by u.lastLogTime desc");
+		List result = adminInfDao.findByPage(sb.toString(), 1, 5);
+		return result;
+	}
+	
+	//查用户带头像信息,更新操作员登录时间 不加缓存
+	public List usrInfHead(String usrId){
+		StringBuilder sb = new StringBuilder();
+		sb.append("select u.adminId,u.adminName,p.picUrl from TblAdminInf u, TblPicInf p");
+		sb.append(" where u.adminHead = p.picId  and u.adminId ='").append(usrId).append("'");
+		TblAdminInf tblAdminInf =this.getById(usrId);
+		tblAdminInf.setLastLogTime(DateTime4J.getCurrentDateTime());
+		adminInfDao.update(tblAdminInf);
+		return adminInfDao.find(sb.toString());
+	}
+	
+	@Transactional
+	@Cacheable(value="adminCache",key = "#root.method.name+#name")
+	public List<TblAdminInf> login(String name){
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM TblAdminInf WHERE adminName = '").append(name).append("'");
+		List<TblAdminInf> adminInfs = adminInfDao.find(sb.toString());
+		return adminInfs;
+	}
+	
+	@Transactional
+	@Cacheable(value="adminCache")
+	public List<TblAdminInf> checkAdmin(String id,String pwd){
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM TblAdminInf WHERE adminId = '").append(id).append("'");
+		sb.append(" and adminPwd ='").append(pwd).append("'");
+		List<TblAdminInf> adminInfs = adminInfDao.find(sb.toString());
+		return adminInfs;
+	}
+	
+	@Transactional
+	@CacheEvict(value="adminCache" ,allEntries=true)
+	public void update(TblAdminInf data){
+		adminInfDao.update(data);
+	}
+	
+	@CacheEvict(value="adminCache" ,allEntries=true)
+	@Transactional
+	public void save(TblAdminInf data,String type,MultipartFile f,String ext) {
+		UpLoad upload = new UpLoad();
+		if(f !=null){
+			//上传文件本地到服务器
+			File file = upload.getFile(f,SystemProperties.getProperties("image.head"),type,ext);
+			TblPicInf picData = new TblPicInf();
+			picData.setPicId(picInfService.getPicId());
+			picData.setPicName("管理员"+data.getAdminId()+"头像");
+			picData.setPicType(Constant.PIC_HEAD);
+			String picUrl = SystemProperties.getProperties("mediaPath")+SystemProperties.getProperties("image.head")+
+					"/"+type+"/"+file.getName();
+			picData.setPicUrl(picUrl);
+			picInfService.save(picData);
+			data.setAdminHead(picData.getPicId());
+		}else{
+			//没上传头像默认是系统自带头像
+			data.setAdminHead("1");
+		}
+		adminInfDao.save(data);
+	}
+	
+	@CacheEvict(value="adminCache" ,allEntries=true)
+	@Transactional
+	public void delById(String id){
+		adminInfDao.deleteById(id);
+	}
+	
+	//序列不做缓存
+	@Transactional
+	public String getAdminId() {
+		String sql = "SELECT SEQ_ADMIN_ID.NEXTVAL FROM DUAL";
+		return adminInfDao.getListSQL(sql).get(0).toString();
+	}
+}

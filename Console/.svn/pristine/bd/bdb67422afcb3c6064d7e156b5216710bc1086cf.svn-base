@@ -1,0 +1,50 @@
+package com.ebeijia.service.wechat.menu;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.ebeijia.dao.wechat.WechatGroupDao;
+import com.ebeijia.entity.wechat.TblWechatGroup;
+
+@Service
+public final class WechatMenuGroupServiceImpl implements WechatMenuGroupService {
+
+	@Autowired
+	private WechatGroupDao wechatGroupDao;
+
+	@Transactional
+	@Cacheable(value="wechatMenuCache",key = "#root.method.name+#mchtId")
+	public List<TblWechatGroup> find(String mchtId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("from TblWechatGroup where mchtId ='").append(mchtId).append("'");
+		sb.append(" and id in (select distinct groupId  from TblWechatMenu where mchtId ='").append(mchtId);
+		sb.append("')");
+		List<TblWechatGroup> list = wechatGroupDao.find(sb.toString());
+		return list;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatMenuCache",key = "#root.method.name+#mchtId")
+	public Map<String, Object> listFind(String mchtId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM TblWechatGroup");
+		sb.append(" where mchtId='").append(mchtId).append("'");
+		sb.append(" ORDER BY id");
+		List<TblWechatGroup> grouplist = wechatGroupDao.find(sb.toString());
+		List<Object> list = new LinkedList<Object>();
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		for(TblWechatGroup tblWechatGroup :grouplist){
+			Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+			hashMap.put("key", tblWechatGroup.getId() + "-" + tblWechatGroup.getName());
+			hashMap.put("value", tblWechatGroup.getId());
+			list.add(hashMap);
+		}
+		map.put("info", list);
+		return map;
+	}
+}

@@ -1,0 +1,57 @@
+package com.ebeijia.redis.lev;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.ebeijia.dao.usr.UsrBehavPointDao;
+import com.ebeijia.entity.TblUsrBehavPoint;
+import com.ebeijia.nosql.redis.RedisSpringProxy;
+import com.ebeijia.nosql.redis.until.RedisKeyMaker;
+
+@Component
+public class UsrBehavPointRedis {
+	
+	@Autowired
+	private UsrBehavPointDao usrBehavPointDao;
+	@Autowired
+	private RedisSpringProxy redisSpringProxy;
+	
+	public void init() {
+		try{
+			List<TblUsrBehavPoint> l = usrBehavPointDao.findAll(TblUsrBehavPoint.class);
+			List<TblUsrBehavPoint> flag0List = new ArrayList<TblUsrBehavPoint>();
+			List<TblUsrBehavPoint> flag1List = new ArrayList<TblUsrBehavPoint>();
+			for(TblUsrBehavPoint behav :l){
+				if ("0".equals(behav.getFlag())) {
+					flag0List.add(behav);
+				}else {
+					flag1List.add(behav);
+				}
+			}
+			redisSpringProxy.save(RedisKeyMaker.makeKey(TblUsrBehavPoint.class, "flag0"),flag0List);
+			redisSpringProxy.save(RedisKeyMaker.makeKey(TblUsrBehavPoint.class, "flag1"),flag1List);
+		}catch(Exception e){
+			Logger log = LoggerFactory.getLogger(UsrBehavPointRedis.class);
+			log.info("===========用户行为积分数据 缓存 初始化 异常==========",e);
+		}
+	}
+
+	// 重新初始化
+	public void reload() {
+		init();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TblUsrBehavPoint> get(String str) throws Exception{
+		return (List<TblUsrBehavPoint>) redisSpringProxy.read(str);
+	}
+	
+	public void delKey(String key){
+		redisSpringProxy.delete(key);
+	}
+}

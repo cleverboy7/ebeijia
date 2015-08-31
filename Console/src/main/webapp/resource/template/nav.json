@@ -1,0 +1,185 @@
+[{
+	"icon": "wechat",
+	"title": "账号管理",
+	"subnav": [{
+		"title": "绑定微信账户",
+		"href": "#wechat-mcht-add"
+	}, {
+		"title": "账户信息管理",
+		"href": "#wechat-mcht-query"
+	}]
+}, {
+	"icon": "user",
+	"title": "关注者管理",
+	"subnav": [{
+		"title": "关注者查询",
+		"href": "#wechat-usr-query"
+	}, {
+		"title": "新增组别",
+		"href": "#wechat-subGroup-add"
+	}, {
+		"title": "组别管理",
+		"href": "#wechat-subGroup-query"
+	}, {
+		"title": "关注者分组管理",
+		"href": "#wechat-usr-batch"
+	}]
+}, {
+	"icon": "volume-up",
+	"title": "消息管理",
+	"subnav": [{
+		"title": "接收消息查询",
+		"href": "#wechat-reqMsg-query"
+	}, {
+		"title": "发送消息管理"
+	}, {
+		"title": "自动答复添加",
+		"href": "#wechat-respMsg-add"
+	}, {
+		"title": "自动答复管理",
+		"href": "#wechat-respMsg-query"
+	}]
+}, {
+	"icon": "tree",
+	"title": "菜单管理",
+	"subnav": [{
+		"title": "自定义菜单添加",
+		"href": "#wechat-menu-add"
+	}, {
+		"title": "自定义菜单管理",
+		"href": "#wechat-menu-query"
+	}, {
+		"title": "自定义菜单同步",
+		"href": "#wechat-menu-syn"
+	}]
+}, {
+	"icon": "medium",
+	"title": "素材管理",
+	"subnav": [{
+		"title": "素材上传",
+		"href": "#wechat-media-upd"
+	}, {
+		"title": "素材管理",
+		"href": "#wechat-media-query"
+	}, {
+		"title": "素材统计",
+		"href": "#wechat-media-all"
+	}]
+}, {
+	"icon": "newspaper-o",
+	"title": "图文管理",
+	"subnav": [{
+		"title": "图文图片上传",
+		"href": "#wechat-news-add"
+	}, {
+		"title": "图文管理",
+		"href": "#wechat-news-query"
+	}]
+}, {
+	"icon": "envelope-o",
+	"title": "群发消息",
+	"subnav": [{
+		"title": "分组群发",
+		"href": "#wechat-mass-group"
+	}, {
+		"title": "筛选群发",
+		"href": "#wechat-mass-batch"
+	}, {
+		"title": "新增多媒体",
+		"href": "#wechat-mass-media-add"
+	}, {
+		"title": "群发查询",
+		"href": "#wechat-mass-query"
+	}]
+}, {
+	"icon": "comment",
+	"title": "客服帐号管理",
+	"subnav": [{
+		"title": "新增客服账号",
+		"href": "#wechat-kf-add"
+	}, {
+		"title": "客服账号管理",
+		"href": "#wechat-kf-query"
+	}, {
+		"title": "发送消息"
+	}]
+}, {
+	"icon": "credit-card",
+	"title": "卡券管理",
+	"subnav": [{
+		"title": "新增卡券"
+	}, {
+		"title": "卡券管理"
+	}]
+}, {
+	"icon": "credit-card",
+	"title": "模板消息",
+	"subnav": [{
+		"title": "设置模板行业",
+		"href": "#wechat-template-add"
+	}, {
+		"title": "模板管理",
+		"href": "#wechat-template-query"
+	}]
+}, {
+	"icon": "github-alt",
+	"title": "人脸识别",
+	"href": "#face-recognition"
+}, {
+	"icon": "star",
+	"title": "活动",
+	"subnav": [{
+		"title": "新增活动",
+		"href": "#wechat-activity-add"
+	}, {
+		"title": "活动管理",
+		"href": "#wechat-activity-query"
+	}, {
+		"title": "刮刮卡",
+		"href": "#wechat-scratchCard"
+	}, {
+		"tutle": "老虎机"
+	}, {
+		"title": "大转盘",
+		"href": "#wechat-luckydraw"
+	}, {
+		"title": "红包",
+		"subnav": [{
+			"title": "新增红包",
+			"href": "#wechat-redPacket-add"
+		}, {
+			"title": "红包管理",
+			"href": "#wechat-redPacket-query"
+		}]
+	}]
+}, {
+	"icon": "user-md",
+	"title": "管理员管理",
+	"subnav": [{
+		"title": "管理员添加",
+		"href": "#admin-add"
+	}, {
+		"title": "管理员维护",
+		"href": "#admin-upd"
+	}, {
+		"title": "管理员查询",
+		"href": "#admin-query"
+	}]
+}, {
+	"icon": "users",
+	"title": "角色管理",
+	"subnav": [{
+		"title": "角色添加",
+		"href": "#role-add"
+	}, {
+		"title": "角色维护",
+		"href": "#role-upd"
+	}, {
+		"title": "角色查询",
+		"href": "#role-query"
+	}]
+}, {
+	"icon": "history",
+	"title": "操作流水查询",
+	"href": "#wechat-txnLog-query"
+}]

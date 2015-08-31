@@ -1,0 +1,14 @@
+package com.ebeijia.service.wechat.menu;
+
+import java.util.List;
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatGroup;
+
+
+public interface WechatMenuGroupService {
+	//根据商户id查组别
+	public List<TblWechatGroup> find(String mchtId);
+	//下拉列表
+	public Map<String, Object> listFind(String mchtId);
+}

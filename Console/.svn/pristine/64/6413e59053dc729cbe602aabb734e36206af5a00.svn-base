@@ -1,0 +1,290 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "TBL_WECHAT_REQ_MSG")
+public class TblWechatReqMsg implements java.io.Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
+	private String reqMsgId;
+
+    private String mchtId;
+
+    private String toUsrName;
+
+    private String fromUsrName;
+
+    private String msgId;
+
+    private String createTime;
+
+    private String msgType;
+
+    private String content;
+
+    private String picUrl;
+
+    private String format;
+
+    private String mediaId;
+
+    private String thumbMediaId;
+
+    private String locationX;
+
+    private String locationY;
+
+    private String scale;
+
+    private String label;
+
+    private String title;
+
+    private String description;
+
+    private String url;
+
+    private String eventType;
+
+    private String eventKey;
+
+    private String ticket;
+
+    private String respContent;
+
+    private String latitude;
+
+    private String longitude;
+
+    private String precise;
+
+    /** default constructor */
+	public TblWechatReqMsg() {
+		
+	}
+	
+	@Id
+	@Column(name = "REQ_MSG_ID", unique = true, nullable = false, length = 20)
+	public String getReqMsgId() {
+		return reqMsgId;
+	}
+
+	public void setReqMsgId(String reqMsgId) {
+		this.reqMsgId = reqMsgId;
+	}
+	@Column(name = "MCHT_ID", nullable = false, length = 15)
+	public String getMchtId() {
+		return mchtId;
+	}
+
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+	@Column(name = "TO_USR_NAME", length = 256)
+	public String getToUsrName() {
+		return toUsrName;
+	}
+
+	public void setToUsrName(String toUsrName) {
+		this.toUsrName = toUsrName;
+	}
+	@Column(name = "FROM_USR_NAME", length = 256)
+	public String getFromUsrName() {
+		return fromUsrName;
+	}
+
+	public void setFromUsrName(String fromUsrName) {
+		this.fromUsrName = fromUsrName;
+	}
+	@Column(name = "MSG_ID", length = 64)
+	public String getMsgId() {
+		return msgId;
+	}
+
+	public void setMsgId(String msgId) {
+		this.msgId = msgId;
+	}
+	@Column(name = "CREATE_TIME", length = 14)
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+	@Column(name = "MSG_TYPE", length = 32)
+	public String getMsgType() {
+		return msgType;
+	}
+
+	public void setMsgType(String msgType) {
+		this.msgType = msgType;
+	}
+	@Column(name = "CONTENT", length = 2048)
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+	@Column(name = "PIC_URL", length = 256)
+	public String getPicUrl() {
+		return picUrl;
+	}
+
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+	@Column(name = "FORMAT", length = 64)
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+	@Column(name = "MEDIA_ID", length = 128)
+	public String getMediaId() {
+		return mediaId;
+	}
+
+	public void setMediaId(String mediaId) {
+		this.mediaId = mediaId;
+	}
+	@Column(name = "THUMB_MEDIA_ID", length = 128)
+	public String getThumbMediaId() {
+		return thumbMediaId;
+	}
+
+	public void setThumbMediaId(String thumbMediaId) {
+		this.thumbMediaId = thumbMediaId;
+	}
+	@Column(name = "LOCATION_X", length = 256)
+	public String getLocationX() {
+		return locationX;
+	}
+
+	public void setLocationX(String locationX) {
+		this.locationX = locationX;
+	}
+	@Column(name = "LOCATION_Y", length = 256)
+	public String getLocationY() {
+		return locationY;
+	}
+
+	public void setLocationY(String locationY) {
+		this.locationY = locationY;
+	}
+	@Column(name = "SCALE", length = 256)
+	public String getScale() {
+		return scale;
+	}
+	
+	public void setScale(String scale) {
+		this.scale = scale;
+	}
+	@Column(name = "LABEL", length = 256)
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+	@Column(name = "TITLE", length = 64)
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	@Column(name = "DESCRIPTION", length = 1024)
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	@Column(name = "URL", length = 256)
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	@Column(name = "EVENT_TYPE", length = 256)
+	public String getEventType() {
+		return eventType;
+	}
+
+	public void setEventType(String eventType) {
+		this.eventType = eventType;
+	}
+	@Column(name = "EVENT_KAY", length = 256)
+	public String getEventKey() {
+		return eventKey;
+	}
+
+	public void setEventKey(String eventKey) {
+		this.eventKey = eventKey;
+	}
+	@Column(name = "TICKET", length = 256)
+	public String getTicket() {
+		return ticket;
+	}
+
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
+	}
+	@Column(name = "RESP_CONTENT", length = 64)
+	public String getRespContent() {
+		return respContent;
+	}
+
+	public void setRespContent(String respContent) {
+		this.respContent = respContent;
+	}
+	@Column(name = "LATITUDE", length = 64)
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	@Column(name = "LONGITUDE", length = 64)
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+	@Column(name = "PRECISE", length = 64)
+	public String getPrecise() {
+		return precise;
+	}
+
+	public void setPrecise(String precise) {
+		this.precise = precise;
+	}
+	
+	
+    
+	
+
+}

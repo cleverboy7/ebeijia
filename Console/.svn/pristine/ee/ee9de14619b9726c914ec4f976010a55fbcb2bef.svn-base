@@ -1,0 +1,92 @@
+.container-inner .menuList {
+	top: 200px;
+	left: 20px;
+	width: 40%;
+}
+
+.menuList li > span {
+	display: inline-block;
+	width: 33%;
+	text-align: center;
+	font-size: 14px;
+	color: #666;
+}
+
+.menuList li:first-child span {
+	font-size: 16px;
+	font-weight: 600;
+	color: #000;
+}
+
+.menuList li {
+	border-bottom: 2px solid #ddd;
+}
+
+widget.view-select .input-wrapper {
+	margin-right: 0;
+}
+
+.container-inner .wechatView {
+	width: 324px;
+	margin-left: 10%;
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+}
+
+.container-inner .wechatView widget-content {
+	position: relative;
+	width: 324px;
+	height: 432px;
+	background-image: url(../image/wechatbg5.jpg);
+	background-position: 0 -43px;
+}
+
+.container-inner .wechatView .wechatBar {
+	position: absolute;
+	bottom: 0;
+	width: 320px;
+	height: 50px;
+	background-image: url(../image/bar.png);
+	background-size: 320px;
+}
+
+.container-inner .wechatView .wechatBar > ul {
+	margin-left: 50px;
+}
+
+.container-inner .wechatView .wechatBar > ul > li {
+	position: relative;
+	float: left;
+	width: 90px;
+	height: 50px;
+	border-right: 1px solid #d1d1d1;
+	cursor: pointer;
+	text-align: center;
+	line-height: 50px;
+}
+
+.container-inner .wechatView .wechatBar .child-menu {
+	position: absolute;
+	bottom: 50px;
+	left: 50%;
+	display: none;
+	margin-left: -40px;
+}
+
+.container-inner .wechatView .wechatBar .child-menu li {
+	display: block;
+	width: 80px;
+	height: 40px;
+	margin-bottom: 5px;
+	border-radius: 5px;
+	background: #fafafa;
+	text-align: center;
+	word-break: break-all;
+}
+
+.container-inner .wechatView .wechatBar > ul > li > span {
+	margin-left: -20px;
+	margin-right: 10px;
+	font-size: 12px;
+	color: #d1d1d1;
+}

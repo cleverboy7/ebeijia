@@ -1,0 +1,46 @@
+package com.ebeijia.entity;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "TBL_ROLE_INF")
+public class TblRoleInf implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	private String roleId;
+	private String dsc;
+	private String roleName;
+	
+	@Id
+	@Column(name = "ROLE_ID", unique = true, nullable = false, length = 6)
+	public String getRoleId() {
+		return roleId;
+	}
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+	
+	
+	@Column(name = "DSC", length = 64)
+	public String getDsc() {
+		return dsc;
+	}
+	public void setDsc(String dsc) {
+		this.dsc = dsc;
+	}
+	
+	@Column(name = "ROLE_NAME", length = 32)
+	public String getRoleName() {
+		return roleName;
+	}
+	
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+	
+}

@@ -1,0 +1,41 @@
+package com.ebeijia.dao.usr;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.ebeijia.dao.base.BaseDao;
+import com.ebeijia.dao.base.BaseDaoImplHibernate;
+import com.ebeijia.entity.TblUsrBehavPoint;
+
+@Repository("UsrBehavPointDao")
+public class UsrBehavPointDao extends BaseDaoImplHibernate<TblUsrBehavPoint> implements BaseDao<TblUsrBehavPoint> {
+
+	public List<TblUsrBehavPoint> getUsrBehavPointList(){
+		List<TblUsrBehavPoint> usrBehavPointList = new ArrayList<TblUsrBehavPoint>();
+		String hql = "FROM TblUsrBehavPoint ";
+		usrBehavPointList = getHibernateTemplate().find(hql);
+		return usrBehavPointList;
+	}
+	
+	/**
+	 * 获取实体信息的总数
+	 * @return Integer 当前实体类在数据库的信息总数
+	 */
+	public Integer countTotalNum(TblUsrBehavPoint usrBehavPoint){
+		String hql ="SELECT COUNT(*) FROM TblUsrBehavPoint";
+		return ((Long) this.getHibernateTemplate().find(hql).get(0)).intValue();
+	}
+	
+	/**
+	 * 分页方法
+	 * @param page:当前第几页
+	 * @param size:当前页面每页显示信息的个数
+	 * @return List<T> 集合
+	 */
+	public List<TblUsrBehavPoint> findByPage(TblUsrBehavPoint usrBehavPoint,final int page, final int size){
+		String hql = "FROM TblUsrBehavPoint";
+		return super.findByPage(hql, page, size);
+	}
+}

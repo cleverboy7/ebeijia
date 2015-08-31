@@ -1,0 +1,20 @@
+package com.ebeijia.entity.vo.wechat;
+
+public class ModUsr {
+
+	private String remark;
+	private String openid;
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	public String getOpenid() {
+		return openid;
+	}
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+	
+}

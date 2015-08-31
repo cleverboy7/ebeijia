@@ -1,0 +1,173 @@
+package com.ebeijia.controller.action.wechat.act;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.wechat.TblWechatAct;
+import com.ebeijia.service.wechat.act.WechatActService;
+import com.ebeijia.util.Constant;
+
+@Controller
+@RequestMapping(value="/wechat/act")
+public class WechatActUpdAction {
+	@Autowired
+	private WechatActService wechatActService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatActUpdAction.class);
+	
+	@RequestMapping(value="upd.html",method = RequestMethod.POST)
+	@MyLog(remark="修改活动")
+	@ResponseBody
+	public Map<String, Object> upd(HttpSession session,HttpServletRequest request) {
+		String status = request.getParameter("status");
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(!"0".equals(status)){
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "未开启的活动才能修改", "");
+			return map;
+		}
+		TblWechatAct data = this.build(request);
+		if(data == null){
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			if (wechatActService.getById(data.getActId()) == null){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "活动不存在", "");
+				return map;
+			}
+			String respMsg =wechatActService.upd(data);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "修改活动失败,请联系管理员或稍后再试", "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("修改活动失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "修改活动失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	@RequestMapping(value="del.html",method = RequestMethod.POST)
+	@MyLog(remark="删除活动")
+	@ResponseBody
+	public Map<String, Object> del(HttpSession session,HttpServletRequest request) {
+		String actId = request.getParameter("actId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { actId, "1", "20" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			TblWechatAct data = wechatActService.getById(actId);
+			if (data == null){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "活动不存在", "");
+				return map;
+			}
+			if ("1".equals((data.getStatus()))){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "活动正在运行,不能删除", "");
+				return map;
+			}
+			String respMsg =wechatActService.del(actId);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "删除活动失败,请联系管理员或稍后再试", "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("删除活动失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "删除活动失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	@RequestMapping(value="sta.html",method = RequestMethod.POST)
+	@MyLog(remark="开启关闭活动")
+	@ResponseBody
+	public Map<String, Object> sta(HttpSession session,HttpServletRequest request) {
+		String actId = request.getParameter("actId");
+		String status = request.getParameter("status");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { actId, "1", "20" },{ status, "1", "1" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			TblWechatAct data = wechatActService.getById(actId);
+			if (data == null){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "活动不存在", "");
+				return map;
+			}
+			if("0".equals(status)){
+				data.setStatus("1");
+			}else{
+				data.setStatus("0");
+			}
+			String respMsg =wechatActService.upd(data);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "开启关闭活动失败,请联系管理员或稍后再试", "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("开启关闭活动失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "开启关闭活动失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	private TblWechatAct build(HttpServletRequest request){
+		String actId = request.getParameter("actId");
+		String mchtId = request.getParameter("mchtId");
+		String actName= request.getParameter("actName");
+		String dsc = request.getParameter("dsc");
+		String actType = request.getParameter("actType");
+		String modId = request.getParameter("modId");
+		String dayFlag = request.getParameter("dayFlag");
+		String lotNum  = request.getParameter("lotNum");
+		String beginDate = request.getParameter("beginDate");
+		String endDate = request.getParameter("endDate");
+		String url = request.getParameter("url");
+		String status = request.getParameter("status");
+		String[][] s = { { actId, "1", "20" } ,{ status, "1", "1" } ,{ mchtId, "15", "15" } ,{ actName, "1", "32" },{ dsc, "0", "128" },
+				{ actType,  "1", "1" },{ modId,  "1", "20" },{ dayFlag,  "1", "1" },{ lotNum, "1", "2" },
+				{ beginDate, "8", "8" },{ endDate, "8", "8" },{ url, "1", "256" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			return null;
+		}
+		TblWechatAct data = new TblWechatAct();
+		//“未开启”状态才能修改
+		data.setActId(actId);
+		data.setActName(actName);
+		data.setActType(actType);
+		data.setBeginDate(beginDate);
+		data.setDayFlag(dayFlag);
+		data.setDsc(dsc);
+		data.setEndDate(endDate);
+		data.setLotNum(Integer.parseInt(lotNum));
+		data.setMchtId(mchtId);
+		data.setModId(modId);
+		data.setUrl(url);
+		data.setStatus(status);
+		return data;
+	}
+}

@@ -1,0 +1,16 @@
+package com.ebeijia.service.wechat.media;
+
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblArticlesInf;
+
+public interface ArticlesService {
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String aoData); 
+	//生成回复消息id
+	public String getArticlesId() ;
+	//保存简易图文信息
+	public void Save(TblArticlesInf data);
+	//根据id获取主键
+	public TblArticlesInf getById(String id);
+}

@@ -1,0 +1,115 @@
+package com.ebeijia.controller.action.wechat.kf;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.vo.wechat.kf.Kf;
+import com.ebeijia.entity.wechat.TblWechatKf;
+import com.ebeijia.entity.wechat.TblWechatKfId;
+import com.ebeijia.service.wechat.kf.WechatKfService;
+import com.ebeijia.util.Constant;
+import com.ebeijia.util.EncryptMD5Util;
+import com.ebeijia.util.wechat.WechatError;
+
+@Controller
+@RequestMapping(value="/wechat/kf")
+public class WechatKfUpdAction {
+	@Autowired
+	private WechatKfService wechatKfService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatKfUpdAction.class);
+	
+	@RequestMapping(value="upd.html",method = RequestMethod.POST)
+	@MyLog(remark="修改多客服")
+	@ResponseBody
+	public Map<String, Object> upd(HttpSession session,HttpServletRequest request) {
+		String mchtId =request.getParameter("mchtId");
+		String name =request.getParameter("name");
+		String id =request.getParameter("id");
+		String pwd =request.getParameter("pwd");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" } ,{ name, "1", "12" },{ id, "1", "32" },{ pwd, "1", "32" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		Kf kf = new Kf();
+		kf.setKf_account(id);
+		kf.setNickname(name);
+		kf.setPassword(EncryptMD5Util.encrypt(pwd));
+		try{
+			//判断客服是否存在
+			TblWechatKfId kfId = new TblWechatKfId();
+			kfId.setKfId(id);
+			kfId.setMchtId(mchtId);
+			TblWechatKf tblWechatKf = wechatKfService.getById(kfId);
+			if(tblWechatKf == null){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "客服账号不存在", "");
+				return map;
+			}
+			String respMsg =wechatKfService.upd(mchtId,kf);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, WechatError.checkCode(respMsg), "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("修改多客服失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "修改多客服失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	@RequestMapping(value="del.html",method = RequestMethod.POST)
+	@MyLog(remark="删除多客服")
+	@ResponseBody
+	public Map<String, Object> del(HttpSession session,HttpServletRequest request) {
+		String mchtId =request.getParameter("mchtId");
+		String name =request.getParameter("name");
+		String id =request.getParameter("id");
+		String pwd =request.getParameter("pwd");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" } ,{ name, "1", "12" },{ id, "1", "32" },{ pwd, "1", "32" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			//判断客服是否存在
+			TblWechatKfId kfId = new TblWechatKfId();
+			kfId.setKfId(id);
+			kfId.setMchtId(mchtId);
+			TblWechatKf tblWechatKf = wechatKfService.getById(kfId);
+			if(tblWechatKf == null){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "客服账号不存在", "");
+				return map;
+			}
+			String respMsg =wechatKfService.del(mchtId,id);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, WechatError.checkCode(respMsg), "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("删除多客服失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "删除多客服失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+}

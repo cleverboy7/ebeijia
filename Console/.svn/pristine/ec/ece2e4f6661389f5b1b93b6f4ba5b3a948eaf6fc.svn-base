@@ -1,0 +1,20 @@
+package com.ebeijia.service.wechat.act;
+
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatRule;
+
+
+
+public interface WechatRuleService {
+	//添加规则
+	public String save(TblWechatRule data,String modId);
+	//修改规则
+	public String upd(TblWechatRule data);
+	//删除规则
+	public String del(String id);
+	//根据主键获取规则对象
+	public TblWechatRule getById(String  id);
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String pageData); 
+}

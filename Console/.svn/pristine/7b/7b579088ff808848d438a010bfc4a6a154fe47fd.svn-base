@@ -1,0 +1,76 @@
+package com.ebeijia.service.wechat.act;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatRuleDao;
+import com.ebeijia.entity.wechat.TblWechatRule;
+import com.ebeijia.entity.wechat.TblWechatRuleId;
+
+@Service
+public final class WechatRuleServiceImpl implements WechatRuleService {
+
+	@Autowired
+	private WechatRuleDao wechatRuleDao;
+
+	@Override
+	@Transactional
+	@CacheEvict(value="wechatRuleCache",allEntries=true)
+	public String save(TblWechatRule data,String modId) {
+		TblWechatRuleId id = new TblWechatRuleId();
+		id.setModId(modId);
+		id.setRuleId(getRuleId());
+		data.setId(id);
+		wechatRuleDao.save(data);
+		return null;
+	}
+
+	@Override
+	@Transactional
+	@CacheEvict(value="wechatRuleCache",allEntries=true)
+	public String upd(TblWechatRule data) {
+		wechatRuleDao.update(data);
+		return null;
+	}
+
+	@Override
+	@Transactional
+	@Cacheable(value="wechatRuleCache",key = "#root.method.name+#mchtId+#pageDate")
+	public Map<String, Object> findBySql(String mchtId, String pageData) {
+		StringBuilder query =new StringBuilder();
+		query.append(" from TblWechatRule ");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND mchtId like '%").append(mchtId).append("%'");
+		}
+		query.append(" order by createTime");
+		Map<String,Object> m =wechatRuleDao.findByPage(query.toString(), pageData);
+		return m;
+	}
+
+	@Override
+	@Transactional
+	@CacheEvict(value="wechatRuleCache",allEntries=true)
+	public String del(String id) {
+		wechatRuleDao.deleteById(id);
+		return null;
+	}
+
+	@Override
+	@Transactional
+	@Cacheable(value="wechatRuleCache",key = "#root.method.name+#id")
+	public TblWechatRule getById(String id) {
+		return wechatRuleDao.getById(id);
+	}
+	
+	private String getRuleId() {
+		String sql = "SELECT SEQ_RULE_ID.NEXTVAL FROM DUAL";
+		String txnNo = wechatRuleDao.getListSQL(sql).get(0).toString();
+		return txnNo;	
+	}
+}

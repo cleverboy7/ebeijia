@@ -1,0 +1,12 @@
+package com.ebeijia.service.wechat.template;
+
+import java.util.Map;
+
+
+
+public interface WechatTemplateService {
+	//设置行业
+	public String set(String mchtId,String id1,String id2);
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String pagaData);
+}

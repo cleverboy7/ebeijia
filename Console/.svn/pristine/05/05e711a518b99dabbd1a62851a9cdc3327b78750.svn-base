@@ -1,0 +1,11 @@
+package com.ebeijia.service.dictInf;
+
+import java.util.Map;
+
+public interface DictInfService {
+	
+
+	//根据dictType查字典
+	public Map<String, Object> findByDictType(String dictType);
+	
+}

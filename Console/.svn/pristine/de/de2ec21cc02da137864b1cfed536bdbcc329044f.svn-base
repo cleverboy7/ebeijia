@@ -1,0 +1,143 @@
+package com.ebeijia.service.wechat.win;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.ebeijia.tools.DateTime4J;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatWinDao;
+import com.ebeijia.entity.wechat.TblWechatAct;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+import com.ebeijia.entity.wechat.TblWechatWinning;
+import com.ebeijia.service.wechat.act.WechatActService;
+import com.ebeijia.service.wechat.core.WechatMchtInfService;
+
+@Service
+public final class WechatWinServiceImpl implements WechatWinService {
+
+	@Autowired
+	private WechatWinDao wechatWinDao;
+	@Autowired
+	private WechatMchtInfService wechatMchtInfService;
+	@Autowired
+	private WechatActService wechatActService;
+	@Autowired
+	private WechatSnService wechatSnService;
+
+	@Override
+	@Transactional
+	public String save(TblWechatWinning data) {
+		data.setId(getWinId());
+		data.setCreateDate(DateTime4J.getCurrentDate());
+		String snCode =wechatSnService.save(data.getMchtId(), data.getActType());
+		wechatWinDao.save(data);
+		data.setSnCode(snCode);
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public String upd(TblWechatWinning data) {
+		wechatWinDao.update(data);
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public Map<String, Object> findBySql(String mchtId, String pageData) {
+		StringBuilder query =new StringBuilder();
+		query.append(" from TblWechatWinning ");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND mchtId like '%").append(mchtId).append("%'");
+		}
+		query.append(" order by beginDate");
+		Map<String,Object> m =wechatWinDao.findByPage(query.toString(), pageData);
+		return m;
+	}
+
+	@Override
+	@Transactional
+	public TblWechatWinning winCheck(String actId,String openid){
+		StringBuilder sb = new StringBuilder();
+		sb.append("from TblWechatWinning where actId = '").append(actId).append("'");
+		sb.append(" and openid= '").append(openid).append("'");
+		List<TblWechatWinning> list = wechatWinDao.find(sb.toString());
+		if(list.isEmpty()){
+			return null;
+		}else{
+			return list.get(0);
+		}
+	}
+	
+	@Override
+	@Transactional
+	public String del(String id) {
+		wechatWinDao.deleteById(id);
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public TblWechatWinning getById(String id) {
+		return wechatWinDao.getById(id);
+	}
+	
+	//验证是否具备抽奖资格
+	public String check(String openid,String appid,String actId,String type){
+		TblWechatMchtInf mchtInf = wechatMchtInfService.getByAppid(appid);
+		if(mchtInf == null){
+			return "appid不存在,请检查该appid是否绑定";
+		}
+		TblWechatAct actInf = wechatActService.getAct(actId);
+		if(actInf == null){
+			return "活动不存在或已经失效";
+		}
+		TblWechatWinning winInf =this.winCheck(actId, openid);
+		if(winInf != null){
+			return "该用户已经中过奖，不再具备抽奖资格";
+		}
+		return null;
+	}
+	//抽奖试算
+	public String calculation(String openid,String appid,String actId,String type){
+		//查询活动的规则
+		StringBuilder sb = new StringBuilder();
+		sb.append("select r.probability,r.pr_name,r.prize,r.win_num from tbl_wechat_act a ,tbl_wechat_mod m ,tbl_wechat_rule r ");
+		sb.append(" where a.mod_id = m.mod_id and a.act_id ='").append(actId).append("'");
+		sb.append(" and r.mod_id =r.mod_id and win_num <( select count(*) from tbl_wechat_winning w where w.act_id = '").append(actId).append("'");
+		sb.append(" and w.mod_id = r.mod_id)");
+		List l = wechatWinDao.find(sb.toString());
+		//计算概率
+		double probability =0;
+		Iterator it = l.iterator();
+		while(it.hasNext()){
+			Object[] o = (Object[])it.next();
+			double tmp = (double) o[0];
+			probability += tmp;
+		}
+		int x=(int)(Math.random()*probability);
+		Iterator it2 =l.iterator();
+		while(it2.hasNext()){
+			Object[] o = (Object[])it.next();
+			double tmp = (double) o[0];
+			if(x-tmp <=0){
+				return o[1].toString();
+			}else{
+				x-=tmp;
+			}
+		}
+		return null;
+	}
+	
+	
+	private String getWinId() {
+		String sql = "SELECT SEQ_WINNING_ID.NEXTVAL FROM DUAL";
+		String txnNo = wechatWinDao.getListSQL(sql).get(0).toString();
+		return txnNo;	
+	}
+}

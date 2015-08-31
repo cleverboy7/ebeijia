@@ -1,0 +1,50 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+
+
+@Entity
+@Table(name = "TBL_WECHAT_SUB_GROUP")
+public class TblWechatSubGroup implements java.io.Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	private TblWechatSubGroupId id;
+
+    private String name;
+    
+
+    
+    /** default constructor */
+	public TblWechatSubGroup() {
+		
+	}
+	
+	@EmbeddedId
+	@AttributeOverrides( {
+			@AttributeOverride(name = "groupId", column = @Column(name = "GROUP_ID", nullable = false, length = 5)),
+			@AttributeOverride(name = "mchtId", column = @Column(name = "MCHT_ID", nullable = false, length = 5))})
+	public TblWechatSubGroupId getId() {
+		return id;
+	}
+
+	public void setId(TblWechatSubGroupId id) {
+		this.id = id;
+	}
+
+	@Column(name = "NAME",length = 32)
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+}

@@ -1,0 +1,189 @@
+package com.ebeijia.service.wechat.group;
+
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatSubGroupDao;
+import com.ebeijia.entity.vo.wechat.AccessToken;
+import com.ebeijia.entity.vo.wechat.Group;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+import com.ebeijia.entity.wechat.TblWechatSubGroup;
+import com.ebeijia.entity.wechat.TblWechatSubGroupId;
+import com.ebeijia.service.wechat.core.WechatMchtInfService;
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.service.wechat.inter.GroupManager;
+import com.ebeijia.service.wechat.subscribe.WechatSubscribeService;
+import com.ebeijia.util.wechat.WechatUtil;
+
+@Service
+public final class WechatSubGroupServiceImpl implements WechatSubGroupService {
+
+	@Autowired
+	private WechatSubGroupDao wechatSubGroupDao;
+	@Autowired
+	private WechatSubscribeService wechatSubscribeService;
+	@Autowired
+	private WechatMchtInfService wechatMchtInfService;
+	@Autowired
+	private WechatTokenService wechatTokenService;
+	@Autowired
+	private GroupManager groupManager;
+	
+	
+	//添加关注者组别
+	@Transactional
+	@CacheEvict(value="wechatSubGroupCache",allEntries=true)
+	public String save(String mchtId,String name){
+		//异常时返回内容
+		String result = null;
+		//查询该商户的appId appSecret
+		TblWechatMchtInf tblWechatMchtInf =wechatMchtInfService.getById(mchtId);
+        // 调用接口获取access_token  
+        AccessToken at = wechatTokenService.getAccessToken(tblWechatMchtInf.getAppid(), tblWechatMchtInf.getAppsecret());  
+        if (null != at) {  
+        	JSONObject jsonObject =groupManager.createGroup(name, at.getToken());
+        	 if (null != jsonObject) {
+                 if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {  
+                     result = jsonObject.getString("errcode");  
+                 }else{
+                	String group =jsonObject.getJSONObject("group").getString("id");
+                	TblWechatSubGroupId id =new TblWechatSubGroupId();
+                	id.setGroupId(group);
+                	id.setMchtId(mchtId);
+                	TblWechatSubGroup data = new TblWechatSubGroup();
+                	data.setId(id);
+                	data.setName(name);
+             		wechatSubGroupDao.save(data);
+                 }
+			}else{
+				result = "8888888";
+			}
+        }else{
+        	result="9999999";
+        }
+        return result;
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatSubGroupCache",allEntries=true)
+	public String update(String mchtId,String groupId,String name){
+		//异常时返回内容
+		String result = null;
+		//查询该商户的appId appSecret
+		TblWechatMchtInf tblWechatMchtInf =wechatMchtInfService.getById(mchtId);
+        // 调用接口获取access_token  
+        AccessToken at = wechatTokenService.getAccessToken(tblWechatMchtInf.getAppid(), tblWechatMchtInf.getAppsecret());  
+        if (null != at) {  
+        	Group group = new Group();
+        	group.setId(groupId);
+        	group.setName(name);
+        	JSONObject jsonObject =groupManager.modGroup(group, at.getToken());
+        	 if (null != jsonObject) {
+                 if (!"0".equals(jsonObject.getString("errcode"))) {  
+                     result = jsonObject.getString("errcode");  
+                 }else{
+                	TblWechatSubGroupId id =new TblWechatSubGroupId();
+                	id.setGroupId(groupId);
+                	id.setMchtId(mchtId);
+                	TblWechatSubGroup data = new TblWechatSubGroup();
+                	data.setId(id);
+                	data.setName(name);
+             		wechatSubGroupDao.update(data);
+                 }
+        	 }
+        }else{
+        	result="9999999";
+        }
+        return result;
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatSubGroupCache",allEntries=true)
+	public String del(String mchtId,String groupId){
+		//异常时返回内容
+		String result = null;
+		//查询该商户的appId appSecret
+		TblWechatMchtInf tblWechatMchtInf =wechatMchtInfService.getById(mchtId);
+        // 调用接口获取access_token  
+        AccessToken at = wechatTokenService.getAccessToken(tblWechatMchtInf.getAppid(), tblWechatMchtInf.getAppsecret());  
+        if (null != at) {  
+        	JSONObject jsonObject =groupManager.delGroup(groupId, at.getToken());
+        	 if (null != jsonObject) {
+                 if (!"0".equals(jsonObject.getString("errcode"))) {  
+                     result = jsonObject.getString("errcode");  
+                 }else{
+                	TblWechatSubGroupId id =new TblWechatSubGroupId();
+                	id.setGroupId(groupId);
+                	id.setMchtId(mchtId);
+             		wechatSubGroupDao.delete(id);
+             		//更新当前组别的用户为空
+             		wechatSubscribeService.upGroup(groupId);
+                 }
+        	 }
+        }else{
+        	result="9999999";
+        }
+        return result;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatSubGroupCache")
+	public Map<String,Object> findBySql(String name,String pageData) {
+		StringBuilder query =new StringBuilder();
+		query.append(" from TblWechatSubGroup ");
+		query.append(" where 1=1");
+		if(name!=null && !"".equals(name)){
+			query.append(" AND name like '%").append(name).append("%'");
+		}
+		query.append(" order by id.groupId");
+		Map<String,Object> m =wechatSubGroupDao.findByPage(query.toString(), pageData);
+		return m;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatSubGroupCache",key = "#root.method.name+#mchtId")
+	public Map<String, Object> listGroupByMchtId(String mchtId){
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		StringBuilder sb = new StringBuilder();
+		sb.append("FROM TblWechatSubGroup  where id.mchtId ='");
+		sb.append(mchtId).append("' order by id.groupId");
+		List<TblWechatSubGroup> list = wechatSubGroupDao.find(sb.toString());
+		Iterator<TblWechatSubGroup> it = list.iterator();
+		List<Object> result = new LinkedList<Object>();
+		while(it.hasNext()){
+			Map<String, Object> hashMap = new LinkedHashMap<String, Object>();
+			TblWechatSubGroup data = it.next();
+			hashMap.put("key", data.getId().getGroupId() + "-" + data.getName());
+			hashMap.put("value",data.getId().getGroupId());
+			result.add(hashMap);
+		}
+		map.put("info", result);
+		return map;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatSubGroupCache",key = "#root.method.name+#id")
+	public TblWechatSubGroup getById(String id){
+		return wechatSubGroupDao.getById(id);
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatSubGroupCache",key = "#root.method.name+#mchtId")
+	public int findCount(String mchtId){
+		StringBuilder sb = new StringBuilder();
+		sb.append("From TblWechatSubGroup where id.mchtId ='").append(mchtId).append("'");
+		int total =wechatSubGroupDao.getTotalRows(sb.toString());
+		return total;
+	}
+}

@@ -1,0 +1,717 @@
+widget {
+	float: left;
+	width: 100%;
+	box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.3);
+}
+widget.simple-form {
+	min-width: 404px;
+	max-width: 774px;
+}
+
+#blackBg {
+	position: fixed;
+	z-index: 88;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	opacity: 0.4;
+	background-color: white;
+}
+
+widget-title {
+	position: relative;
+	float: left;
+	width: 100%;
+	padding: 12px 15px;
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	font-size: 14px;
+	line-height: 20px;
+	color: white;
+}
+
+widget-content {
+	float: left;
+	width: 100%;
+	border-width: 0 2px 2px;
+	border-style: solid;
+	background-color: white;
+	font-size: 12px;
+}
+
+widget button {
+	outline: none;
+}
+
+widget .btn {
+	display: inline-block;
+	padding-left: 12px;
+	padding-right: 12px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	background-color: #eee;
+	color: #333;
+}
+widget .btn.btn-primary {
+	color: white;
+}
+
+widget.simple-form > widget-content,
+widget.query-form > widget-content,
+widget.rich-edit-form > widget-content {
+	padding: 12px 15px;
+}
+
+widget input,
+widget select,
+widget textarea {
+	background-color: white;
+}
+
+widget.simple-form form,
+widget.rich-edit-form form,
+widget.simple-form form > .form-input-wrapper,
+widget.rich-edit-form form > .form-input-wrapper,
+widget.simple-form form > .button-wrapper,
+widget.rich-edit-form form > .button-wrapper {
+	float: left;
+	width: 100%;
+}
+
+widget form label,
+widget form .input-item {
+	float: left;
+}
+
+widget form label,
+widget form .input-item > select {
+	cursor: pointer;
+}
+
+widget form .input-item {
+	position: relative;
+	height: 30px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	line-height: 28px;
+}
+widget form .input-item.input-small {
+	width: 100px;
+}
+widget form .input-item.input-medium {
+	width: 160px;
+}
+widget form .input-item.input-large,
+widget form .input-item.input-place-full {
+	width: 220px;
+}
+widget form .input-item.input-two-column {
+	width: 590px;
+}
+widget form .input-item.input-full {
+	width: 100%;
+}
+
+widget form .input-wrapper.required .required-mark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border-width: 5px;
+	border-style: solid;
+}
+widget form .input-wrapper.required [disabled] > .required-mark,
+widget form .input-wrapper.required [disabled] + .required-mark {
+	display: none;
+}
+widget form .input-wrapper.required dual-select .required-mark {
+	left: 60%;
+}
+widget form .input-wrapper.required .required-mark:after {
+	position: absolute;
+	top: -21px;
+	left: -5px;
+	display: block;
+	opacity: 0;
+	width: 40px;
+	content: "\5fc5\586b\9879";
+	text-align: center;
+	font-size: 12px;
+	line-height: 16px;
+	color: white;
+}
+widget form .input-wrapper.required .required-mark:hover:after {
+	opacity: 1;
+}
+
+widget form .input-item > input,
+widget form .input-item > select,
+widget form .input-item > textarea {
+	width: 100%;
+	height: 100%;
+	padding-left: 6px;
+	padding-right: 6px;
+	border: 1px solid #ccc;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	line-height: normal;
+}
+widget form .input-item > input:focus,
+widget form .input-item > select:focus,
+widget form .input-item > textarea:focus {
+	outline: none;
+}
+widget form .input-item > [disabled],
+widget form .input-item > [readonly] {
+	background-color: #eee;
+	cursor: not-allowed;
+}
+widget form .input-item.textarea-item {
+	height: auto;
+	line-height: 20px;
+}
+
+widget form .input-item.file-item > .file-name {
+	width: 100%;
+	height: 100%;
+	padding-left: 6px;
+	padding-right: 66px;
+	border: 1px solid #ccc;
+	line-height: 28px;
+}
+widget form .input-item.file-item > .file-name > .name {
+	float: left;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+widget form .input-item.file-item > .file-name > .extension {
+	float: left;
+}
+
+widget form .input-item.file-item > button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 60px;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border-radius: 0;
+	font-size: 13px;
+}
+
+widget form .input-item.file-item > input[type="file"] {
+	display: none;
+}
+
+widget.simple-form form .input-wrapper,
+widget.rich-edit-form form .input-wrapper {
+	float: left;
+	width: 50%;
+	min-width: 370px;
+	padding: 5px 15px;
+	line-height: 40px;
+	color: #555;
+}
+widget.simple-form form .input-wrapper.input-wrapper-full,
+widget.rich-edit-form form .input-wrapper.input-wrapper-full {
+	width: 100%;
+}
+
+widget.simple-form form .input-wrapper > label,
+widget.rich-edit-form form .input-wrapper > label {
+	width: 120px;
+}
+
+widget.simple-form form button,
+widget.rich-edit-form form button {
+	width: 100px;
+	height: 30px;
+	margin: 5px 10px;
+	color: white;
+}
+
+widget.query-form {
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+widget.query-form > widget-content {
+	line-height: 40px;
+}
+
+widget.query-form .form-input-wrapper {
+	float: left;
+	margin-left: -40px;
+}
+
+widget.query-form .input-wrapper {
+	float: left;
+	margin-left: 40px;
+}
+
+widget.query-form .button-wrapper {
+	float: right;
+}
+
+widget.query-form label {
+	width: 80px;
+}
+
+widget.query-form button {
+	height: 30px;
+	margin: 5px 10px 5px 0;
+}
+
+widget.dynamic-table table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 12px;
+}
+
+widget.dynamic-table col:nth-child(odd),
+widget.dynamic-table td:nth-child(odd) {
+	background-color: white;
+}
+
+widget.dynamic-table col:nth-child(even),
+widget.dynamic-table td:nth-child(even) {
+	background-color: #f7f7f7;
+}
+
+widget.dynamic-table tr {
+	height: 36px;
+}
+
+widget.dynamic-table th,
+widget.dynamic-table td {
+	padding-left: 4px;
+	padding-right: 4px;
+	word-break: break-all;
+}
+
+widget.dynamic-table .dyn-groupId {
+	width: 120px;
+	height: 30px;
+}
+
+widget.dynamic-table th {
+	border: 1px solid #444;
+}
+widget.dynamic-table td {
+	border: 1px solid #ccc;
+	text-align: center;
+}
+
+widget.dynamic-table td input,
+widget.dynamic-table td select {
+	width: 100px;
+	font-size: 12px;
+}
+
+widget.dynamic-table td input {
+	padding: 5px;
+	border: 1px solid transparent;
+	outline: none;
+	text-align: center;
+}
+widget.dynamic-table td input:focus {
+	padding: 5px;
+	border-width: 1px;
+	border-style: solid;
+	outline: none;
+	text-align: center;
+}
+
+widget.dynamic-table thead {
+	background-color: #333;
+	color: white;
+}
+widget.dynamic-table thead th {
+	font-weight: normal;
+}
+
+widget.dynamic-table tbody {
+	color: #333;
+}
+
+widget.dynamic-table td button {
+	height: 24px;
+	padding-left: 6px;
+	padding-right: 6px;
+	font-size: 12px;
+}
+
+widget.dynamic-table .paginate {
+	padding: 10px;
+	background-color: #eee;
+	line-height: 20px;
+}
+
+widget.dynamic-table .paginate > .info,
+widget.dynamic-table .paginate-nav .paginate-button,
+widget.dynamic-table .paginate-nav .paginate-indexes {
+	float: left;
+}
+widget.dynamic-table .paginate > .paginate-nav {
+	float: right;
+}
+
+widget.dynamic-table .paginate-nav .paginate-button {
+	padding-left: 7px;
+	padding-right: 7px;
+	border-width: 1px 1px 1px 0;
+	border-style: solid;
+	border-color: #ccc;
+	cursor: pointer;
+	color: #666;
+}
+widget.dynamic-table .paginate-nav .paginate-button.first {
+	border-left-width: 1px;
+}
+widget.dynamic-table .paginate-nav .paginate-button.current {
+	background-color: white;
+	cursor: default;
+}
+widget.dynamic-table .paginate-nav .paginate-button.disabled {
+	cursor: default;
+	color: #ccc;
+}
+
+widget img.tableImg {
+	width: 30px;
+	height: 30px;
+	margin-top: 2px;
+	border-radius: 50%;
+}
+
+widget.modify-box {
+	position: fixed;
+	z-index: 99;
+	top: 45%;
+	left: 45%;
+	margin-top: -100px;
+	margin-left: -200px;
+}
+
+widget.modify-box.modify-password {
+	width: 500px;
+}
+
+widget form dual-select.input-item {
+	position: relative;
+	height: 200px;
+	border: none;
+	box-shadow: none;
+}
+
+widget form dual-select > ul {
+	float: left;
+	overflow: auto;
+	width: 40%;
+	height: 100%;
+	padding: 5px;
+	border: 1px solid #ddd;
+	font-size: 14px;
+	line-height: 20px;
+}
+widget form dual-select > ul.selected-list {
+	float: left;
+	margin-left: 20%;
+}
+
+widget form dual-select > ul > li {
+	padding: 2px;
+	cursor: pointer;
+}
+
+widget form dual-select > ul > li span {
+	-webkit-transition: none;
+	        transition: none;
+}
+
+widget form dual-select > ul > li.active {
+	color: white;
+}
+widget form dual-select > ul > li.disabled {
+	background-color: #eee;
+}
+
+widget form dual-select > .button-group {
+	position: absolute;
+	top: 20px;
+	left: 50%;
+	width: 60px;
+	height: 160px;
+	margin: 0 0 0 -30px;
+}
+widget form dual-select > .button-group > button {
+	width: 100%;
+	height: 30px;
+	margin: 5px 0;
+	padding: 0;
+}
+widget form dual-select > button.btn {
+	position: absolute;
+	top: 85px;
+	display: none;
+	width: 15px;
+	height: 30px;
+	margin: 0;
+	padding: 0;
+	outline: none;
+}
+widget form dual-select.paginate > button.btn {
+	display: block;
+}
+widget form dual-select > button.btn.prev-page {
+	left: 0;
+	margin-left: -7px;
+}
+widget form dual-select > button.btn.next-page {
+	left: 40%;
+	margin-left: -8px;
+}
+
+widget widget-title .sizeBtn {
+	float: right;
+	margin-left: 5px;
+	cursor: pointer;
+	text-align: center;
+	font-size: 20px;
+}
+
+widget .form-nav {
+	float: left;
+	width: 100%;
+	margin-bottom: 10px;
+}
+widget .form-nav li {
+	float: left;
+	width: 25%;
+	border: 1px solid;
+}
+widget .form-nav li a {
+	display: block;
+	overflow: hidden;
+	text-align: center;
+	text-overflow: ellipsis;
+	font-size: 16px;
+	line-height: 36px;
+	color: #666;
+}
+widget .form-nav li.current a {
+	background-color: blue;
+	color: white;
+}
+
+widget .digest-image {
+	float: left;
+	width: 180px;
+	height: 180px;
+	margin-top: 10px;
+	margin-left: 70px;
+	background-image: url(../image/face.jpg);
+	background-size: 100% 100%;
+}
+
+widget.simple-form .button-wrapper > button {
+	font-size: 13px;
+}
+
+#jGrowl {
+	top: 140px;
+	right: 0;
+}
+#jGrowl .jGrowl-notification {
+	min-height: initial;
+}
+#jGrowl .jGrowl-closer {
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+widget .face {
+	width: 100%;
+	height: 380px;
+	margin-bottom: 20px;
+	padding: 10px;
+}
+
+widget .face > div {
+	float: left;
+	max-height: 360px;
+	margin-bottom: 20px;
+	margin-right: 20px;
+}
+
+widget .face .face-img {
+	overflow: hidden;
+	width: 400px;
+	height: 360px;
+}
+
+widget .face .face-img > div {
+	display: inline-block;
+	height: 100%;
+	padding: 5px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+}
+
+widget .face .face-img img {
+	display: inherit;
+	max-width: 380px;
+	height: 100%;
+	margin: 0 auto;
+	border-radius: 5px;
+}
+
+widget .face .face-content {
+	width: 240px;
+	padding: 5px 10px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+}
+
+widget .face dd,
+widget .face dt {
+	display: inline-block;
+	font-size: 14px;
+	line-height: 30px;
+}
+
+widget .face dd {
+	width: 70%;
+}
+
+widget.media-widget {
+	position: absolute;
+	z-index: 9999;
+	top: 50%;
+	left: 50%;
+	width: 500px;
+	height: 420px;
+	margin-top: -210px;
+	margin-left: -250px;
+}
+
+widget.media-widget widget-content {
+	overflow-y: auto;
+	height: 400px;
+}
+
+widget.media-widget .thumb {
+	position: relative;
+	float: left;
+	width: 120px;
+	height: 128px;
+	margin: 18px;
+	padding: 0;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+widget.media-widget .thumb a {
+	display: block;
+}
+
+widget.media-widget .thumb img {
+	width: 120px;
+	height: 100px;
+	border: 1px solid;
+}
+
+widget.media-widget .thumb video {
+	height: 100px;
+	background-color: #333;
+	z-index:1;
+	width: 120px;
+}
+
+widget.media-widget .thumb div {
+	overflow: hidden;
+	height: 29px;
+	margin-top: -3px;
+	padding: 0 5px;
+	background: #56abe4;
+	cursor: pointer;
+	text-overflow: ellipsis;
+	color: #fff;
+}
+
+widget.media-widget .thumb .thumb-select {
+	position: absolute;
+	bottom: 0;
+	display: none;
+	width: 100%;
+	height: 30px;
+	text-align: center;
+	line-height: 30px;
+}
+
+widget.media-widget .thumb .control {
+	display: none;
+ 	position: absolute;
+ 	height: 100px;
+  	top: 4px;
+  	left: 0;
+  	width: 120px;
+  	opacity: .3;
+  	background-color: black;
+  	z-index: 2;
+}
+
+widget.media-widget .control span {
+	font-size: 60px;
+  	display: block;
+  	height: 100px;
+  	text-align: center;
+  	line-height: 100px;
+}
+
+widget form .luckydraw-input-group {
+	position: relative;
+	float: left;
+	padding-left: 20px;
+	padding-right: 120px;
+}
+widget form .luckydraw-input-group .input-wrapper {
+	min-width: 270px;
+}
+widget form .luckydraw-input-group .input-wrapper > label {
+	width: 80px;
+}
+widget form .luckydraw-input-group > button {
+	position: absolute;
+	top: 30px;
+	right: 10px;
+	width: auto;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+
+.scratch-card-box {
+	background-image: url(../image/scratch-card.png);
+	display: none;
+	width: 500px;
+	height: 300px;
+	float: left;
+	position: relative;
+}
+
+.scratch-card {
+	position: absolute;
+	width: 220px;
+	height: 40px;
+	bottom: 40px;
+	left: 160px;
+	font-size: 20px;
+	line-height: 40px;
+	font-weight: 600;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

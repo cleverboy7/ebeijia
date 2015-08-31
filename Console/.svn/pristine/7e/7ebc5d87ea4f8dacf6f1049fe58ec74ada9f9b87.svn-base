@@ -1,0 +1,33 @@
+package com.ebeijia.entity.vo.wechat.mass;
+
+import java.util.List;
+
+/** 
+ * 群发筛选用户
+ *  
+ * @author zhicheng.xu 
+ * @date 2015-05-09
+ */  
+public class SendVoiceMassByUsr extends BaseMass {  
+	
+
+    private Voice voice;
+
+    private List<?> touser;
+
+   	public List<?> getTouser() {
+   		return touser;
+   	}
+
+   	public void setTouser(List<?> touser) {
+   		this.touser = touser;
+   	}
+
+	public Voice getVoice() {
+		return voice;
+	}
+
+	public void setVoice(Voice voice) {
+		this.voice = voice;
+	}
+}  

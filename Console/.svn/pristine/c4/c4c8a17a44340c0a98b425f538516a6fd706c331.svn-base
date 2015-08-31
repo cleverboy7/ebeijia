@@ -1,0 +1,83 @@
+package com.ebeijia.service.wechat.inter;
+
+
+import net.sf.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.util.wechat.WechatUtil;
+
+/** 
+ * 用户管理器类 
+ * @author zhicheng.xu
+ * @date 2015-02-02
+ */  
+
+@Service("MassManager")
+public class MassManagerImpl implements MassManager{  
+  
+	@Autowired
+	private WechatTokenService wechatTokenService;
+	
+	/** 
+     * 群发所有，组别
+     * @param accessToken 有效的access_token 
+     * @param sendJson 群发json
+     * @return JSONObject 
+     */  
+    public JSONObject massAll(String accessToken,String sendJson){
+    	String url = WechatUtil.MASS_All.replace("ACCESS_TOKEN", accessToken);
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", sendJson);
+		return jsonObject;
+    }
+    /** 
+     * 群发用户群发
+     * @param accessToken 有效的access_token 
+     * @param sendJson 群发json
+     * @return JSONObject 
+     */  
+    public JSONObject massUsr(String accessToken,String sendJson){
+    	String url = WechatUtil.MASS_USR.replace("ACCESS_TOKEN", accessToken);
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", sendJson);
+		return jsonObject;
+    }
+    /** 
+     * 删除群发
+     * @param accessToken 有效的access_token 
+     * @param mediaId 图文是和视频media
+     * @return JSONObject 
+     */  
+    public JSONObject massDel(String accessToken,String msgId){
+    	String url = WechatUtil.MASS_DEL.replace("ACCESS_TOKEN", accessToken);
+    	msgId ="{\"msg_id\":\""+msgId+"\"}";
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", msgId);
+		return jsonObject;
+    }
+    
+    /** 
+     * 群发预览
+     * @param accessToken 有效的access_token 
+     * @param sendJson 群发预览json
+     * @return JSONObject 
+     */  
+    public String massPreview(String accessToken,String toUsrJson){
+    	String url = WechatUtil.MASS_PREVIEW.replace("ACCESS_TOKEN", accessToken);
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", toUsrJson);
+		return jsonObject.toString();
+    }
+    
+    /** 
+     * 查询群发状态
+     * @param accessToken 有效的access_token 
+     * @param msgId 群发id
+     * @return JSONObject 
+     */  
+    public String massStatus(String accessToken,String msgId){
+    	String url = WechatUtil.MASS_STATUS.replace("ACCESS_TOKEN", accessToken);
+    	msgId ="{\"msg_id\":\""+msgId+"\"}";
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST", msgId);
+		return jsonObject.toString();
+    }
+}  

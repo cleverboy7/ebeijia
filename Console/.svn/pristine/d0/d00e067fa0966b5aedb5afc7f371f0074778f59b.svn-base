@@ -1,0 +1,36 @@
+package com.ebeijia.entity.vo.interf;
+
+import java.io.Serializable;
+
+public class PraiseReq extends CommonReq implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String partyId;
+	private String flag;
+	private String usrId;
+	public String getPartyId() {
+		return partyId;
+	}
+	public void setPartyId(String partyId) {
+		this.partyId = partyId;
+	}
+	public String getFlag() {
+		return flag;
+	}
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+	public String getUsrId() {
+		return usrId;
+	}
+	public void setUsrId(String usrId) {
+		this.usrId = usrId;
+	}
+	
+	
+
+}

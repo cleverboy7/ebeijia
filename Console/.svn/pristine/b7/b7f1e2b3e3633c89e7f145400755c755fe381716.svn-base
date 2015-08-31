@@ -1,0 +1,83 @@
+package com.ebeijia.service.wechat.act;
+
+import java.util.List;
+import java.util.Map;
+
+import org.ebeijia.tools.DateTime4J;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatActDao;
+import com.ebeijia.entity.wechat.TblWechatAct;
+
+@Service
+public final class WechatActServiceImpl implements WechatActService {
+
+	@Autowired
+	private WechatActDao wechatActDao;
+
+	@Override
+	@Transactional
+	public String save(TblWechatAct data) {
+		data.setActId(getActId());
+		wechatActDao.save(data);
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public String upd(TblWechatAct data) {
+		wechatActDao.update(data);
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public Map<String, Object> findBySql(String mchtId, String pageData) {
+		StringBuilder query =new StringBuilder();
+		query.append(" from TblWechatAct ");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND mchtId like '%").append(mchtId).append("%'");
+		}
+		query.append(" order by beginDate");
+		Map<String,Object> m =wechatActDao.findByPage(query.toString(), pageData);
+		return m;
+	}
+
+	@Override
+	@Transactional
+	public String del(String id) {
+		wechatActDao.deleteById(id);
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public TblWechatAct getById(String id) {
+		return wechatActDao.getById(id);
+	}
+	
+	@Override
+	@Transactional
+	public TblWechatAct getAct(String id) {
+		StringBuilder sb = new StringBuilder();
+		String date = DateTime4J.getCurrentDate();
+		sb.append("from TblWechatAct where id = '").append(id).append("'");
+		sb.append(" and type = '1' and begin_date <='").append(date);
+		sb.append("' and end_Date >= '").append(date).append("'");
+		List<TblWechatAct> list = wechatActDao.find(sb.toString());
+		if(list.isEmpty()){
+			return null;
+		}else{
+			return list.get(0);
+		}
+	}
+	
+	private String getActId() {
+		String sql = "SELECT SEQ_ACT_ID.NEXTVAL FROM DUAL";
+		String txnNo = wechatActDao.getListSQL(sql).get(0).toString();
+		return txnNo;	
+	}
+}

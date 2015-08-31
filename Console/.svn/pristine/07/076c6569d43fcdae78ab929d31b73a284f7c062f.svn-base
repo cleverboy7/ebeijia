@@ -1,0 +1,30 @@
+package com.ebeijia.controller.action.login;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.util.Constant;
+
+@Controller
+public class LogoutAction {
+
+	
+	@RequestMapping(value="logout.html")
+	@MyLog(remark="登出")
+	@ResponseBody
+	public Map<String, Object> logout(HttpSession session,HttpServletRequest request) {
+		session.removeAttribute("admin");
+		session.removeAttribute("operator");
+		session.removeAttribute("role");
+		Map<String, Object> map =AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+		return map;
+	}
+}

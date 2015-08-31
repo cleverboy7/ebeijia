@@ -1,0 +1,131 @@
+package com.ebeijia.entity;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "TBL_ADMIN_INF")
+public class TblAdminInf implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+//	@Length(min=1, max=20, message="长度不合法")
+	private String adminId;
+	private String adminName;
+	private String roleId;
+	private String adminPwd;
+	private String adminStat;
+	private String crtTime;
+	private String lastLogTime;
+	private String updTime;
+	private String adminDsc;
+	private String adminHead;
+
+	public TblAdminInf() {
+	}
+
+	public TblAdminInf(String adminId, String adminName, String roleId,
+			String adminPwd, String adminStat, String crtTime,
+			String lastLogTime, String updTime, String adminDsc,
+			String adminHead) {
+		super();
+		this.adminId = adminId;
+		this.adminName = adminName;
+		this.roleId = roleId;
+		this.adminPwd = adminPwd;
+		this.adminStat = adminStat;
+		this.crtTime = crtTime;
+		this.lastLogTime = lastLogTime;
+		this.updTime = updTime;
+		this.adminDsc = adminDsc;
+		this.adminHead = adminHead;
+	}
+	@Id
+	@Column(name = "ADMIN_ID", unique = true, nullable = false, length = 10)
+	public String getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(String adminId) {
+		this.adminId = adminId;
+	}
+	@Column(name = "ADMIN_NAME", length = 32)
+	public String getAdminName() {
+		return adminName;
+	}
+
+	public void setAdminName(String adminName) {
+		this.adminName = adminName;
+	}
+	@Column(name = "ROLE_ID", length = 10)
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+	@Column(name = "ADMIN_PWD", length = 32)
+	public String getAdminPwd() {
+		return adminPwd;
+	}
+
+	public void setAdminPwd(String adminPwd) {
+		this.adminPwd = adminPwd;
+	}
+	@Column(name = "ADMIN_STAT", length = 1)
+	public String getAdminStat() {
+		return adminStat;
+	}
+
+	public void setAdminStat(String adminStat) {
+		this.adminStat = adminStat;
+	}
+	@Column(name = "CRT_TIME", length = 14)
+	public String getCrtTime() {
+		return crtTime;
+	}
+
+	public void setCrtTime(String crtTime) {
+		this.crtTime = crtTime;
+	}
+	@Column(name = "LAST_LOG_TIME", length = 14)
+	public String getLastLogTime() {
+		return lastLogTime;
+	}
+
+	public void setLastLogTime(String lastLogTime) {
+		this.lastLogTime = lastLogTime;
+	}
+	@Column(name = "UPD_TIME", length = 14)
+	public String getUpdTime() {
+		return updTime;
+	}
+
+	public void setUpdTime(String updTime) {
+		this.updTime = updTime;
+	}
+	@Column(name = "ADMIN_DSC", length = 128)
+	public String getAdminDsc() {
+		return adminDsc;
+	}
+
+	public void setAdminDsc(String adminDsc) {
+		this.adminDsc = adminDsc;
+	}
+	@Column(name = "ADMIN_HEAD", length = 10)
+	public String getAdminHead() {
+		return adminHead;
+	}
+
+	public void setAdminHead(String adminHead) {
+		this.adminHead = adminHead;
+	}
+}

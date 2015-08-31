@@ -1,0 +1,150 @@
+package com.ebeijia.entity;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+@Entity
+@Table(name = "TBL_TXN_LOG")
+public class TblTxnLog implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
+	private String txnNo;
+	private String txnDate;
+	private String txnTime;
+	private String operator;
+	private String remoteAddr;
+	private String operaTime;
+	private String txnStatus;
+	private String txnName;
+	private String txnChl;
+	private String txnError;
+	private String tlMisc;
+	
+	/** default constructor */
+	public TblTxnLog() {
+	}
+
+	/** full constructor */
+	public TblTxnLog(String txnNo, String txnDate,String txnTime,String operator,String remoteAddr,String operaTime,
+			String txnStatus,String txnName,String txnChl,String txnError,String tlMisc) {
+		this.txnNo = txnNo;
+		this.txnDate = txnDate;
+		this.txnTime = txnTime;
+		this.operator = operator;
+		this.remoteAddr = remoteAddr;
+		this.operaTime = operaTime;
+		this.txnStatus = txnStatus;
+		this.txnName = txnName;
+		this.txnChl = txnChl;
+		this.txnError = txnError;
+		this.tlMisc = tlMisc;
+	}
+
+	@Id
+	@Column(name = "TXN_NO", unique = true, nullable = false, length = 15)
+	public String getTxnNo() {
+		return txnNo;
+	}
+
+	public void setTxnNo(String txnNo) {
+		this.txnNo = txnNo;
+	}
+	
+	@Column(name = "TXN_DATE", nullable = false, length = 8)
+	public String getTxnDate() {
+		return txnDate;
+	}
+
+	public void setTxnDate(String txnDate) {
+		this.txnDate = txnDate;
+	}
+	@Column(name = "TXN_TIME", nullable = false, length = 6)
+	public String getTxnTime() {
+		return txnTime;
+	}
+
+	public void setTxnTime(String txnTime) {
+		this.txnTime = txnTime;
+	}
+	@Column(name = "OPERATOR", length = 32)
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+	
+	@Column(name = "REMOTE_ADDR", length = 15)
+	public String getRemoteAddr() {
+		return remoteAddr;
+	}
+
+	public void setRemoteAddr(String remoteAddr) {
+		this.remoteAddr = remoteAddr;
+	}
+	@Column(name = "OPERA_TIME", length = 7)
+	public String getOperaTime() {
+		return operaTime;
+	}
+
+	public void setOperaTime(String operaTime) {
+		this.operaTime = operaTime;
+	}
+	@Column(name = "TXN_STATUS", length = 1)
+	public String getTxnStatus() {
+		return txnStatus;
+	}
+	
+	public void setTxnStatus(String txnStatus) {
+		this.txnStatus = txnStatus;
+	}
+	@Column(name = "TXN_NAME", length = 36)
+	public String getTxnName() {
+		return txnName;
+	}
+
+	public void setTxnName(String txnName) {
+		this.txnName = txnName;
+	}
+	@Column(name = "TXN_CHL", length = 1)
+	public String getTxnChl() {
+		return txnChl;
+	}
+
+	public void setTxnChl(String txnChl) {
+		this.txnChl = txnChl;
+	}
+	
+	@Column(name = "TXN_ERROR", length = 128)
+	public String getTxnError() {
+		return txnError;
+	}
+
+	public void setTxnError(String txnError) {
+		this.txnError = txnError;
+	}
+
+	@Column(name = "TL_MISC", length = 128)
+	public String getTlMisc() {
+		return tlMisc;
+	}
+
+	public void setTlMisc(String tlMisc) {
+		this.tlMisc = tlMisc;
+	}
+	
+	
+	
+	
+	
+
+}

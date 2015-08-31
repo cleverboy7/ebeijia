@@ -1,0 +1,42 @@
+package com.ebeijia.controller.action.wechat.menu;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.entity.wechat.TblWechatGroup;
+import com.ebeijia.service.wechat.menu.WechatMenuGroupService;
+import com.ebeijia.util.Constant;
+
+@Controller
+@RequestMapping(value="/wechat/menu")
+public class WechatMenuGroupQueryAction {
+	@Autowired
+	private WechatMenuGroupService wechatMenuGroupService;
+	
+	@RequestMapping(value="groupQuery.html",method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> wechatMenuQuery(HttpSession session,HttpServletRequest request){
+		String mchtId = request.getParameter("mchtId");
+		String[][] s = { { mchtId, "15", "15" }};
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		List<TblWechatGroup> list = wechatMenuGroupService.find(mchtId);
+		map.put("info", list);
+		map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", map);
+		return map;
+	}
+}

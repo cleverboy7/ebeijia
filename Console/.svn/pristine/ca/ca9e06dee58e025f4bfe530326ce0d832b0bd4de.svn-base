@@ -1,0 +1,67 @@
+package com.ebeijia.service.txnLog;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.txnLog.TxnLogDao;
+import com.ebeijia.entity.TblTxnLog;
+
+@Service
+public final class TxnLogServiceImpl implements TxnLogService {
+
+	@Autowired
+	private TxnLogDao txnLogDao;
+
+	@Transactional
+	public void updateTxnLog(TblTxnLog txnLog) {
+		txnLogDao.saveOrUpdate(txnLog);
+	}
+
+	@Transactional
+	public void deleteTxnLog(TblTxnLog txnLog) {
+		txnLogDao.update(txnLog);
+	}
+
+	@Transactional
+	public void addTxnLog(TblTxnLog txnLog) {
+		txnLogDao.saveOrUpdate(txnLog);
+	}
+
+	@Transactional
+	public List<TblTxnLog> queryTxnLogList() {
+		return txnLogDao.getTxnLogList();
+	}
+	
+	@Transactional
+	public int countTotalNum(TblTxnLog txnLog){
+		return txnLogDao.countTotalNum(txnLog);
+	}
+	
+	@Transactional
+	public TblTxnLog queryTxnLogById(int id){
+		return txnLogDao.getById(id);
+	}
+
+	@Transactional
+	public Map<String,Object> findBySql(String date,String txnChl,String status,String pageData) {
+		StringBuilder query =new StringBuilder();
+		query.append("from TblTxnLog ");
+		query.append(" where 1=1");
+		if(date !=null && !"".equals(date)){
+			//sb.append(" txnDate <='").append(date).append("' ");
+		}
+		if(txnChl !=null && !"".equals(txnChl)){
+			query.append(" AND txnChl ='").append(txnChl).append("' ");
+		}
+		if(status !=null && !"".equals(status)){
+			query.append(" AND txnStatus ='").append(status).append("' ");
+		}
+		query.append(" order by txnNo desc");
+		Map<String,Object> m =txnLogDao.findByPage(query.toString(), pageData);
+		return m;
+	}
+}

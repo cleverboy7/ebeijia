@@ -1,0 +1,20 @@
+#database server properties
+db_driver=oracle.jdbc.driver.OracleDriver
+db_url=jdbc:oracle:thin:@114.215.180.20:1521:orcl
+#db_url=jdbc:oracle:thin:@192.168.1.137:1521:orcl
+db_username=console
+db_password=console
+
+#dataSource for hibernate properties
+hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
+hibernate.show_sql=true
+hibernate.format_sql=true
+hibernate.default_batch_fetch_size=16
+hibernate.max_fetch_depth=3
+hibernate.generate_Consoleics=true
+hibernate.bytecode.use_reflection_optimizer=false
+hibernate.cache.use_second_level_cache=true
+hibernate.cache.use_query_cache=true
+hibernate.cache.region.factory_class=org.hibernate.cache.ehcache.EhCacheRegionFactory
+hibernate.cache.use_structured_entries=true
+hibernate.metadata_defaults=false

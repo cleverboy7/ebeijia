@@ -1,0 +1,30 @@
+package com.ebeijia.service.wechat.subscribe;
+
+import java.util.List;
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatSubscribe;
+
+public interface WechatSubscribeService {
+	
+	//保存关注用户
+	public void addWechatSubscribe(TblWechatSubscribe wechatSubscribe);						
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String openid,String aoData); 
+	//批量移动用户分页查询
+	public Map<String,Object> findByBatch(String mchtId,String groupId,String aoData); 
+	//根据用户组查用户
+	public List<TblWechatSubscribe> findByGroup(String mchtId,String groupId);
+	//同步关注用户
+	public String synUsr();	
+	//修改用户备注
+	public String upRemark(TblWechatSubscribe data);
+	//修改用户组别
+	public String upGroup(TblWechatSubscribe data);
+	//批量修改用户组别
+	public String batchUpGroup(String mchtId,String subList,String groupId);
+	//根据id获得实体类
+	public TblWechatSubscribe getById(String id);
+	//更新当前组别的用户为空
+	public void upGroup(String groupId);
+}

@@ -1,0 +1,30 @@
+package com.ebeijia.controller.list.wechat.media;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.service.wechat.media.WechatFodderService;
+
+
+@Controller
+@RequestMapping(value="/list")
+public class ListNews {
+	
+	@Autowired
+	private WechatFodderService wechatFodderService;
+
+	@RequestMapping(value="news.html")
+	public @ResponseBody Map<String, Object> listCompUsrId(HttpServletRequest request){
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		String mchtId =request.getParameter("mchtId");
+		map =wechatFodderService.mediaList(mchtId,"news");
+		return map;	
+	}
+}

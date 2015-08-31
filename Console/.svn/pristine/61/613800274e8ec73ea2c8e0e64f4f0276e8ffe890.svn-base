@@ -1,0 +1,32 @@
+package com.ebeijia.entity.vo.interf;
+
+import java.io.Serializable;
+
+public class EmotionReq extends CommonReq implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
+	private String usrId;
+	private String friendId;
+	
+	
+	public String getUsrId() {
+		return usrId;
+	}
+	public void setUsrId(String usrId) {
+		this.usrId = usrId;
+	}
+	public String getFriendId() {
+		return friendId;
+	}
+	public void setFriendId(String friendId) {
+		this.friendId = friendId;
+	}
+	
+	
+
+}

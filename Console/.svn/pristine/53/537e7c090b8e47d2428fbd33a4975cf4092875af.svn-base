@@ -1,0 +1,145 @@
+package com.ebeijia.controller.action.wechat.redpachet;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.UUID4J;
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.vo.wechat.kf.Kf;
+import com.ebeijia.entity.wechat.TblWechatKf;
+import com.ebeijia.entity.wechat.TblWechatKfId;
+import com.ebeijia.entity.wechat.TblWechatRedpacket;
+import com.ebeijia.entity.wechat.TblWechatRedpacketId;
+import com.ebeijia.service.wechat.act.WechatRedpacketService;
+import com.ebeijia.service.wechat.kf.WechatKfService;
+import com.ebeijia.util.Constant;
+import com.ebeijia.util.EncryptMD5Util;
+import com.ebeijia.util.wechat.WechatError;
+
+@Controller
+@RequestMapping(value="/wechat/redpacket")
+public class WechatRedpacketUpdAction {
+	@Autowired
+	private WechatRedpacketService wechatRedpacketService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatRedpacketUpdAction.class);
+	
+	@RequestMapping(value="upd.html",method = RequestMethod.POST)
+	@MyLog(remark="修改红包")
+	@ResponseBody
+	public Map<String, Object> upd(HttpSession session,HttpServletRequest request) {
+		TblWechatRedpacket data = this.build(request);
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(data == null){
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			String respMsg =wechatRedpacketService.upd(data);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "修改红包失败,请联系管理员或稍后再试", "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("修改红包失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "修改红包失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	@RequestMapping(value="del.html",method = RequestMethod.POST)
+	@MyLog(remark="删除红包")
+	@ResponseBody
+	public Map<String, Object> del(HttpSession session,HttpServletRequest request) {
+		String mchtId = request.getParameter("mchtId");
+		String nonceStr = request.getParameter("nonceStr");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" } ,{ nonceStr, "32", "32" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			//判断客服是否存在
+			TblWechatRedpacketId id = new TblWechatRedpacketId();
+			id.setMchtId(mchtId);
+			id.setNonceStr(nonceStr);
+			TblWechatRedpacket tblWechatRedpacket = wechatRedpacketService.getById(id);
+			if(tblWechatRedpacket == null){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "红包不存在", "");
+				return map;
+			}
+			String respMsg =wechatRedpacketService.del(id);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "删除红包失败,请联系管理员或稍后再试", "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("删除红包失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "删除红包失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	private TblWechatRedpacket build(HttpServletRequest request){
+		String mchtId = request.getParameter("mchtId");
+		String nonceStr = request.getParameter("nonceStr");
+		String sendName = request.getParameter("sendName");
+		String openid= request.getParameter("openid");
+		int totalAmount = Integer.parseInt(request.getParameter("totalAmount"));
+		int minValue = Integer.parseInt(request.getParameter("minValue"));
+		int maxValue = Integer.parseInt(request.getParameter("maxValue"));
+		int totalNum = Integer.parseInt(request.getParameter("totalNum"));
+		String wishing = request.getParameter("wishing");
+		String actName = request.getParameter("actName");
+		String remark = request.getParameter("remark");
+		String logoImgUrl  = request.getParameter("logoImgUrl");
+		String shareContent = request.getParameter("shareContent");
+		String shareUrl = request.getParameter("shareUrl");
+		String shareImgUrl = request.getParameter("shareImgUrl");
+		String[][] s = { { mchtId, "15", "15" } ,{ nonceStr, "32", "32" } ,{ sendName, "1", "32" },{ openid, "0", "32" },
+				{ logoImgUrl,  "0", "128" },{ shareContent,  "0", "256" },{ shareUrl,  "0", "256" },{ shareImgUrl, "0", "10" },
+				{ wishing, "1", "128" },{ actName, "1", "32" },{ remark, "0", "256" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			return null;
+		}
+		TblWechatRedpacketId id = new TblWechatRedpacketId();
+		TblWechatRedpacket data = new TblWechatRedpacket();
+		id.setMchtId(mchtId);
+		id.setNonceStr(nonceStr);
+		data.setId(id);
+		data.setSendName(sendName);
+		data.setOpenid(openid);
+		data.setTotalAmount(totalAmount);
+		data.setMinValue(minValue);
+		data.setMaxValue(maxValue);
+		data.setTotalNum(totalNum);
+		data.setWishing(wishing);
+		data.setActName(actName);
+		data.setRemark(remark);
+		data.setLogoImgUrl(logoImgUrl);
+		data.setShareContent(shareContent);
+		data.setShareUrl(shareUrl);
+		data.setShareImgUrl(shareImgUrl);
+		//默认“已生成”状态
+		data.setStatus("0");
+		return data;
+	}
+}

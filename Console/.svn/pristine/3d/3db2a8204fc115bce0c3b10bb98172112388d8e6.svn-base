@@ -1,0 +1,22 @@
+package com.ebeijia.service.wechat.act;
+
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatKf;
+import com.ebeijia.entity.wechat.TblWechatRedpacket;
+import com.ebeijia.entity.wechat.TblWechatRedpacketId;
+
+
+
+public interface WechatRedpacketService {
+	//添加红包
+	public String save(TblWechatRedpacket data);
+	//修改红包
+	public String upd(TblWechatRedpacket data);
+	//删除红包
+	public String del(TblWechatRedpacketId id);
+	//根据主键获取红包对象
+	public TblWechatRedpacket getById(TblWechatRedpacketId id);
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String pageData); 
+}

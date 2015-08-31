@@ -1,0 +1,22 @@
+package com.ebeijia.service.wechat.media;
+
+import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
+
+
+public interface WechatMediaService {
+
+	//上传素材
+	public String upLoadMedia(String mchtId,String type,MultipartFile f,String mediaType,String ext,String name,String dsc);
+	//下载素材
+	public String dowLoadMedia(String mchtId,String mediaId,String mediaType);
+	//获得素材总数
+	public Map<String,Object> mediaAllCount(String mchtId);
+	//上传图文素材
+	public String upGtMedia(String mchtId,String name ,String dsc ,String articles) ;
+	//获得图文素材列表
+	public String newsGet(String mchtId,String media);
+	//修改图文素材
+	public String updateGtMedia(String mchtId,String name ,String dsc,String media,String articles);
+}

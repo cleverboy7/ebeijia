@@ -1,0 +1,42 @@
+package com.ebeijia.entity;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "TBL_FUNC_INF")
+public class TblFuncInf implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private String funcId;
+	private String funcName;
+	private String parentId;
+	
+	@Id
+	@Column(name = "FUNC_ID", unique = true, nullable = false, length = 6)
+	public String getFuncId() {
+		return funcId;
+	}
+	public void setFuncId(String funcId) {
+		this.funcId = funcId;
+	}
+	@Column(name = "FUNC_NAME", length = 32)
+	public String getFuncName() {
+		return funcName;
+	}
+	public void setFuncName(String funcName) {
+		this.funcName = funcName;
+	}
+	@Column(name = "PARENT_ID", length = 6)
+	public String getParentId() {
+		return parentId;
+	}
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+}

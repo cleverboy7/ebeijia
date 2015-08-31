@@ -1,0 +1,56 @@
+package com.ebeijia.service.wechat.inter;
+
+import net.sf.json.JSONObject;
+
+
+
+
+/** 
+ * 群发管理器类 
+ * @author zhicheng.xu
+ * @date 2015-04-22
+ */  
+
+public interface MassManager {  
+  
+    
+	/** 
+     * 群发所有，组别
+     * @param accessToken 有效的access_token 
+     * @param sendJson 群发json
+     * @return JSONObject 
+     */  
+    public JSONObject massAll(String accessToken,String sendJson);
+    /** 
+     * 群发用户群发
+     * @param accessToken 有效的access_token 
+     * @param sendJson 群发json
+     * @return JSONObject 
+     */  
+    public JSONObject massUsr(String accessToken,String sendJson);
+    
+    /** 
+     * 删除群发
+     * @param accessToken 有效的access_token 
+     * @param mediaId 图文和视频media
+     * @return JSONObject 
+     */  
+    public JSONObject massDel(String accessToken,String msgId);
+    
+    /** 
+     * 群发预览
+     * @param accessToken 有效的access_token 
+     * @param sendJson 群发预览json
+     * @return JSONObject 
+     */  
+    public String massPreview(String accessToken,String toUsrJson);
+    
+    
+    /** 
+     * 查询群发状态
+     * @param accessToken 有效的access_token 
+     * @param msgId 群发id
+     * @return JSONObject 
+     */  
+    public String massStatus(String accessToken,String msgId);
+}  

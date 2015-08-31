@@ -1,0 +1,53 @@
+package com.ebeijia.service.wechat.media;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.ArticlesDao;
+import com.ebeijia.entity.wechat.TblArticlesInf;
+import com.ebeijia.util.StringUtil;
+
+@Service
+public final class ArticlesServiceImpl implements ArticlesService {
+
+	@Autowired
+	private ArticlesDao articlesDao;
+
+	@Transactional
+	@Cacheable(value="articlesCache")
+	public Map<String,Object> findBySql(String mchtId,String pagaData) {
+		StringBuilder query =new StringBuilder();
+		query.append("from TblWechatRespMsg");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND mchtId like '%").append(mchtId).append("%'");
+		}
+		query.append( " ORDER BY id.mchtId");
+		Map<String,Object> m =articlesDao.findByPage(query.toString(), pagaData);
+		return m;
+	}
+	
+	@Transactional
+	@CacheEvict(value="articlesCache",allEntries=true)
+	public void Save(TblArticlesInf data){
+		articlesDao.save(data);
+	}
+	
+	@Transactional
+	@Cacheable(value="articlesCache",key = "#root.method.name+#id")
+	public TblArticlesInf getById(String id){
+		return articlesDao.getById(id);
+	}
+	
+	@Transactional
+	public String getArticlesId() {
+		String sql = "SELECT SEQ_ARTICLES_ID.NEXTVAL FROM DUAL";
+		String respMsgId = articlesDao.getListSQL(sql).get(0).toString();
+		return StringUtil.beforFillValue(respMsgId, 20, '0');
+	}
+}

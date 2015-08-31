@@ -1,0 +1,3 @@
+activemq.brokerURL=tcp://114.215.180.20:61616
+activemq.username=admin
+activemq.password=admin

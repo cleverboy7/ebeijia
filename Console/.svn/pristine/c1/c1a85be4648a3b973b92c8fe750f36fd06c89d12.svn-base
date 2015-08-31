@@ -1,0 +1,180 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "TBL_WECHAT_RESP_MSG")
+public class TblWechatRespMsg implements java.io.Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
+	
+	private String respMsgId;
+	private String mchtId;
+    private String keywords;
+    private String keywordType;
+    private String respType;
+    private String msgType;
+    private String content;
+    private String title;
+    private String description;
+    private String picUrl;
+    private String url;
+    private String mediaId;
+    private String articleIds;
+    private String musicUrl;
+    private String hqMusicUrl;
+    private String createTime;
+    private String updateTime;
+    
+    /** default constructor */
+	public TblWechatRespMsg() {
+	}
+
+
+	
+	@Id
+	@Column(name = "RESP_MSG_ID", nullable = false, length = 20)
+	public String getRespMsgId() {
+		return respMsgId;
+	}
+	public void setRespMsgId(String respMsgId) {
+		this.respMsgId = respMsgId;
+	}
+	@Column(name = "MCHT_ID", nullable = false, length = 15)
+	public String getMchtId() {
+		return mchtId;
+	}
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+	@Column(name = "KEYWORDS", length = 32)
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+	@Column(name = "KEYWORD_TYPE", length = 1)
+	public String getKeywordType() {
+		return keywordType;
+	}
+
+	public void setKeywordType(String keywordType) {
+		this.keywordType = keywordType;
+	}
+	@Column(name = "RESP_TYPE", length = 6)
+	public String getRespType() {
+		return respType;
+	}
+
+	public void setRespType(String respType) {
+		this.respType = respType;
+	}
+	@Column(name = "MSG_TYPE", length = 25)
+	public String getMsgType() {
+		return msgType;
+	}
+
+	public void setMsgType(String msgType) {
+		this.msgType = msgType;
+	}
+	@Column(name = "CONTENT", length = 1000)
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+	@Column(name = "TITLE", length = 64)
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	@Column(name = "DESCRIPTION", length = 1024)
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	@Column(name = "PIC_URL", length = 256)
+	public String getPicUrl() {
+		return picUrl;
+	}
+
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+	@Column(name = "URL", length = 256)
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	@Column(name = "MEDIA_ID", length = 256)
+	public String getMediaId() {
+		return mediaId;
+	}
+
+	public void setMediaId(String mediaId) {
+		this.mediaId = mediaId;
+	}
+	@Column(name = "ARTICLE_IDS", length = 256)
+	public String getArticleIds() {
+		return articleIds;
+	}
+
+	public void setArticleIds(String articleIds) {
+		this.articleIds = articleIds;
+	}
+	@Column(name = "MUSIC_URL", length = 256)
+	public String getMusicUrl() {
+		return musicUrl;
+	}
+
+	public void setMusicUrl(String musicUrl) {
+		this.musicUrl = musicUrl;
+	}
+	@Column(name = "HQ_MUSIC_URL", length = 256)
+	public String getHqMusicUrl() {
+		return hqMusicUrl;
+	}
+
+	public void setHqMusicUrl(String hqMusicUrl) {
+		this.hqMusicUrl = hqMusicUrl;
+	}
+	@Column(name = "CREATE_TIME", length = 14)
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+	@Column(name = "UPDATE_TIME", length = 14)
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+    
+    
+
+}

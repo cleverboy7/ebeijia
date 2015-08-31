@@ -1,0 +1,32 @@
+package com.ebeijia.service.wechat.menu;
+
+import java.util.List;
+import java.util.Map;
+
+import com.ebeijia.entity.vo.wechat.Menu;
+import com.ebeijia.entity.wechat.TblWechatMenu;
+
+public interface WechatMenuService {
+	
+	//修改实体信息
+	public void updateWechatMenu(TblWechatMenu wechatMenu);				
+	//保存菜单
+	public void save(TblWechatMenu wechatMenu);
+	
+	public String deleteMenuById(String menuId);
+
+	//查询菜单是
+	public List<TblWechatMenu> findByHql(String menuKey,String mchtId);
+	//生成菜单id seq
+	public String getMenuId() ;
+	//修改自定义菜单
+	public void modifyMenuById(TblWechatMenu tblWechatMenu);
+	//与微信服务器同步自定义菜单
+	public Menu SynchToMenu(String mchtId,String groupId);
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String groupId,String aoData); 
+	//下拉框查询
+	public Map<String, Object> listFind(String mchtId ,String groupId);
+	//根据id获取对象
+	public TblWechatMenu getById(String id);
+}

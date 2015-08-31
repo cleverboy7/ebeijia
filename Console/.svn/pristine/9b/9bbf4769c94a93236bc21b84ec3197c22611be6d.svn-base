@@ -1,0 +1,99 @@
+package com.ebeijia.service.wechat.inter;
+
+
+import net.sf.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ebeijia.entity.vo.wechat.ModUsr;
+import com.ebeijia.entity.vo.wechat.UsrToGroup;
+import com.ebeijia.entity.vo.wechat.UsrsToGroup;
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.util.wechat.WechatUtil;
+
+/** 
+ * 用户管理器类 
+ * @author zhicheng.xu
+ * @date 2015-02-02
+ */  
+
+@Service("UsrManager")
+public class UsrManagerImpl implements UsrManager{  
+  
+	@Autowired
+	private WechatTokenService wechatTokenService;
+    /** 
+     * 移动用户分组
+     * @param UsrToGroup 用户实例 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+    public JSONObject mvUsr(UsrToGroup utg, String accessToken) {  
+		String url = WechatUtil.USR_GROUP_URL.replace("ACCESS_TOKEN",accessToken);
+		String jsonUtg = JSONObject.fromObject(utg).toString();
+		JSONObject jsonObject = wechatTokenService.httpRequest(url, "POST",jsonUtg);
+		return jsonObject;
+	} 
+    
+    /** 
+     * 批量移动用户分组 
+     * @param UsrsToGroup 用户实例 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public JSONObject mvUsrs(UsrsToGroup utg,String accessToken) {
+		String requestUrl = WechatUtil.USRS_GROUP_URL.replace("ACCESS_TOKEN", accessToken);
+	    String jsonUtg = JSONObject.fromObject(utg).toString();  
+	    JSONObject jsonObject = wechatTokenService.httpRequest(requestUrl, "POST", jsonUtg);
+		return jsonObject;
+	}
+	
+	/** 
+     * 查询用户信息 
+     * @param openId 用户id
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public  JSONObject getUsrInf(String accessToken,String openId) {
+	    String requestUrl = WechatUtil.USR_INF_URL.replace("ACCESS_TOKEN", accessToken).replace("OPENID", openId);
+	    JSONObject jsonObject = wechatTokenService.httpRequest(requestUrl, "POST", null);
+        return jsonObject;  
+	}
+	
+	/** 
+     * 查询关注者用户第一页 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public  JSONObject getUsr(String accessToken) {
+	    String requestUrl = WechatUtil.SUBSCRIBE_FIRST_PAGE_URL.replace("ACCESS_TOKEN", accessToken);
+	    JSONObject jsonObject = wechatTokenService.httpRequest(requestUrl, "POST", null);
+        return jsonObject;  
+	}
+	
+	/** 
+     * 查询关注者用户下一页 
+     * @param nextOpenid 下一页
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public  JSONObject getUsrNext(String accessToken,String nextOpenid) {
+	    String requestUrl = WechatUtil.SUBSCRIBE_NEXT_PAGE_URL.replace("ACCESS_TOKEN", accessToken).replace("NEXT_OPENID", nextOpenid);
+	    JSONObject jsonObject = wechatTokenService.httpRequest(requestUrl, "POST", null);
+        return jsonObject;  
+	}
+	
+	/** 
+     * 修改用户备注
+     * @param ModUsr 对象
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public JSONObject upRemark(ModUsr modUsr,String accessToken){
+		String requestUrl = WechatUtil.USR_UPD_REMARK.replace("ACCESS_TOKEN", accessToken);
+        String jsonUsr = JSONObject.fromObject(modUsr).toString();  
+	    JSONObject jsonObject = wechatTokenService.httpRequest(requestUrl, "POST", jsonUsr);
+        return jsonObject;  
+	}
+}  

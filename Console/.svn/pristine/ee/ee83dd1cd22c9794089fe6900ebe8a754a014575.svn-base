@@ -1,0 +1,26 @@
+package com.ebeijia.service.picInf;
+
+import java.util.List;
+
+import com.ebeijia.entity.TblPicInf;
+
+public interface PicInfService {
+	
+	public void updatePicInf(TblPicInf picInf);				//修改实体信息
+	
+	public void deletePicInf(TblPicInf picInf);				//逻辑删除实体信息
+	
+	public List<TblPicInf> queryPicInfList();					//返回实体信息
+	
+	public List<TblPicInf> queryPageList(TblPicInf picInf,int page, int size);		//返回分页形式的实体信息
+	
+	public int countTotalNum(TblPicInf picInf);			//获取数据总数量
+
+	public TblPicInf queryPicInfById(int id);	//通过主键获取实体信息
+	
+	//保存图片
+	public void save(TblPicInf picInf);		
+	
+	//获取图片seq
+	public String getPicId();
+}

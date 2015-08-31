@@ -1,0 +1,67 @@
+package com.ebeijia.service.picInf;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.picInf.PicInfDao;
+import com.ebeijia.entity.TblPicInf;
+
+@Service
+public final class PicInfServiceImpl implements PicInfService {
+
+	@Autowired
+	private PicInfDao picInfDao;
+
+	@Transactional
+	@CacheEvict(value="picCache" ,allEntries=true)
+	public void updatePicInf(TblPicInf picInf) {
+		picInfDao.saveOrUpdate(picInf);
+	}
+
+	@Transactional
+	@CacheEvict(value="picCache" ,allEntries=true)
+	public void deletePicInf(TblPicInf picInf) {
+		picInfDao.update(picInf);
+	}
+
+	@Transactional
+	@CacheEvict(value="picCache" ,allEntries=true)
+	public void save(TblPicInf picInf) {
+		picInfDao.save(picInf);
+	}
+
+	@Transactional
+	@Cacheable(value="picCache")
+	public List<TblPicInf> queryPicInfList() {
+		return picInfDao.getPicInfList();
+	}
+	
+	@Transactional
+	@Cacheable(value="picCache")
+	public List<TblPicInf> queryPageList(TblPicInf picInf,int page, int size){
+		return picInfDao.findByPage(picInf, page, size);
+	}
+	
+	@Transactional
+	@Cacheable(value="picCache",key = "#root.method.name+#picInf")
+	public int countTotalNum(TblPicInf picInf){
+		return picInfDao.countTotalNum(picInf);
+	}
+	
+	@Transactional
+	@Cacheable(value="picCache",key = "#root.method.name+#id")
+	public TblPicInf queryPicInfById(int id){
+		return picInfDao.getById(id);
+	}
+	
+	@Transactional
+	public String getPicId() {
+		String sql = "SELECT SEQ_PIC_ID.NEXTVAL FROM DUAL";
+		return  picInfDao.getListSQL(sql).get(0).toString();
+	}
+}

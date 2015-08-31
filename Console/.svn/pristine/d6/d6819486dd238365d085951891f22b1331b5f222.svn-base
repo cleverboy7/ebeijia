@@ -1,0 +1,9 @@
+package com.ebeijia.service.face;
+
+import org.springframework.web.multipart.MultipartFile;
+
+public interface FaceInfService {
+	
+	//人脸检测
+	public String faceDetect(MultipartFile f,String ext);	
+}

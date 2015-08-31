@@ -1,0 +1,333 @@
+package com.ebeijia.service.wechat.subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.ebeijia.tools.DateTime4J;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatMchtInfDao;
+import com.ebeijia.dao.wechat.WechatSubscribeDao;
+import com.ebeijia.entity.vo.wechat.AccessToken;
+import com.ebeijia.entity.vo.wechat.ModUsr;
+import com.ebeijia.entity.vo.wechat.UsrToGroup;
+import com.ebeijia.entity.vo.wechat.UsrsToGroup;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+import com.ebeijia.entity.wechat.TblWechatSubscribe;
+import com.ebeijia.service.wechat.core.WechatMchtInfService;
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.service.wechat.inter.UsrManager;
+import com.ebeijia.util.StringUtil;
+import com.ebeijia.util.wechat.WechatUtil;
+
+@Service("wechatSubscribeService")
+public final class WechatSubscribeServiceImpl implements WechatSubscribeService {
+
+	@Autowired
+	private WechatMchtInfDao wechatMchtInfDao;
+	@Autowired
+	private WechatMchtInfService wechatMchtInfService;
+	@Autowired
+	private WechatTokenService wechatTokenService;
+	@Autowired
+	private UsrManager usrManager;
+	@Autowired
+	private WechatSubscribeDao wechatSubscribeDao;
+	
+	@Transactional
+	@Cacheable(value="wechatUsrCache")
+	public Map<String,Object> findBySql(String mchtId,String openid,String pagaData) {
+		StringBuilder query =new StringBuilder();
+		query.append("from TblWechatSubscribe");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND mchtId like '%").append(mchtId).append("%'");
+		}
+		if(openid!=null && !"".equals(openid)){
+			query.append(" AND openid like '%").append(openid).append("%'");
+		}
+		query.append( " ORDER BY subscribeTime");
+		Map<String,Object> m =wechatSubscribeDao.findByPage(query.toString(), pagaData);
+		return m;
+	}
+
+
+	@Transactional
+	@Cacheable(value="wechatUsrCache")
+	public Map<String,Object> findByBatch(String mchtId,String groupId,String pagaData) {
+		StringBuilder query =new StringBuilder();
+		query.append("from TblWechatSubscribe");
+		query.append(" where mchtId ='").append(mchtId).append("'");
+		query.append(" and  subscribeTiny =1");
+		if("0".equals(groupId)){
+			query.append(" AND groupId is not null");
+		}else{
+			query.append(" AND (groupId <>'").append(groupId).append("' or groupId is null )");
+		}
+		query.append( " ORDER BY subscribeTime");
+		Map<String,Object> m =wechatSubscribeDao.findByPage(query.toString(), pagaData);
+		return m;
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatUsrCache",key = "#root.method.name+#mchtId+#groupId")
+	public List<TblWechatSubscribe> findByGroup(String mchtId,String groupId) {
+		StringBuilder query =new StringBuilder();
+		query.append("from TblWechatSubscribe");
+		query.append(" where mchtId ='").append(mchtId).append("'");
+		query.append(" and  subscribeTiny =1");
+		if("0".equals(groupId)){
+			query.append(" AND groupId is null");
+		}else{
+			query.append(" AND groupId ='").append(groupId).append("'");
+		}
+		query.append( " ORDER BY subscribeTime");
+		List<TblWechatSubscribe> result = wechatSubscribeDao.find(query.toString());
+		return result ;
+	}
+	
+	@Override
+	@CacheEvict(value="wechatUsrCache",allEntries=true)
+	public String synUsr() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("from TblWechatMchtInf ");
+		List<TblWechatMchtInf> list = wechatMchtInfDao.find(sb.toString());
+		String resp = null;
+		for (TblWechatMchtInf data : list) {
+			resp = this.SynchUsrIdList(data.getAppid(),data.getAppsecret(), data.getMchtId());
+			if(resp !=null){
+				break;
+			}
+		}
+		return resp;
+	}
+	
+	
+	//修改用户备注
+	@Override
+	@Transactional
+	@CacheEvict(value="wechatUsrCache",allEntries=true)
+	public String upRemark(TblWechatSubscribe tblWechatSubscribe){
+		TblWechatMchtInf data = wechatMchtInfService.getById(tblWechatSubscribe.getMchtId());
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(),data.getAppsecret());
+		String result = null;
+		if (null != at) {
+			ModUsr modUsr = new ModUsr();
+			modUsr.setOpenid(tblWechatSubscribe.getOpenid());
+			modUsr.setRemark(tblWechatSubscribe.getRemarks());
+			JSONObject jsonObject = usrManager.upRemark(modUsr,at.getToken());
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					// 修改用户备注
+					wechatSubscribeDao.update(tblWechatSubscribe);
+				}
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;	
+	}
+	
+	private String SynchUsrIdList(String appId, String appSecret,String mchtId) {
+		// 调用接口获取access_token
+		AccessToken at = wechatTokenService.getAccessToken(appId, appSecret);
+		String openid ="";
+		JSONObject jsonObject = null;
+		// 异常时返回内容
+		String result = null;
+		if (null != at) {
+			jsonObject = usrManager.getUsr(at.getToken());
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) == 0) {
+					JSONObject usrId = (JSONObject) jsonObject.get("data");
+					if(usrId != null){
+						JSONArray jsonArr = (JSONArray) usrId.get("openid");
+						for(int i = 0 ; i <jsonArr.size();i++){
+							JSONObject usrDef =null;
+							if (null != at) {
+								usrDef = usrManager.getUsrInf(at.getToken(), jsonArr.get(i).toString());
+								this.saveWechatSubscribe(usrDef, mchtId);
+								//将所有关注用户加入列表
+								openid+=("'"+usrDef.get("openid")+"',");
+							}
+						}
+					}
+					//查询到取消关注的用户修改状态
+					if(!"".equals(openid)){
+						this.updateWechatSubscribe(openid, mchtId);
+					}
+				}
+			}else{
+				result = "8888888";
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;
+	}
+	
+	//修改未关注者状态
+	@Transactional
+	@CacheEvict(value="wechatUsrCache",allEntries=true)
+	public void updateWechatSubscribe(String openid,String mchtId){
+		//去除最后个"，"
+		openid =openid.substring(0,openid.length()-1);
+		StringBuilder sb = new StringBuilder();
+		sb.append("update TblWechatSubscribe set subscribeTiny ='0' where openid in (");
+		sb.append("select openid from TblWechatSubscribe where openid not in (").append(openid).append("");
+		sb.append(" )) and mchtId ='").append(mchtId).append("'");
+		wechatSubscribeDao.updateAll(sb.toString());
+	}
+	
+	private void saveWechatSubscribe(JSONObject def, String mchtId) {
+		//数据格式化为DB需要的POJO
+		TblWechatSubscribe subscribe = new TblWechatSubscribe();
+		subscribe.setMchtId(mchtId);
+		subscribe.setSubcribeId(getSubcribeId());
+		subscribe.setOpenid(def.get("openid").toString());
+		subscribe.setSubscribeTiny(Integer.parseInt(def.get("subscribe").toString()));
+		subscribe.setNickname(def.get("nickname").toString());
+		subscribe.setSex(Integer.parseInt(def.get("sex").toString()));
+		subscribe.setCity(def.get("city").toString());
+		subscribe.setCountry(def.get("country").toString());
+		subscribe.setProvince(def.get("province").toString());
+		subscribe.setLanguage(def.get("language").toString());
+		subscribe.setHeadimgurl(def.get("headimgurl").toString());
+		subscribe.setSubscribeTime(DateTime4J.timestampFormat(Long.valueOf(def.get("subscribe_time").toString())*1000L));
+		subscribe.setCreateTime(DateTime4J.getCurrentDateTime());
+		this.addWechatSubscribe(subscribe);
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatUsrCache",allEntries=true)
+	public void addWechatSubscribe(TblWechatSubscribe wechatSubscribe) {
+		//如果用户已经存在则更新数据
+		StringBuilder hql = new StringBuilder();
+		hql.append("from TblWechatSubscribe where mchtId ='").append(wechatSubscribe.getMchtId()).append("' and");
+		hql.append(" openid ='").append(wechatSubscribe.getOpenid()).append("'");
+		List<TblWechatSubscribe> list = wechatSubscribeDao.find(hql.toString());
+		if(!list.isEmpty()){
+			TblWechatSubscribe data =list.get(0);
+			data.setNickname(wechatSubscribe.getNickname());
+			data.setSex(wechatSubscribe.getSex());
+			data.setCity(wechatSubscribe.getCity());
+			data.setCountry(wechatSubscribe.getCountry());
+			data.setSubscribeTiny(wechatSubscribe.getSubscribeTiny());
+			data.setProvince(wechatSubscribe.getProvince());
+			data.setLanguage(wechatSubscribe.getLanguage());
+			data.setHeadimgurl(wechatSubscribe.getHeadimgurl());
+			data.setSubscribeTime(wechatSubscribe.getSubscribeTime());
+			data.setUpdateTime(DateTime4J.getCurrentDateTime());
+			wechatSubscribeDao.update(data);
+		}else{
+			wechatSubscribeDao.save(wechatSubscribe);
+		}
+	}
+	
+	/**
+	 * 生成关注者id
+	 * @return
+	 */
+	private String getSubcribeId() {
+		String sql = "SELECT SEQ_WECHAT_SUBSCRIBE_ID.NEXTVAL FROM DUAL";
+		String subId = wechatSubscribeDao.getListSQL(sql).get(0).toString();
+		return StringUtil.beforFillValue(subId, 20, '0');
+	}
+
+	//修改用户组别
+	@Transactional
+	@CacheEvict(value="wechatUsrCache",allEntries=true)
+	public String upGroup(TblWechatSubscribe tblWechatSubscribe){
+		TblWechatMchtInf data = wechatMchtInfService.getById(tblWechatSubscribe.getMchtId());
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(),data.getAppsecret());
+		String result = null;
+		if (null != at) {
+			UsrToGroup utg =new UsrToGroup();
+			utg.setOpenid(tblWechatSubscribe.getOpenid());
+			utg.setTo_groupid(tblWechatSubscribe.getGroupId());
+			JSONObject jsonObject = usrManager.mvUsr(utg,at.getToken());
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					if(tblWechatSubscribe.getGroupId().equals("0")){
+						tblWechatSubscribe.setGroupId("");
+					}
+					wechatSubscribeDao.update(tblWechatSubscribe);
+				}
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;	
+	}
+	
+	//批量修改用户组别
+	@Transactional
+	@CacheEvict(value="wechatUsrCache",allEntries=true)
+	public String batchUpGroup(String mchtId,String subList,String groupId){
+		TblWechatMchtInf data = wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(),data.getAppsecret());
+		String result = null;
+		if (null != at) {
+			UsrsToGroup utg =new UsrsToGroup();
+			List tmp = new ArrayList();
+			for(String str :subList.split(",")){
+				tmp.add(str);
+			}
+			utg.setOpenid_list(tmp);
+			utg.setTo_groupid(groupId);
+			JSONObject jsonObject = usrManager.mvUsrs(utg,at.getToken());
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					//批量更新组别
+					StringBuilder sb =new StringBuilder();
+					String subTmp ="";
+					for(int i = 0 ;i<tmp.size();i++){
+						subTmp+="'"+tmp.get(i)+"',";
+					}
+					if(groupId.equals("0")){
+						groupId="";
+					}
+					sb.append("update TblWechatSubscribe set groupId = '").append(groupId).append("' where ");
+					sb.append("openid in (").append(subTmp.substring(0,subTmp.length()-1)).append(")");
+					wechatSubscribeDao.updateAll(sb.toString());
+				}
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;	
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatUsrCache",allEntries=true)	
+	public void upGroup(String groupId){
+		StringBuilder sb =new StringBuilder();
+		sb.append("update TblWechatSubscribe set groupId = '' where groupId='").append(groupId).append("'");
+		wechatSubscribeDao.updateAll(sb.toString());
+	}
+	
+	@Transactional
+	@Cacheable(value="wechatUsrCache",key = "#root.method.name+#id")
+	public TblWechatSubscribe getById(String id){
+		//如果没有关注了也返回空
+		TblWechatSubscribe data = wechatSubscribeDao.getById(id);
+		if(data.getSubscribeTiny()==0){
+			return null;
+		}
+		return wechatSubscribeDao.getById(id);
+	}
+}

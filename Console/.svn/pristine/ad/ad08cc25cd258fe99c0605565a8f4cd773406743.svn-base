@@ -1,0 +1,60 @@
+package com.ebeijia.service.wechat.template;
+
+import java.util.Map;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatMchtInfDao;
+import com.ebeijia.entity.vo.wechat.AccessToken;
+import com.ebeijia.entity.wechat.TblWechatMchtInf;
+import com.ebeijia.service.wechat.core.WechatMchtInfService;
+import com.ebeijia.service.wechat.core.WechatTokenService;
+import com.ebeijia.service.wechat.inter.TemplateManager;
+import com.ebeijia.util.wechat.WechatUtil;
+
+@Service
+public final class WechatTemplateServiceImpl implements WechatTemplateService {
+
+	@Autowired
+	private WechatMchtInfService wechatMchtInfService;
+	@Autowired
+	private WechatMchtInfDao wechatMchtInfDao;
+	@Autowired
+	private WechatTokenService wechatTokenService;
+	@Autowired
+	private TemplateManager templateManager;
+	
+	//设置模板行业
+	@Transactional
+	public String set(String mchtId,String id1,String id2){
+		TblWechatMchtInf data = wechatMchtInfService.getById(mchtId);
+		AccessToken at = wechatTokenService.getAccessToken(data.getAppid(),data.getAppsecret());
+		String result = null;
+		if (null != at) {
+			JSONObject jsonObject = templateManager.set(id1, id2, at.getToken());
+			if (null != jsonObject) {
+				if (WechatUtil.getWechatCallBackStatus(jsonObject.toString()) != 0) {
+					result = jsonObject.getString("errcode");
+				} else {
+					// 修改用户备注
+					data.setTemplate1(id1);
+					data.setTemplate2(id2);
+					wechatMchtInfDao.update(data);
+				}
+			}
+		} else {
+			result = "9999999";
+		}
+		return result;	
+	}
+
+	@Transactional
+	public Map<String,Object> findBySql(String mchtId,String pagaData) {
+		Map<String,Object> m =wechatMchtInfService.findBySql(mchtId,pagaData);
+		return m;
+	}
+}

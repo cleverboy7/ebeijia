@@ -1,0 +1,26 @@
+package com.ebeijia.service.wechat.win;
+
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatWinning;
+
+
+
+public interface WechatWinService {
+	//添加中奖名单
+	public String save(TblWechatWinning data);
+	//修改中奖名单
+	public String upd(TblWechatWinning data);
+	//删除中奖名单
+	public String del(String id);
+	//根据主键获取中奖名单对象
+	public TblWechatWinning getById(String  id);
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String pageData);
+	//验证是否具备抽奖资格
+	public String check(String openid,String appid,String actId,String type);
+	//抽奖试算
+	public String calculation(String openid,String appid,String actId,String type);
+	//验证是否中过奖
+	public TblWechatWinning winCheck(String actId, String openid);
+}

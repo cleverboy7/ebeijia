@@ -1,0 +1,13 @@
+package com.ebeijia.service.wechat.win;
+
+import com.ebeijia.entity.wechat.TblWechatSn;
+import com.ebeijia.entity.wechat.TblWechatSnId;
+
+
+
+public interface WechatSnService {
+	//生sn码
+	public String save(String mchtId,String actType);
+	//根据主键获取sn码对象
+	public TblWechatSn getById(TblWechatSnId  id);
+}

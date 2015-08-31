@@ -1,0 +1,24 @@
+package com.ebeijia.service.txnLog;
+
+import java.util.List;
+import java.util.Map;
+
+import com.ebeijia.entity.TblTxnLog;
+
+public interface TxnLogService {
+	
+	public void updateTxnLog(TblTxnLog txnLog);				//修改实体信息
+	
+	public void deleteTxnLog(TblTxnLog txnLog);				//逻辑删除实体信息
+	
+	public void addTxnLog(TblTxnLog txnLog);						//添加实体信息
+	
+	public List<TblTxnLog> queryTxnLogList();					//返回实体信息
+	
+	public int countTotalNum(TblTxnLog txnLog);			//获取数据总数量
+
+	public TblTxnLog queryTxnLogById(int id);	//通过主键获取实体信息
+	
+	//分页查询
+	public Map<String,Object> findBySql(String date,String txnChl,String status,String pageData); 
+}

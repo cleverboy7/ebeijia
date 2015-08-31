@@ -1,0 +1,276 @@
+package com.ebeijia.entity.vo.interf;
+
+import java.io.Serializable;
+
+public class UsrInfReq extends CommonReq implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String usrId;
+	private String usrName;
+	private String mobileNo;
+	private String pwd;
+	private String oldPwd;
+	private String newPwd;
+	private String pic;
+	private String sex;
+	private String birthday;
+	private String signature;
+	private String cid;
+	private String marriage;
+	private String edu;
+	private String cerNo;
+	private String job;
+	private String wage;
+	private String age;
+	private String specialty;
+	private String high;
+	private String weight;
+	private String color;
+	private String number;
+	private String conste;
+	private String email;
+	private String post;
+	private String addr;
+	private String wchat;
+	private String wbo;
+	private String sign;
+	private String note;
+	private String inviteNo;
+	private String point;
+	private String gameId;
+	private String flag;
+	private String hobby;
+	private String blood;
+	private String zodiac;
+	
+	
+	
+	public String getFlag() {
+		return flag;
+	}
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+	public String getGameId() {
+		return gameId;
+	}
+	public void setGameId(String gameId) {
+		this.gameId = gameId;
+	}
+	public String getPoint() {
+		return point;
+	}
+	public void setPoint(String point) {
+		this.point = point;
+	}
+	public String getUsrId() {
+		return usrId;
+	}
+	public void setUsrId(String usrId) {
+		this.usrId = usrId;
+	}
+	public String getUsrName() {
+		return usrName;
+	}
+	public void setUsrName(String usrName) {
+		this.usrName = usrName;
+	}
+	public String getMobileNo() {
+		return mobileNo;
+	}
+	public void setMobileNo(String mobileNo) {
+		this.mobileNo = mobileNo;
+	}
+	public String getPwd() {
+		return pwd;
+	}
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
+	public String getOldPwd() {
+		return oldPwd;
+	}
+	public void setOldPwd(String oldPwd) {
+		this.oldPwd = oldPwd;
+	}
+	public String getNewPwd() {
+		return newPwd;
+	}
+	public void setNewPwd(String newPwd) {
+		this.newPwd = newPwd;
+	}
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic;
+	}
+	public String getSex() {
+		return sex;
+	}
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+	public String getBirthday() {
+		return birthday;
+	}
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
+	public String getSignature() {
+		return signature;
+	}
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+	public String getCid() {
+		return cid;
+	}
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+	public String getMarriage() {
+		return marriage;
+	}
+	public void setMarriage(String marriage) {
+		this.marriage = marriage;
+	}
+	public String getEdu() {
+		return edu;
+	}
+	public void setEdu(String edu) {
+		this.edu = edu;
+	}
+	public String getCerNo() {
+		return cerNo;
+	}
+	public void setCerNo(String cerNo) {
+		this.cerNo = cerNo;
+	}
+	public String getJob() {
+		return job;
+	}
+	public void setJob(String job) {
+		this.job = job;
+	}
+	public String getWage() {
+		return wage;
+	}
+	public void setWage(String wage) {
+		this.wage = wage;
+	}
+	public String getHigh() {
+		return high;
+	}
+	public void setHigh(String high) {
+		this.high = high;
+	}
+	public String getWeight() {
+		return weight;
+	}
+	public void setWeight(String weight) {
+		this.weight = weight;
+	}
+	
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
+	public String getNumber() {
+		return number;
+	}
+	public void setNumber(String number) {
+		this.number = number;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPost() {
+		return post;
+	}
+	public void setPost(String post) {
+		this.post = post;
+	}
+	public String getAddr() {
+		return addr;
+	}
+	public void setAddr(String addr) {
+		this.addr = addr;
+	}
+	public String getWchat() {
+		return wchat;
+	}
+	public void setWchat(String wchat) {
+		this.wchat = wchat;
+	}
+	public String getWbo() {
+		return wbo;
+	}
+	public void setWbo(String wbo) {
+		this.wbo = wbo;
+	}
+	public String getSign() {
+		return sign;
+	}
+	public void setSign(String sign) {
+		this.sign = sign;
+	}
+	public String getNote() {
+		return note;
+	}
+	public void setNote(String note) {
+		this.note = note;
+	}
+	public String getAge() {
+		return age;
+	}
+	public void setAge(String age) {
+		this.age = age;
+	}
+	public String getSpecialty() {
+		return specialty;
+	}
+	public void setSpecialty(String specialty) {
+		this.specialty = specialty;
+	}
+	public String getConste() {
+		return conste;
+	}
+	public void setConste(String conste) {
+		this.conste = conste;
+	}
+	public String getInviteNo() {
+		return inviteNo;
+	}
+	public void setInviteNo(String inviteNo) {
+		this.inviteNo = inviteNo;
+	}
+	public String getHobby() {
+		return hobby;
+	}
+	public void setHobby(String hobby) {
+		this.hobby = hobby;
+	}
+	public String getBlood() {
+		return blood;
+	}
+	public void setBlood(String blood) {
+		this.blood = blood;
+	}
+	public String getZodiac() {
+		return zodiac;
+	}
+	public void setZodiac(String zodiac) {
+		this.zodiac = zodiac;
+	}
+
+}

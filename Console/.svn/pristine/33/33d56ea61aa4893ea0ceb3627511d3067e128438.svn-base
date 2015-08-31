@@ -1,0 +1,16 @@
+package com.ebeijia.contro.task;
+
+import org.springframework.stereotype.Component;
+
+/**
+ * @author zhicheng.xu
+ * @date 2015年5月18日
+ */
+@Component
+public class TaskTest {
+//每分钟调度一次
+//	@Scheduled(cron = "0 0/1 15,* * * ?")
+//	public void test() {
+//		System.out.println("任务调度测试");
+//	}
+}

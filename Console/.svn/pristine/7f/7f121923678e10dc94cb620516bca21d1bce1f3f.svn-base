@@ -1,0 +1,21 @@
+package com.ebeijia.entity.vo.wechat.mass;
+
+import java.util.List;
+
+/**
+ * @author zhicheng.xu
+ * @date 2015年5月7日
+ */
+public class ToUser {
+
+	private List<?> toUser;
+
+	public List<?> getToUser() {
+		return toUser;
+	}
+
+	public void setToUser(List<?> toUser) {
+		this.toUser = toUser;
+	}
+	
+}

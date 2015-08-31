@@ -1,0 +1,22 @@
+package com.ebeijia.service.wechat.act;
+
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatMod;
+
+
+
+public interface WechatModService {
+	//添加模板
+	public String save(String mchtId,String modName,String prizeJson,String type);
+	//修改模板
+	public String upd(TblWechatMod data);
+	//删除模板
+	public String del(String id);
+	//根据主键获取模板对象
+	public TblWechatMod getById(String  id);
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String pageData); 
+	//根据类型查询模板
+	public Map<String, Object> modList(String mchtId,String type);
+}

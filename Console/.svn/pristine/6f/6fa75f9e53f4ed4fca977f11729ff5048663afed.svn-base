@@ -1,0 +1,44 @@
+package com.ebeijia.service.wechat.inter;
+
+
+import net.sf.json.JSONObject;
+
+import com.ebeijia.entity.vo.wechat.Group;
+
+/** 
+ * 分组管理器类 
+ * @author zhicheng.xu
+ * @date 2015-02-02
+ */  
+public interface GroupManager {  
+  
+	
+    /** 
+     * 创建分组 
+     * @param group 分组名称 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+    public JSONObject createGroup(String group, String accessToken);
+    
+    /** 
+     * 修改分组 
+     * @param Group 分组实例 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public JSONObject modGroup(Group group,String accessToken);
+	/** 
+     * 删除分组 
+     * @param group 组别id 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public JSONObject delGroup(String groupId,String accessToken);
+	/** 
+     * 查询分组 
+     * @param accessToken 有效的access_token 
+     * @return JSONObject 
+     */  
+	public JSONObject getGroup(String accessToken) ;
+}  

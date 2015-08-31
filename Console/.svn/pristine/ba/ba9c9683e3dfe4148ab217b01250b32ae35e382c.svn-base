@@ -1,0 +1,113 @@
+package com.ebeijia.entity.wechat;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "TBL_WECHAT_NEWS")
+public class TblWechatNews implements java.io.Serializable{
+	
+	private static final long serialVersionUID = 1L;
+
+	private String id;
+	private String groupId;
+	private String title;
+	private String thumbMediaId;
+	private String author;
+	private String digest;
+	private String showCoverPic;
+	private String content;
+	private String contentSourceUrl;
+    
+    /** default constructor */
+   	public TblWechatNews() {
+   		
+   	}
+
+	@Id
+	@Column(name = "ID", unique = true, nullable = false, length = 20)
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	@Column(name = "GROUP_ID",length = 5)
+	public String getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
+
+	@Column(name = "TITLE",length = 64)
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	@Column(name = "THUMB_MEDIA_ID",length = 100)
+	public String getThumbMediaId() {
+		return thumbMediaId;
+	}
+
+	public void setThumbMediaId(String thumbMediaId) {
+		this.thumbMediaId = thumbMediaId;
+	}
+
+	@Column(name = "AUTHOR",length = 20)
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	
+	@Column(name = "DIGEST",length = 128)
+	public String getDigest() {
+		return digest;
+	}
+
+	public void setDigest(String digest) {
+		this.digest = digest;
+	}
+//	show_cover_pic 封面 0false1true  char
+//	content  图文具体内容   clob
+//	content_source_url 图文原地址 VARCHAR(128) 
+	@Column(name = "SHOW_COVER_PIC",length = 1)
+	public String getShowCoverPic() {
+		return showCoverPic;
+	}
+
+	public void setShowCoverPic(String showCoverPic) {
+		this.showCoverPic = showCoverPic;
+	}
+	
+	@Column(name = "CONTENT")
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	@Column(name = "CONTENT_SOURCE_URL",length = 128)
+	public String getContentSourceUrl() {
+		return contentSourceUrl;
+	}
+
+	public void setContentSourceUrl(String contentSourceUrl) {
+		this.contentSourceUrl = contentSourceUrl;
+	}
+
+}

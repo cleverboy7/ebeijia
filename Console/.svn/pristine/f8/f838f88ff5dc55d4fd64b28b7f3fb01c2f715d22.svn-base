@@ -1,0 +1,28 @@
+package com.ebeijia.service.roleInf;
+
+import java.util.Map;
+
+import com.ebeijia.entity.TblRoleInf;
+
+
+public interface RoleInfService {
+
+	//新增角色
+	public void save(String name,String dsc,String roleList);
+	//登录查询菜单列表
+	public String funcFind(String usrId);
+	//查询已有权限和未添加权限列表
+	public Map<String,Object> findRoleDef(String roleId);
+	//查询所有菜单列表
+	public Map<String, Object> funcFindAll();
+	//通过条件查询结果
+	public Map<String,Object> findBySql(String roleId,String roleName,String pageData);  
+	//根据id查信息
+	public TblRoleInf getById(String id);
+	//删除角色
+	public void delById(String id);
+	//更新角色
+	public void update(TblRoleInf tblRoleInf ,String roleList);
+	//查询角色列表
+	public Map<String, Object> findRole();
+}

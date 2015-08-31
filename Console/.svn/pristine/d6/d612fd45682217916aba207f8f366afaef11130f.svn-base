@@ -1,0 +1,52 @@
+package com.ebeijia.controller.action.wechat.template;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.service.wechat.template.WechatTemplateService;
+import com.ebeijia.util.Constant;
+
+/**
+ * @author zhicheng.xu
+ * @date 2015年5月4日
+ */
+@Controller
+@RequestMapping(value="/wechat/template")
+public class WechatTemplateQueryAction {
+	@Autowired
+	private WechatTemplateService wechatTemplateService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatTemplateQueryAction.class);
+	
+	@RequestMapping(value="query.html",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> query(HttpSession session,HttpServletRequest request){
+		String mchtId=request.getParameter("mchtId");
+		String pageData =request.getParameter("aoData");
+		Map<String, Object> map = new HashMap<String, Object>();
+		try{
+			Map<String,Object> mapTmp =wechatTemplateService.findBySql(mchtId,pageData);
+			map.put("mchtList", mapTmp.get("list"));
+			map.put("current", mapTmp.get("current"));
+			map.put("total",mapTmp.get("total"));
+			map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", map);
+			return map;
+		}catch (Exception e) {
+			logger.info("公众号行业模板查询失败,请联系管理员或稍后再试");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "公众号行业模板查询失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+}

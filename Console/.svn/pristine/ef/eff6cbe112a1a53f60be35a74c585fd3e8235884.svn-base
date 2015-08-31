@@ -1,0 +1,453 @@
+package com.ebeijia.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * TblMchtInf entity. @author MyEclipse Persistence Tools
+ */
+@Entity
+@Table(name = "TBL_MCHT_INF")
+public class TblMchtInf implements java.io.Serializable {
+	private static final long serialVersionUID = 1L;
+	// Fields
+
+	private String mchtId;
+	private String mchtName;
+	private String mchtType;
+	private String mchtBusType;
+	private String mchtLvl;
+	private String upperMchtId;
+	private String mchtStat;
+	private String mchtNationCd;
+	private String mchtCityCd;
+	private String mchtDistCd;
+	private String mchtBusDistCd;
+	private String mchtAddr;
+	private String mchtPostCd;
+	private String mchtTel1;
+	private String mchtTel2;
+	private String mchtTel3;
+	private String mchtUsr1;
+	private String mchtMobile1;
+	private String mchtEmail;
+	private String mchtUsr2;
+	private String mchtMobile2;
+	private String mchtEmail2;
+	private String mchtUrl;
+	private String mchtWapUrl;
+	private String mchtLongitude;
+	private String mchtLatitude;
+	private double mchtTasteGd;
+	private double mchtServiceGd;
+	private double mchtEnvGd;
+	private double mchtGd;
+	private double mchtGdPartNum;
+	private String mchtDsc;
+	private String mchtPlatId;
+	private String ptrMchtId;
+	private String avePrice;
+	private String remark;
+	private String serviceFee;
+
+	// Constructors
+
+	/** default constructor */
+	public TblMchtInf() {
+	}
+
+	/** minimal constructor */
+	public TblMchtInf(String mchtId) {
+		this.mchtId = mchtId;
+	}
+
+	/** full constructor */
+	public TblMchtInf(String mchtId, String mchtName, String mchtType,
+			String mchtBusType, String mchtLvl, String upperMchtId,
+			String mchtStat, String mchtNationCd, String mchtCityCd,
+			String mchtDistCd, String mchtBusDistCd, String mchtAddr,
+			String mchtPostCd, String mchtTel1, String mchtTel2,
+			String mchtTel3, String mchtUsr1, String mchtMobile1,
+			String mchtEmail, String mchtUsr2, String mchtMobile2,
+			String mchtEmail2, String mchtUrl, String mchtWapUrl,
+			String mchtLongitude, String mchtLatitude, double mchtTasteGd,
+			double mchtServiceGd, double mchtEnvGd, double mchtGd,
+			double mchtGdPartNum, String mchtDsc,String mchtPlatId,String ptrMchtId,String avePrice,String remark,String serviceFee) {
+		this.mchtId = mchtId;
+		this.mchtName = mchtName;
+		this.mchtType = mchtType;
+		this.mchtBusType = mchtBusType;
+		this.mchtLvl = mchtLvl;
+		this.upperMchtId = upperMchtId;
+		this.mchtStat = mchtStat;
+		this.mchtNationCd = mchtNationCd;
+		this.mchtCityCd = mchtCityCd;
+		this.mchtDistCd = mchtDistCd;
+		this.mchtBusDistCd = mchtBusDistCd;
+		this.mchtAddr = mchtAddr;
+		this.mchtPostCd = mchtPostCd;
+		this.mchtTel1 = mchtTel1;
+		this.mchtTel2 = mchtTel2;
+		this.mchtTel3 = mchtTel3;
+		this.mchtUsr1 = mchtUsr1;
+		this.mchtMobile1 = mchtMobile1;
+		this.mchtEmail = mchtEmail;
+		this.mchtUsr2 = mchtUsr2;
+		this.mchtMobile2 = mchtMobile2;
+		this.mchtEmail2 = mchtEmail2;
+		this.mchtUrl = mchtUrl;
+		this.mchtWapUrl = mchtWapUrl;
+		this.mchtLongitude = mchtLongitude;
+		this.mchtLatitude = mchtLatitude;
+		this.mchtTasteGd = mchtTasteGd;
+		this.mchtServiceGd = mchtServiceGd;
+		this.mchtEnvGd = mchtEnvGd;
+		this.mchtGd = mchtGd;
+		this.mchtGdPartNum = mchtGdPartNum;
+		this.mchtDsc = mchtDsc;
+		this.mchtPlatId = mchtPlatId;
+		this.ptrMchtId = ptrMchtId;
+		this.avePrice = avePrice;
+		this.remark = remark;
+		this.serviceFee=serviceFee;
+	}
+
+	// Property accessors
+	@Id
+	@Column(name = "MCHT_ID", unique = true, nullable = false, length = 15)
+	public String getMchtId() {
+		return this.mchtId;
+	}
+
+	public void setMchtId(String mchtId) {
+		this.mchtId = mchtId;
+	}
+
+	@Column(name = "MCHT_NAME", length = 256)
+	public String getMchtName() {
+		return this.mchtName;
+	}
+
+	public void setMchtName(String mchtName) {
+		this.mchtName = mchtName;
+	}
+
+	@Column(name = "MCHT_TYPE", length = 2)
+	public String getMchtType() {
+		return this.mchtType;
+	}
+
+	public void setMchtType(String mchtType) {
+		this.mchtType = mchtType;
+	}
+
+	@Column(name = "MCHT_BUS_TYPE", length = 2)
+	public String getMchtBusType() {
+		return this.mchtBusType;
+	}
+
+	public void setMchtBusType(String mchtBusType) {
+		this.mchtBusType = mchtBusType;
+	}
+
+	@Column(name = "MCHT_LVL", length = 2)
+	public String getMchtLvl() {
+		return this.mchtLvl;
+	}
+
+	public void setMchtLvl(String mchtLvl) {
+		this.mchtLvl = mchtLvl;
+	}
+
+	@Column(name = "UPPER_MCHT_ID", length = 15)
+	public String getUpperMchtId() {
+		return this.upperMchtId;
+	}
+
+	public void setUpperMchtId(String upperMchtId) {
+		this.upperMchtId = upperMchtId;
+	}
+
+	@Column(name = "MCHT_STAT", length = 1)
+	public String getMchtStat() {
+		return this.mchtStat;
+	}
+
+	public void setMchtStat(String mchtStat) {
+		this.mchtStat = mchtStat;
+	}
+
+	@Column(name = "MCHT_NATION_CD", length = 3)
+	public String getMchtNationCd() {
+		return this.mchtNationCd;
+	}
+
+	public void setMchtNationCd(String mchtNationCd) {
+		this.mchtNationCd = mchtNationCd;
+	}
+
+	@Column(name = "MCHT_CITY_CD", length = 3)
+	public String getMchtCityCd() {
+		return this.mchtCityCd;
+	}
+
+	public void setMchtCityCd(String mchtCityCd) {
+		this.mchtCityCd = mchtCityCd;
+	}
+
+	@Column(name = "MCHT_DIST_CD", length = 3)
+	public String getMchtDistCd() {
+		return this.mchtDistCd;
+	}
+
+	public void setMchtDistCd(String mchtDistCd) {
+		this.mchtDistCd = mchtDistCd;
+	}
+
+	@Column(name = "MCHT_BUS_DIST_CD", length = 3)
+	public String getMchtBusDistCd() {
+		return this.mchtBusDistCd;
+	}
+
+	public void setMchtBusDistCd(String mchtBusDistCd) {
+		this.mchtBusDistCd = mchtBusDistCd;
+	}
+
+	@Column(name = "MCHT_ADDR", length = 256)
+	public String getMchtAddr() {
+		return this.mchtAddr;
+	}
+
+	public void setMchtAddr(String mchtAddr) {
+		this.mchtAddr = mchtAddr;
+	}
+
+	@Column(name = "MCHT_POST_CD", length = 6)
+	public String getMchtPostCd() {
+		return this.mchtPostCd;
+	}
+
+	public void setMchtPostCd(String mchtPostCd) {
+		this.mchtPostCd = mchtPostCd;
+	}
+
+	@Column(name = "MCHT_TEL1", length = 20)
+	public String getMchtTel1() {
+		return this.mchtTel1;
+	}
+
+	public void setMchtTel1(String mchtTel1) {
+		this.mchtTel1 = mchtTel1;
+	}
+
+	@Column(name = "MCHT_TEL2", length = 20)
+	public String getMchtTel2() {
+		return this.mchtTel2;
+	}
+
+	public void setMchtTel2(String mchtTel2) {
+		this.mchtTel2 = mchtTel2;
+	}
+
+	@Column(name = "MCHT_TEL3", length = 20)
+	public String getMchtTel3() {
+		return this.mchtTel3;
+	}
+
+	public void setMchtTel3(String mchtTel3) {
+		this.mchtTel3 = mchtTel3;
+	}
+
+	@Column(name = "MCHT_USR1", length = 32)
+	public String getMchtUsr1() {
+		return this.mchtUsr1;
+	}
+
+	public void setMchtUsr1(String mchtUsr1) {
+		this.mchtUsr1 = mchtUsr1;
+	}
+
+	@Column(name = "MCHT_MOBILE1", length = 20)
+	public String getMchtMobile1() {
+		return this.mchtMobile1;
+	}
+
+	public void setMchtMobile1(String mchtMobile1) {
+		this.mchtMobile1 = mchtMobile1;
+	}
+
+	@Column(name = "MCHT_EMAIL", length = 64)
+	public String getMchtEmail() {
+		return this.mchtEmail;
+	}
+
+	public void setMchtEmail(String mchtEmail) {
+		this.mchtEmail = mchtEmail;
+	}
+
+	@Column(name = "MCHT_USR2", length = 32)
+	public String getMchtUsr2() {
+		return this.mchtUsr2;
+	}
+
+	public void setMchtUsr2(String mchtUsr2) {
+		this.mchtUsr2 = mchtUsr2;
+	}
+
+	@Column(name = "MCHT_MOBILE2", length = 20)
+	public String getMchtMobile2() {
+		return this.mchtMobile2;
+	}
+
+	public void setMchtMobile2(String mchtMobile2) {
+		this.mchtMobile2 = mchtMobile2;
+	}
+
+	@Column(name = "MCHT_EMAIL2", length = 64)
+	public String getMchtEmail2() {
+		return this.mchtEmail2;
+	}
+
+	public void setMchtEmail2(String mchtEmail2) {
+		this.mchtEmail2 = mchtEmail2;
+	}
+
+	@Column(name = "MCHT_URL", length = 128)
+	public String getMchtUrl() {
+		return this.mchtUrl;
+	}
+
+	public void setMchtUrl(String mchtUrl) {
+		this.mchtUrl = mchtUrl;
+	}
+
+	@Column(name = "MCHT_WAP_URL", length = 128)
+	public String getMchtWapUrl() {
+		return this.mchtWapUrl;
+	}
+
+	public void setMchtWapUrl(String mchtWapUrl) {
+		this.mchtWapUrl = mchtWapUrl;
+	}
+
+	@Column(name = "MCHT_LONGITUDE", length = 16)
+	public String getMchtLongitude() {
+		return this.mchtLongitude;
+	}
+
+	public void setMchtLongitude(String mchtLongitude) {
+		this.mchtLongitude = mchtLongitude;
+	}
+
+	@Column(name = "MCHT_LATITUDE", length = 16)
+	public String getMchtLatitude() {
+		return this.mchtLatitude;
+	}
+
+	public void setMchtLatitude(String mchtLatitude) {
+		this.mchtLatitude = mchtLatitude;
+	}
+
+	@Column(name = "MCHT_TASTE_GD", precision = 22, scale = 0)
+	public double getMchtTasteGd() {
+		return this.mchtTasteGd;
+	}
+
+	public void setMchtTasteGd(double mchtTasteGd) {
+		this.mchtTasteGd = mchtTasteGd;
+	}
+
+	@Column(name = "MCHT_SERVICE_GD", precision = 22, scale = 0)
+	public double getMchtServiceGd() {
+		return this.mchtServiceGd;
+	}
+
+	public void setMchtServiceGd(double mchtServiceGd) {
+		this.mchtServiceGd = mchtServiceGd;
+	}
+
+	@Column(name = "MCHT_ENV_GD", precision = 22, scale = 0)
+	public double getMchtEnvGd() {
+		return this.mchtEnvGd;
+	}
+
+	public void setMchtEnvGd(double mchtEnvGd) {
+		this.mchtEnvGd = mchtEnvGd;
+	}
+
+	@Column(name = "MCHT_GD", precision = 22, scale = 0)
+	public double getMchtGd() {
+		return this.mchtGd;
+	}
+
+	public void setMchtGd(double mchtGd) {
+		this.mchtGd = mchtGd;
+	}
+
+	@Column(name = "MCHT_GD_PART_NUM", precision = 22, scale = 0)
+	public double getMchtGdPartNum() {
+		return this.mchtGdPartNum;
+	}
+
+	public void setMchtGdPartNum(double mchtGdPartNum) {
+		this.mchtGdPartNum = mchtGdPartNum;
+	}
+
+	@Column(name = "MCHT_DSC", length = 512)
+	public String getMchtDsc() {
+		return this.mchtDsc;
+	}
+
+	public void setMchtDsc(String mchtDsc) {
+		this.mchtDsc = mchtDsc;
+	}
+	
+	@Column(name = "MCHT_PLAT_ID",length = 15)
+	public String getMchtPlatId() {
+		return mchtPlatId;
+	}
+
+	public void setMchtPlatId(String mchtPlatId) {
+		this.mchtPlatId = mchtPlatId;
+	}
+	
+    @Column(name = "PTR_MCHT_ID", length = 15)
+	public String getPtrMchtId() {
+		return ptrMchtId;
+	}
+
+	public void setPtrMchtId(String ptrMchtId) {
+		this.ptrMchtId = ptrMchtId;
+	}
+
+	@Column(name = "AVE_PRICE", length = 22)
+	public String getAvePrice() {
+		return avePrice;
+	}
+
+	public void setAvePrice(String avePrice) {
+		this.avePrice = avePrice;
+	}
+	
+	@Column(name = "REMARK", length = 256)
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	@Column(name = "SERVICE_FEE", precision = 22, scale = 0)
+	public String getServiceFee() {
+		return serviceFee;
+	}
+
+	public void setServiceFee(String serviceFee) {
+		this.serviceFee = serviceFee;
+	}
+	
+
+}

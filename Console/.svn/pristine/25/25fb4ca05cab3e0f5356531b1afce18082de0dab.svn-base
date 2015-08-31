@@ -1,0 +1,54 @@
+package com.ebeijia.controller.action.role;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.service.roleInf.RoleInfService;
+import com.ebeijia.util.Constant;
+
+@Controller
+@RequestMapping(value="/wechat/role")
+public class RoleAddAction {
+	@Autowired
+	private RoleInfService roleInfService;
+	
+	private static Logger logger = LoggerFactory.getLogger(RoleAddAction.class);
+	
+	@RequestMapping(value="add.html",method = RequestMethod.POST)
+	@MyLog(remark="角色新增")
+	@ResponseBody
+	public Map<String, Object> add(HttpSession session,HttpServletRequest request) {
+		String roleList =request.getParameter("roleList");
+		String name =request.getParameter("name");
+		String dsc =request.getParameter("dsc");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { dsc, "0", "64" } ,{ name, "1", "32" },{ roleList, "5", null }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			roleInfService.save(name,dsc,roleList);
+			map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			return map;
+		}catch(Exception e){
+			logger.info("角色新增失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "角色新增失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+}

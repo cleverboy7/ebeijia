@@ -1,0 +1,25 @@
+package com.ebeijia.service.wechat.msg;
+
+import java.util.List;
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatRespMsg;
+
+public interface WechatRespMsgService {
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String aoData); 
+	//新增回复消息设置
+	public void save(TblWechatRespMsg data,String articlesJson);
+	//修改回复消息设置
+	public void update(TblWechatRespMsg data,String articlesJson);
+	//根据商户,回复类型,关键字查询回复数据
+	public List<TblWechatRespMsg> findByMchtType(String mcht,String msgType,String keywords);
+	//生成主键序列
+	public String getRespMsgId();
+	//根据id获取对象
+	public TblWechatRespMsg getById(String id);
+	//根据id删除对象
+	public void delete(String id);
+	//验证回复是否重复
+	public int check(String respMsgId,String mchtId,String keywords);
+}

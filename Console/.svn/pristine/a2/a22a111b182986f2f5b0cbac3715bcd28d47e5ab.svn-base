@@ -1,0 +1,90 @@
+package com.ebeijia.controller.action.wechat.mass;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.service.wechat.mass.WechatMassService;
+import com.ebeijia.util.Constant;
+import com.ebeijia.util.wechat.WechatError;
+
+@Controller
+@RequestMapping(value="/wechat/mass")
+public class WechatMassMpMediaUpAction {
+	
+	@Autowired
+	private WechatMassService wechatMassService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatMassMpMediaUpAction.class);
+	
+
+	@RequestMapping(value="mpnews.html",method = RequestMethod.POST)
+	@MyLog(remark="微信上传群发图文")
+	@ResponseBody
+	public  Map<String, Object> mpnews(HttpSession session,HttpServletRequest request) {
+		String mchtId =request.getParameter("mchtId");
+		String articles =request.getParameter("articles");
+		String title =request.getParameter("title");
+		String description =request.getParameter("description");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" } ,{ articles, "1", null },{ title, "1", "30" },{ description, "1", "64" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			String respMsg = wechatMassService.upGtMedia(mchtId,title,description,articles);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, WechatError.checkCode(respMsg), "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("微信上传群发图文失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "微信上传群发图文失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+	
+	@RequestMapping(value="mpvideo.html",method = RequestMethod.POST)
+	@MyLog(remark="微信上传群发视频")
+	@ResponseBody
+	public  Map<String, Object> mpvideo(HttpSession session,HttpServletRequest request) {
+		String mchtId =request.getParameter("mchtId");
+		String title =request.getParameter("title");
+		String description =request.getParameter("description");
+		String mediaId =request.getParameter("mediaId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" } ,{ mediaId, "1", null },{ title, "1", "30" },{ description, "1", "64" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		try{
+			String respMsg = wechatMassService.upVideoMedia(mchtId,title,description,mediaId);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, WechatError.checkCode(respMsg), "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("微信上传群发视频失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "微信上传群发视频失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+}

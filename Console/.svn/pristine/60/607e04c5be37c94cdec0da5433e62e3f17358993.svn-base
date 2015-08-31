@@ -1,0 +1,33 @@
+package com.ebeijia.entity.vo.wechat.mass;
+
+import java.util.List;
+
+/** 
+ * 群发筛选用户
+ *  
+ * @author zhicheng.xu 
+ * @date 2015-05-09
+ */   
+public class SendImageMassByUsr extends BaseMass {  
+	
+
+    private Image image;
+
+    private List<?> touser;
+
+   	public List<?> getTouser() {
+   		return touser;
+   	}
+
+   	public void setTouser(List<?> touser) {
+   		this.touser = touser;
+   	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+}  

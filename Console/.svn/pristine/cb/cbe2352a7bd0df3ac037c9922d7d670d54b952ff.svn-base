@@ -1,0 +1,67 @@
+package com.ebeijia.service.wechat.msg;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ebeijia.dao.wechat.WechatReqMsgDao;
+import com.ebeijia.entity.wechat.TblWechatReqMsg;
+import com.ebeijia.util.StringUtil;
+
+@Service
+public final class WechatReqMsgServiceImpl implements WechatReqMsgService {
+
+	@Autowired
+	private WechatReqMsgDao wechatReqMsgDao;
+
+	@Transactional
+	@Cacheable(value="wechatReqMsgCache",key = "#root.method.name+#msgId")
+	public TblWechatReqMsg findByMsgId(String msgId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("from TblWechatReqMsg where msgId ='").append(msgId).append("'");
+		List<TblWechatReqMsg> list =wechatReqMsgDao.find(sb.toString());
+		TblWechatReqMsg data = new TblWechatReqMsg();
+		if(list.isEmpty()){
+			return data;
+		}else{
+			return list.get(0);
+		}
+	}
+
+	@Transactional
+	@Cacheable(value="wechatReqMsgCache")
+	public Map<String,Object> findBySql(String mchtId,String pagaData) {
+		StringBuilder query =new StringBuilder();
+		query.append("from TblWechatReqMsg");
+		query.append(" where 1=1");
+		if(mchtId!=null && !"".equals(mchtId)){
+			query.append(" AND id.mchtId like '%").append(mchtId).append("%'");
+		}
+		query.append( " ORDER BY id.mchtId");
+		Map<String,Object> m =wechatReqMsgDao.findByPage(query.toString(), pagaData);
+		return m;
+	}
+	
+	@Transactional
+	@CacheEvict(value="wechatReqMsgCache",allEntries=true)
+	public void save(TblWechatReqMsg data) {
+		data.setReqMsgId(getReqMsgId());
+		wechatReqMsgDao.save(data);
+	}
+
+	/**
+	 * 生成收到消息id
+	 * @return
+	 */
+	private String getReqMsgId() {
+		String sql = "SELECT SEQ_WECHAT_REQ_ID.NEXTVAL FROM DUAL";
+		String subId = wechatReqMsgDao.getListSQL(sql).get(0).toString();
+		return StringUtil.beforFillValue(subId, 20, '0');
+	}
+	
+}

@@ -1,0 +1,68 @@
+package com.ebeijia.entity.vo.interf;
+
+import java.io.Serializable;
+
+public class SendMsg extends CommonReq implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
+	private String downSeq;
+	private String msgReg;
+	private String msgPwd;
+	private String sourceAdd;
+	private String content;
+	private String phone;
+	private String txnCode;
+	private String time;
+	public String getDownSeq() {
+		return downSeq;
+	}
+	public void setDownSeq(String downSeq) {
+		this.downSeq = downSeq;
+	}
+	public String getMsgReg() {
+		return msgReg;
+	}
+	public void setMsgReg(String msgReg) {
+		this.msgReg = msgReg;
+	}
+	public String getMsgPwd() {
+		return msgPwd;
+	}
+	public void setMsgPwd(String msgPwd) {
+		this.msgPwd = msgPwd;
+	}
+	public String getSourceAdd() {
+		return sourceAdd;
+	}
+	public void setSourceAdd(String sourceAdd) {
+		this.sourceAdd = sourceAdd;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getTxnCode() {
+		return txnCode;
+	}
+	public void setTxnCode(String txnCode) {
+		this.txnCode = txnCode;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+	
+	
+
+}

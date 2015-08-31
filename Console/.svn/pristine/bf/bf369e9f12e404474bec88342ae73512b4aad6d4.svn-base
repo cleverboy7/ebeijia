@@ -1,0 +1,21 @@
+package com.ebeijia.service.wechat.act;
+
+import java.util.Map;
+
+import com.ebeijia.entity.wechat.TblWechatAct;
+
+
+
+public interface WechatActService {
+	//添加活动
+	public String save(TblWechatAct data);
+	//修改活动
+	public String upd(TblWechatAct data);
+	//删除活动
+	public String del(String id);
+	//根据主键获取活动对象
+	public TblWechatAct getById(String  id);
+	//分页查询
+	public Map<String,Object> findBySql(String mchtId,String pageData);
+	public TblWechatAct getAct(String id); 
+}

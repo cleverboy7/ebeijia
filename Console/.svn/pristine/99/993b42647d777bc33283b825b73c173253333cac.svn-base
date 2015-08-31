@@ -1,0 +1,35 @@
+package com.ebeijia.service.file;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import com.ebeijia.util.SystemProperties;
+
+@Service("fileService")
+public class FileServiceImpl implements FileService {
+
+	private static Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
+	
+	public void generateHTML(String fileInfo) throws Exception{
+		String path = SystemProperties.getProperties("projectUrl")
+				+ SystemProperties.getProperties("htmlUrl");
+		File f = new File(path + ".html");
+		OutputStreamWriter opsw = null;
+		if (f.exists()) {
+			f.delete();
+		}
+		if (f.createNewFile()) {
+			logger.info("文件创建成功！");
+		} else {
+			logger.info("文件创建失败！");
+		}
+		opsw = new OutputStreamWriter(new FileOutputStream(path + ".html"), "UTF-8");
+		opsw.write(fileInfo);
+		opsw.flush();
+		opsw.close();
+		logger.info("HTML写入完成！");
+	}
+}

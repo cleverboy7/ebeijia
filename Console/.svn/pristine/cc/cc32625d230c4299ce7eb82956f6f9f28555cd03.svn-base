@@ -1,0 +1,72 @@
+package com.ebeijia.controller.action.wechat.kf;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.ebeijia.tools.Validate4J;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ebeijia.ajax.resp.AjaxResp;
+import com.ebeijia.annotation.MyLog;
+import com.ebeijia.entity.vo.wechat.kf.Kf;
+import com.ebeijia.service.wechat.kf.WechatKfService;
+import com.ebeijia.util.Constant;
+import com.ebeijia.util.EncryptMD5Util;
+import com.ebeijia.util.wechat.WechatError;
+
+@Controller
+@RequestMapping(value="/wechat/kf")
+public class WechatKfAddAction {
+	@Autowired
+	private WechatKfService wechatKfService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WechatKfAddAction.class);
+	
+	@RequestMapping(value="add.html",method = RequestMethod.POST)
+	@MyLog(remark="新增多客服")
+	@ResponseBody
+	public Map<String, Object> add(HttpSession session,HttpServletRequest request) {
+		String mchtId =request.getParameter("mchtId");
+		String name =request.getParameter("name");
+		String id =request.getParameter("id");
+		String pwd =request.getParameter("pwd");
+		Map<String, Object> map = new HashMap<String, Object>();
+		String[][] s = { { mchtId, "15", "15" } ,{ name, "1", "12" },{ id, "1", "32" },{ pwd, "1", "32" }};
+		if (!Validate4J.checkStrArrLen(s)) {
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "参数长度或格式不正确", "");
+			return map;
+		}
+		Kf kf = new Kf();
+		kf.setKf_account(id);
+		kf.setNickname(name);
+		kf.setPassword(EncryptMD5Util.encrypt(pwd));
+		try{
+			//验证客服限制
+			int total = wechatKfService.findCount(mchtId);
+			if(total >=10){
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, "一个公众账号，最多只能创建10个客服", "");
+				return map;
+			}
+			String respMsg =wechatKfService.save(mchtId,kf);
+			if(respMsg ==null){
+				map = AjaxResp.getReturn(Constant.SUCCESS_CODE, "", "");
+			}else{
+				map = AjaxResp.getReturn(Constant.ERROR_CODE, WechatError.checkCode(respMsg), "");
+			}
+			return map;
+		}catch(Exception e){
+			logger.info("新增多客服失败");
+			map = AjaxResp.getReturn(Constant.ERROR_CODE, "新增多客服失败,请联系管理员或稍后再试", "");
+			return map;
+		}
+	}
+}
